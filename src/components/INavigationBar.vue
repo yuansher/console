@@ -14,7 +14,8 @@
     -->
     <div class="navigationbar-container">
       <div class="nc-logo">
-        <img :src="IDM.url.getModuleAssetsWebPath(require('../assets/logo.png'),moduleObject)"/>
+        <img v-if="propData.leftLogo" :src="IDM.url.getWebPath(propData.leftLogo)"/>
+        <img v-else :src="IDM.url.getModuleAssetsWebPath(require('../assets/logo.png'),moduleObject)"/>
         <span>{{propData.leftTitle||"IDM页面控制台"}}<label>{{propData.betaTitle}}</label></span>
       </div>
       <div class="nc-menu">
@@ -23,18 +24,15 @@
       <div class="nc-user">
         <a-dropdown>
           <a-button type="danger">
-            我要建
+            {{propData.newBtnTitle||'我要建'}}
           </a-button>
           <a-menu slot="overlay" @click="clickNewHandle">
-            <a-menu-item key="newModule">
-              <a href="javascript:;">新建组件</a>
-            </a-menu-item>
-            <a-menu-item key="newPage">
-              <a href="javascript:;">新建页面</a>
+            <a-menu-item v-for="(item,index) in propData.newMenuList" :key="index">
+              <a href="javascript:;">{{item.title}}</a>
             </a-menu-item>
           </a-menu>
         </a-dropdown>
-        <div class="user-info"><a-avatar icon="user" /> 超级管理员</div>
+        <div class="user-info"><a-avatar icon="user" /> {{userName}}</div>
       </div>
     </div>
   </div>
@@ -46,7 +44,8 @@ export default {
   data(){
     return {
       moduleObject:{},
-      propData:this.$root.propData.compositeAttr||{}
+      propData:this.$root.propData.compositeAttr||{},
+      userName:"用户名"
     }
   },
   props: {
@@ -55,6 +54,26 @@ export default {
     this.moduleObject = this.$root.moduleObject
     // console.log(this.moduleObject)
     this.convertAttrToStyleObject();
+    if(this.moduleObject.env=="production"){
+      var dataObject = {IDM:window.IDM};
+          dataObject["userInfo"] = IDM.user.getCurrentUserInfo();
+
+          var _defaultVal = "";
+          if(this.propData.userInfoField){
+            var filedExp = this.propData.userInfoField;
+            filedExp = "userInfo"+(filedExp.startsWiths("[")?"":".")+filedExp;
+            _defaultVal = window.IDM.express.replace.call(this, "@["+filedExp+"]", dataObject);
+          }
+          
+          var dataFunction = this.propData.userInfoFunction;
+          dataFunction&&dataFunction.forEach(item=>{
+            _defaultVal = window[item.name]&&window[item.name].call(this,{
+              customParam:item.param,
+              ...dataObject
+            });
+          })
+          this.userName = _defaultVal;
+    }
   },
   mounted() {
   },
@@ -235,14 +254,20 @@ export default {
        * {name:"",param:{}}
        * ]
        */
-      var clickNewFunction = e.key=='newModule'?this.propData.clickNewModuleFunction:this.propData.clickNewPageFunction;
-      clickNewFunction.forEach(item=>{
-        window[item.name]&&window[item.name].call(this,{
-          urlData:urlObject,
-          pageId,
-          customParam:item.param,
-          _this:this
-        });
+      var clickNewFunction = this.propData.newMenuList;
+      clickNewFunction.forEach((item,index)=>{
+        if(index==e.key){
+          if(item.clickFunction&&item.clickFunction.length>0){
+            item.clickFunction.forEach(fitem=>{
+              window[fitem.name]&&window[fitem.name].call(this,{
+                urlData:urlObject,
+                pageId,
+                customParam:fitem.param,
+                _this:this
+              });
+            })
+          }
+        }
       })
     },
     /**

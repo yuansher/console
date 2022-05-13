@@ -1,6 +1,6 @@
 {
-    "version": "1.0.0",
-    "lasttime": "2021年8月4日09:56:27",
+    "version": "1.0.1",
+    "lasttime": "2022年5月13日15:02:55",
     "author": "申龙",
     "className": "console",
     "desc": "",
@@ -93,6 +93,13 @@
             "classId": "idm.componet.console.ilayoutcomponentcarditem",
             "comName": "布局Item卡片",
             "className": "ILayoutComponentCardItem",
+            "comType": "common",
+            "comLangue": "vue"
+        },
+        {
+            "classId": "idm.componet.console.icommoncarditem",
+            "comName": "通用Item卡片",
+            "className": "ICommonCardItem",
             "comType": "common",
             "comLangue": "vue"
         }

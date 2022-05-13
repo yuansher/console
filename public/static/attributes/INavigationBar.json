@@ -21,6 +21,12 @@
             "desc": "提供设置组件能达到展示效果的基本属性设置信息",
             "children": [
                 {
+                    "type": "uploadImage",
+                    "layoutType": "inline",
+                    "text": "左侧Logo",
+                    "bindKey": "leftLogo"
+                },
+                {
                     "type": "input",
                     "layoutType": "inline",
                     "text": "左侧标题",
@@ -78,6 +84,35 @@
                                 }
                             ],
                             "default": "_self"
+                        }
+                    ]
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "新建名称",
+                    "bindKey": "newBtnTitle",
+                    "default": "我要建"
+                },
+                {
+                    "type": "table",
+                    "text": "我要建菜单",
+                    "bindKey": "newMenuList",
+                    "tabText": "菜单[index]",
+                    "children": [
+                        {
+                            "type": "input",
+                            "layoutType": "inline",
+                            "text": "菜单名称",
+                            "bindKey": "title",
+                            "default": ""
+                        },{
+                            "type": "actionSelect",
+                            "layoutType": "block",
+                            "text": "点击时动作",
+                            "bindKey": "clickFunction",
+                            "desc": "点击此菜单的时候会调用设置的自定义函数，接收参数为格式为{...自定义的}",
+                            "multiple": true
                         }
                     ]
                 }
@@ -317,20 +352,21 @@
             "desc": "点击？查看高级设置用法指南",
             "children": [
                 {
-                    "type": "actionSelect",
+                    "type": "textarea",
                     "layoutType": "block",
-                    "text": "点击[新建组件]时动作",
-                    "bindKey": "clickNewModuleFunction",
-                    "desc": "点击新建组件的时候会调用设置的自定义函数，接收参数为格式为{...自定义的}",
-                    "multiple": true
+                    "text": "用户名显示字段",
+                    "bindKey": "userInfoField",
+                    "desc": "根据用户信息接口返回数据格式指定字段，比如用户信息的值为{data:{userName:'超级管理员'}}，则这里应该填写data.userName",
+                    "default": "",
+                    "placeholder": "示例：data.userName 或者 [0].data[0].userName"
                 },
                 {
                     "type": "actionSelect",
                     "layoutType": "block",
-                    "text": "点击[新建页面]时动作",
-                    "bindKey": "clickNewPageFunction",
-                    "desc": "点击新建页面的时候会调用设置的自定义函数，接收参数为格式为{...自定义的}",
-                    "multiple": true
+                    "text": "用户名显示自定义函数",
+                    "bindKey": "userInfoFunction",
+                    "desc": "接收参数格式为{customParam:自定义的}",
+                    "multiple": false
                 }
             ]
         }
