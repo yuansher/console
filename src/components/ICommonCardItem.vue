@@ -89,7 +89,7 @@
                               item
                             )))
                       " :key="tagItem.key" :color="tagItem.colorType=='custom'?tagItem.colorValue:tagItem.colorType">
-                {{tagItem.tagText}}
+                {{tagItem.tagTextFunction&&tagItem.tagTextFunction.length>0?getFieldCustomRender(tagItem,'tagTextFunction', item):tagItem.tagText}}
               </a-tag>
             </template>
             <div v-if="propData.showActionMenu" class="cc-item-bottom-right-action">

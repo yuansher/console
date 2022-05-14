@@ -101,3 +101,9 @@ export {
 export {
     default as PaperClipOutline
 } from '@ant-design/icons/lib/outline/PaperClipOutline';
+export {
+    default as ExclamationCircleFill
+} from '@ant-design/icons/lib/fill/ExclamationCircleFill';
+export {
+    default as InfoCircleFill
+} from '@ant-design/icons/lib/fill/InfoCircleFill';

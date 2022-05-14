@@ -507,6 +507,13 @@
                             "bindKey": "tagText",
                             "default": ""
                         },{
+                            "type": "actionSelect",
+                            "layoutType": "block",
+                            "text": "自定义显示函数",
+                            "bindKey": "tagTextFunction",
+                            "desc": "当标识文字不满足要求的时候会使用此函数来执行自定义返回的结果，接收参数为格式为{customParam:自定义的,configObject:当前页签配置项,itemObject:整条数据对象}",
+                            "multiple": false
+                        },{
                             "type": "select",
                             "layoutType": "inline",
                             "text": "显示方式",
