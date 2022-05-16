@@ -71,34 +71,68 @@
               v-html="getFieldCustomRender(propData,'subtitleCustomShowFunction', item)"
             ></span>
           </div>
-          <div class="cc-item-info-tags">
-            <template v-for="tagItem in propData.tagsOptionList">
-              <a-tag v-if="
-                        tagItem.tagText &&
-                        (tagItem.tagShowType == 'default' ||
-                          (tagItem.tagShowType == 'field' &&
+          <div class="cc-item-info-footer-box">
+            <div>
+              <template v-for="tagItem in propData.tagsOptionList">
+                <a-tag v-if="
+                          tagItem.tagText &&
+                          (tagItem.tagShowType == 'default' ||
+                            (tagItem.tagShowType == 'field' &&
+                              getExpressData(
+                                'data',
+                                tagItem.tagDataFiled,
+                                item
+                              )) ||
+                            (tagItem.tagShowType == 'custom' &&
+                              getFieldCustomRender(
+                                tagItem,
+                                'tagDataFunction',
+                                item
+                              )))
+                        " :key="tagItem.key" :color="tagItem.colorType=='custom'?tagItem.colorValue:tagItem.colorType">
+                  {{tagItem.tagTextFunction&&tagItem.tagTextFunction.length>0?getFieldCustomRender(tagItem,'tagTextFunction', item):tagItem.tagText}}
+                </a-tag>
+              </template>
+            </div>
+            <div v-if="propData.showActionMenu" class="cc-item-bottom-right-action">
+              <!--按钮类型的-->
+              <template v-for="btnItem in propData.buttonOptionList" >
+                <a-button v-if="
+                        btnItem.type=='button'&&(btnItem.iconSvg || btnItem.buttonText) &&
+                        (btnItem.buttonShowType == 'default' ||
+                          (btnItem.buttonShowType == 'field' &&
                             getExpressData(
                               'data',
-                              tagItem.tagDataFiled,
+                              btnItem.buttonDataFiled,
                               item
                             )) ||
-                          (tagItem.tagShowType == 'custom' &&
+                          (btnItem.buttonShowType == 'custom' &&
                             getFieldCustomRender(
-                              tagItem,
-                              'tagDataFunction',
+                              btnItem,
+                              'buttonDataFunction',
                               item
                             )))
-                      " :key="tagItem.key" :color="tagItem.colorType=='custom'?tagItem.colorValue:tagItem.colorType">
-                {{tagItem.tagTextFunction&&tagItem.tagTextFunction.length>0?getFieldCustomRender(tagItem,'tagTextFunction', item):tagItem.tagText}}
-              </a-tag>
-            </template>
-            <div v-if="propData.showActionMenu" class="cc-item-bottom-right-action">
-              <a-dropdown placement="bottomRight" :overlayClassName="moduleObject.id+'-ddbox'">
+                      " :key="btnItem.key" :type="btnItem.buttoType" shape="round" size="small" @click="btnClickEventFunHandle({key:btnItem.key},item)">
+                <svg
+                    :style="
+                      getButtonSvgIconCustomFont(btnItem, 'iconSvgFont',true)
+                    "
+                    class="idm-common-filed-svg-icon"
+                    v-if="btnItem.iconSvg && btnItem.iconSvg.length > 0"
+                    aria-hidden="true"
+                  >
+                    <use :xlink:href="`#${btnItem.iconSvg[0]}`"></use>
+                  </svg>
+                  {{btnItem.buttonText}}
+                </a-button>
+              </template>
+              <!--菜单类型的-->
+              <a-dropdown v-show="isShowMoreIcon(item)" placement="bottomRight" :overlayClassName="moduleObject.id+'-ddbox'">
                 <svg-icon className="cc-item-svg-icon" iconClass="gengduo-shuxiang"></svg-icon>
                 <a-menu slot="overlay" @click="btnClickEventFunHandle($event,item)">
                   <template v-for="btnItem in propData.buttonOptionList">
                     <a-menu-item v-if="
-                        (btnItem.iconSvg || btnItem.buttonText) &&
+                        btnItem.type=='menu'&&(btnItem.iconSvg || btnItem.buttonText) &&
                         (btnItem.buttonShowType == 'default' ||
                           (btnItem.buttonShowType == 'field' &&
                             getExpressData(
@@ -231,6 +265,8 @@ export default {
   },
   props: {
   },
+  computed: {
+  },
   created() {
     this.moduleObject = this.$root.moduleObject;
     if(this.moduleObject.env!="production"){
@@ -279,6 +315,31 @@ export default {
   },
   destroyed() {},
   methods:{
+    /**
+     * 判断是否显示更多图标
+     */
+    isShowMoreIcon(item){
+      let count = 0;
+      this.propData.buttonOptionList&&this.propData.buttonOptionList.forEach(btnItem=>{
+        if(btnItem.type=='menu'&&(btnItem.iconSvg || btnItem.buttonText) &&
+                        (btnItem.buttonShowType == 'default' ||
+                          (btnItem.buttonShowType == 'field' &&
+                            this.getExpressData(
+                              'data',
+                              btnItem.buttonDataFiled,
+                              item
+                            )) ||
+                          (btnItem.buttonShowType == 'custom' &&
+                            this.getFieldCustomRender(
+                              btnItem,
+                              'buttonDataFunction',
+                              item
+                            )))){
+                              count=count+1;
+                            }
+      })
+      return count!==0;
+    },
     /**
      * 获取自定义函数处理后的结果
      */
@@ -961,9 +1022,6 @@ export default {
       overflow: hidden;
       // padding:5px 0px;
     }
-    .cc-item-info-tags{
-      line-height: 33px;
-    }
     .cc-item-info-classid{
       display: flex;
       justify-content: space-between;
@@ -992,11 +1050,24 @@ export default {
       margin-left: 6px;
     }
   }
+  .cc-item-info-footer-box{
+    display: flex;
+    justify-content:space-between;
+    align-items:center;
+    min-height: 30px;
+    .ant-tag{
+      margin-bottom: 5px;
+    }
+  }
   .cc-item-bottom-right-action{
     display: none;
-    position: absolute;
-    right: 10px;
-    bottom: 5px;
+    // position: absolute;
+    // right: 10px;
+    // bottom: 5px;
+    >*{
+      margin-left: 5px;
+      margin-bottom: 5px;
+    }
   }
   &:hover{
     box-shadow: 0px 0px 15px rgba(0,0,0,0.15);
@@ -1005,7 +1076,8 @@ export default {
       opacity: 1;
     }
     .cc-item-bottom-right-action{
-      display: block;
+      display: flex;
+      align-items: center;
     }
   }
   //遮罩层

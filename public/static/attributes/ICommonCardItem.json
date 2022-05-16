@@ -399,6 +399,52 @@
                             "bindKey": "buttonText",
                             "default": ""
                         },{
+                            "type": "select",
+                            "layoutType": "inline",
+                            "text": "菜单方式",
+                            "bindKey": "type",
+                            "desc":"设置菜单类型将会隐藏再更多的菜单中，以菜单的类型出现，设置为按钮类型将会直接显示在右下角卡片中，以按钮的方式出现，注意按钮不能过多，否则影响使用",
+                            "dictionary": [
+                                {
+                                    "label": "菜单类型",
+                                    "value": "menu"
+                                },
+                                {
+                                    "label": "按钮类型",
+                                    "value": "button"
+                                }
+                            ],
+                            "default": "menu"
+                        },{
+                            "type": "radio",
+                            "layoutType": "inline",
+                            "text": "按钮类型",
+                            "bindKey": "buttoType",
+                            "display":"@[type=='button']",
+                            "dictionary": [
+                                {
+                                    "label": "主要",
+                                    "value": "primary"
+                                },
+                                {
+                                    "label": "次要",
+                                    "value": "default"
+                                },
+                                {
+                                    "label": "虚线",
+                                    "value": "dashed"
+                                },
+                                {
+                                    "label": "危险",
+                                    "value": "danger"
+                                },
+                                {
+                                    "label": "链接",
+                                    "value": "link"
+                                }
+                            ],
+                            "default": "default"
+                        },{
                             "type": "iconSelect",
                             "layoutType": "inline",
                             "text": "显示图标",
