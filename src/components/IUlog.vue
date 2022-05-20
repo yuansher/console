@@ -14,157 +14,47 @@
     -->
     <div class="ulog-container">
       <div class="uc-topbox">
-          <div class="uc-title">
-                <a-icon type="dashboard" /> {{propData.cardTitle||'日志监控'}}
-            </div>
-          <div class="uc-search-condition">
-                  <a-range-picker @change="dateOnChange" :locale="locale" style="width:300px"/>
-                  <a-radio-group default-value="0" button-style="solid" style="margin-left:10px">
-                    <a-radio-button value="0">
-                      控制台日志
-                    </a-radio-button>
-                    <a-radio-button value="1">
-                      页面配置日志
-                    </a-radio-button>
-                  </a-radio-group>
-          </div>
+        <div class="uc-title">
+          <a-icon type="dashboard" /> {{ propData.cardTitle || '日志监控' }}
+        </div>
+        <div class="uc-search-condition">
+          <a-config-provider :locale="locale">
+            <a-range-picker @change="dateOnChange" :locale="locale" style="width:300px" />
+          </a-config-provider>
+          <a-radio-group :value="tableType" button-style="solid" @change="handleChangeTable" style="margin-left:10px">
+            <a-radio-button :value="0">
+              控制台日志
+            </a-radio-button>
+            <a-radio-button :value="1">
+              页面配置日志
+            </a-radio-button>
+          </a-radio-group>
+        </div>
       </div>
-      <div class="uc-table-box">
-          <a-table :columns="columns" :data-source="data" size="middle" />
+      <div v-show="tableType==0" class="uc-table-box">
+        <div class="drag_container" :idm-ctrl-id="moduleObject.id" idm-container-index="1">
+          
+        </div>
+      </div>
+      <div v-show="tableType==1" class="uc-table-box">
+        <div class="drag_container" :idm-ctrl-id="moduleObject.id" idm-container-index="2">
+          
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-const columns = [
-  {
-    title: '操作日期',
-    dataIndex: 'opDate',
-  },
-  {
-    title: '操作人',
-    dataIndex: 'opUser',
-  },
-  {
-    title: '框架版本',
-    dataIndex: 'frameVersion',
-  },
-  {
-    title: '页面与版本',
-    dataIndex: 'pageAndVersion',
-  },
-  {
-    title: '组件与版本',
-    dataIndex: 'moduleAndVersion',
-  },
-  {
-    title: '操作内容',
-    dataIndex: 'opContent',
-  }
-];
-const data = [
-  {
-    key: '1',
-    opDate: '2021-8-12 14:31:53',
-    opUser: '超级管理员',
-    frameVersion: 'V1.0.0',
-    pageAndVersion: '门户首页标准...(v1.0.0)',
-    moduleAndVersion: '待办组件(v1.2.0)',
-    opContent: '修改了初始默认值【增加了公告选项卡，删除了事务信息选项卡】'
-  },
-  {
-    key: '2',
-    opDate: '2021-8-12 14:31:53',
-    opUser: '超级管理员',
-    frameVersion: 'V1.0.0',
-    pageAndVersion: '门户首页标准...(v1.0.0)',
-    moduleAndVersion: '待办组件(v1.2.0)',
-    opContent: '修改了初始默认值【增加了公告选项卡，删除了事务信息选项卡】'
-  },
-  {
-    key: '3',
-    opDate: '2021-8-12 14:31:53',
-    opUser: '超级管理员',
-    frameVersion: 'V1.0.0',
-    pageAndVersion: '门户首页标准...(v1.0.0)',
-    moduleAndVersion: '待办组件(v1.2.0)',
-    opContent: '修改了初始默认值【增加了公告选项卡，删除了事务信息选项卡】'
-  },
-  {
-    key: '4',
-    opDate: '2021-8-12 14:31:53',
-    opUser: '超级管理员',
-    frameVersion: 'V1.0.0',
-    pageAndVersion: '门户首页标准...(v1.0.0)',
-    moduleAndVersion: '待办组件(v1.2.0)',
-    opContent: '修改了初始默认值【增加了公告选项卡，删除了事务信息选项卡】'
-  },
-  {
-    key: '5',
-    opDate: '2021-8-12 14:31:53',
-    opUser: '超级管理员',
-    frameVersion: 'V1.0.0',
-    pageAndVersion: '门户首页标准...(v1.0.0)',
-    moduleAndVersion: '待办组件(v1.2.0)',
-    opContent: '修改了初始默认值【增加了公告选项卡，删除了事务信息选项卡】'
-  },
-  {
-    key: '6',
-    opDate: '2021-8-12 14:31:53',
-    opUser: '超级管理员',
-    frameVersion: 'V1.0.0',
-    pageAndVersion: '门户首页标准...(v1.0.0)',
-    moduleAndVersion: '待办组件(v1.2.0)',
-    opContent: '修改了初始默认值【增加了公告选项卡，删除了事务信息选项卡】'
-  },
-  {
-    key: '7',
-    opDate: '2021-8-12 14:31:53',
-    opUser: '超级管理员',
-    frameVersion: 'V1.0.0',
-    pageAndVersion: '门户首页标准...(v1.0.0)',
-    moduleAndVersion: '待办组件(v1.2.0)',
-    opContent: '修改了初始默认值【增加了公告选项卡，删除了事务信息选项卡】'
-  },
-  {
-    key: '8',
-    opDate: '2021-8-12 14:31:53',
-    opUser: '超级管理员',
-    frameVersion: 'V1.0.0',
-    pageAndVersion: '门户首页标准...(v1.0.0)',
-    moduleAndVersion: '待办组件(v1.2.0)',
-    opContent: '修改了初始默认值【增加了公告选项卡，删除了事务信息选项卡】'
-  },
-  {
-    key: '9',
-    opDate: '2021-8-12 14:31:53',
-    opUser: '超级管理员',
-    frameVersion: 'V1.0.0',
-    pageAndVersion: '门户首页标准...(v1.0.0)',
-    moduleAndVersion: '待办组件(v1.2.0)',
-    opContent: '修改了初始默认值【增加了公告选项卡，删除了事务信息选项卡】'
-  },
-  {
-    key: '10',
-    opDate: '2021-8-12 14:31:53',
-    opUser: '超级管理员',
-    frameVersion: 'V1.0.0',
-    pageAndVersion: '门户首页标准...(v1.0.0)',
-    moduleAndVersion: '待办组件(v1.2.0)',
-    opContent: '修改了初始默认值【增加了公告选项卡，删除了事务信息选项卡】'
-  }
-];
-import locale from 'ant-design-vue/es/date-picker/locale/zh_CN';
+import locale from 'ant-design-vue/es/locale/zh_CN';
 export default {
   name: 'IUlog',
-  data(){
+  data() {
     return {
       locale,
-      data,
-      columns,
-      moduleObject:{},
-      propData:this.$root.propData.compositeAttr||{}
+      moduleObject: {},
+      propData: this.$root.propData.compositeAttr || {},
+      tableType:0
     }
   },
   props: {
@@ -172,151 +62,179 @@ export default {
   created() {
     this.moduleObject = this.$root.moduleObject
     // console.log(this.moduleObject)
+    this.tableType = this.propData.defaultShowTab||0;
     this.convertAttrToStyleObject();
   },
   mounted() {
   },
-  destroyed() {},
-  methods:{
+  destroyed() { },
+  methods: {
+    handleChangeTable(e){
+        this.tableType = e.target.value;
+    },
     dateOnChange(date, dateString) {
       console.log(date, dateString);
+      
+      if(this.propData.linkageDemandPageModule&&this.propData.linkageDemandPageModule.length>0){
+        var moduleIdArray = [];
+        this.propData.linkageDemandPageModule.forEach(item=>{moduleIdArray.push(item.moduleId)});
+        this.sendBroadcastMessage({
+          type:"linkageDemand",
+          message:dateString,
+          rangeModule:moduleIdArray,
+          messageKey:this.propData.formFiledKey||this.propData.ctrlId,
+          triggerType:'MT'
+        })
+      }
+      if(this.propData.linkageResultPageModule&&this.propData.linkageResultPageModule.length>0){
+        var moduleIdArray = [];
+        this.propData.linkageResultPageModule.forEach(item=>{moduleIdArray.push(item.moduleId)});
+        this.sendBroadcastMessage({
+          type:"linkageResult",
+          message:dateString,
+          rangeModule:moduleIdArray,
+          messageKey:this.propData.formFiledKey||this.propData.ctrlId,
+          triggerType:'MT'
+        })
+      }
     },
 
     /**
      * 提供父级组件调用的刷新prop数据组件
      */
-    propDataWatchHandle(propData){
-      this.propData = propData.compositeAttr||{};
+    propDataWatchHandle(propData) {
+      this.propData = propData.compositeAttr || {};
+      this.tableType = this.propData.defaultShowTab||0;
       this.convertAttrToStyleObject();
     },
     /**
      * 把属性转换成样式对象
      */
-    convertAttrToStyleObject(){
+    convertAttrToStyleObject() {
       var styleObject = {};
-      if(this.propData.bgSize&&this.propData.bgSize=="custom"){
-        styleObject["background-size"]=(this.propData.bgSizeWidth?this.propData.bgSizeWidth.inputVal+this.propData.bgSizeWidth.selectVal:"auto")+" "+(this.propData.bgSizeHeight?this.propData.bgSizeHeight.inputVal+this.propData.bgSizeHeight.selectVal:"auto")
-      }else if(this.propData.bgSize){
-        styleObject["background-size"]=this.propData.bgSize;
+      if (this.propData.bgSize && this.propData.bgSize == "custom") {
+        styleObject["background-size"] = (this.propData.bgSizeWidth ? this.propData.bgSizeWidth.inputVal + this.propData.bgSizeWidth.selectVal : "auto") + " " + (this.propData.bgSizeHeight ? this.propData.bgSizeHeight.inputVal + this.propData.bgSizeHeight.selectVal : "auto")
+      } else if (this.propData.bgSize) {
+        styleObject["background-size"] = this.propData.bgSize;
       }
-      if(this.propData.positionX&&this.propData.positionX.inputVal){
-        styleObject["background-position-x"]=this.propData.positionX.inputVal+this.propData.positionX.selectVal;
+      if (this.propData.positionX && this.propData.positionX.inputVal) {
+        styleObject["background-position-x"] = this.propData.positionX.inputVal + this.propData.positionX.selectVal;
       }
-      if(this.propData.positionY&&this.propData.positionY.inputVal){
-        styleObject["background-position-y"]=this.propData.positionY.inputVal+this.propData.positionY.selectVal;
+      if (this.propData.positionY && this.propData.positionY.inputVal) {
+        styleObject["background-position-y"] = this.propData.positionY.inputVal + this.propData.positionY.selectVal;
       }
       for (const key in this.propData) {
         if (this.propData.hasOwnProperty.call(this.propData, key)) {
           const element = this.propData[key];
-          if(!element&&element!==false&&element!=0){
+          if (!element && element !== false && element != 0) {
             continue;
           }
           switch (key) {
             case "width":
             case "height":
-              styleObject[key]=element;
+              styleObject[key] = element;
               break;
             case "bgColor":
-              if(element&&element.hex8){
-                styleObject["background-color"]=element.hex8;
+              if (element && element.hex8) {
+                styleObject["background-color"] = element.hex8;
               }
               break;
             case "box":
-              if(element.marginTopVal){
-                styleObject["margin-top"]=`${element.marginTopVal}`;
+              if (element.marginTopVal) {
+                styleObject["margin-top"] = `${element.marginTopVal}`;
               }
-              if(element.marginRightVal){
-                styleObject["margin-right"]=`${element.marginRightVal}`;
+              if (element.marginRightVal) {
+                styleObject["margin-right"] = `${element.marginRightVal}`;
               }
-              if(element.marginBottomVal){
-                styleObject["margin-bottom"]=`${element.marginBottomVal}`;
+              if (element.marginBottomVal) {
+                styleObject["margin-bottom"] = `${element.marginBottomVal}`;
               }
-              if(element.marginLeftVal){
-                styleObject["margin-left"]=`${element.marginLeftVal}`;
+              if (element.marginLeftVal) {
+                styleObject["margin-left"] = `${element.marginLeftVal}`;
               }
-              if(element.paddingTopVal){
-                styleObject["padding-top"]=`${element.paddingTopVal}`;
+              if (element.paddingTopVal) {
+                styleObject["padding-top"] = `${element.paddingTopVal}`;
               }
-              if(element.paddingRightVal){
-                styleObject["padding-right"]=`${element.paddingRightVal}`;
+              if (element.paddingRightVal) {
+                styleObject["padding-right"] = `${element.paddingRightVal}`;
               }
-              if(element.paddingBottomVal){
-                styleObject["padding-bottom"]=`${element.paddingBottomVal}`;
+              if (element.paddingBottomVal) {
+                styleObject["padding-bottom"] = `${element.paddingBottomVal}`;
               }
-              if(element.paddingLeftVal){
-                styleObject["padding-left"]=`${element.paddingLeftVal}`;
+              if (element.paddingLeftVal) {
+                styleObject["padding-left"] = `${element.paddingLeftVal}`;
               }
               break;
             case "bgImgUrl":
-              styleObject["background-image"]=`url(${window.IDM.url.getWebPath(element)})`;
+              styleObject["background-image"] = `url(${window.IDM.url.getWebPath(element)})`;
               break;
             case "positionX":
               //背景横向偏移
-              
+
               break;
             case "positionY":
               //背景纵向偏移
-              
+
               break;
             case "bgRepeat":
               //平铺模式
-                styleObject["background-repeat"]=element;
+              styleObject["background-repeat"] = element;
               break;
             case "bgAttachment":
               //背景模式
-                styleObject["background-attachment"]=element;
+              styleObject["background-attachment"] = element;
               break;
             case "border":
-              if(element.border.top.width>0){
-                styleObject["border-top-width"]=element.border.top.width+element.border.top.widthUnit;
-                styleObject["border-top-style"]=element.border.top.style;
-                if(element.border.top.colors.hex8){
-                  styleObject["border-top-color"]=element.border.top.colors.hex8;
+              if (element.border.top.width > 0) {
+                styleObject["border-top-width"] = element.border.top.width + element.border.top.widthUnit;
+                styleObject["border-top-style"] = element.border.top.style;
+                if (element.border.top.colors.hex8) {
+                  styleObject["border-top-color"] = element.border.top.colors.hex8;
                 }
               }
-              if(element.border.right.width>0){
-                styleObject["border-right-width"]=element.border.right.width+element.border.right.widthUnit;
-                styleObject["border-right-style"]=element.border.right.style;
-                if(element.border.right.colors.hex8){
-                  styleObject["border-right-color"]=element.border.right.colors.hex8;
+              if (element.border.right.width > 0) {
+                styleObject["border-right-width"] = element.border.right.width + element.border.right.widthUnit;
+                styleObject["border-right-style"] = element.border.right.style;
+                if (element.border.right.colors.hex8) {
+                  styleObject["border-right-color"] = element.border.right.colors.hex8;
                 }
               }
-              if(element.border.bottom.width>0){
-                styleObject["border-bottom-width"]=element.border.bottom.width+element.border.bottom.widthUnit;
-                styleObject["border-bottom-style"]=element.border.bottom.style;
-                if(element.border.bottom.colors.hex8){
-                  styleObject["border-bottom-color"]=element.border.bottom.colors.hex8;
+              if (element.border.bottom.width > 0) {
+                styleObject["border-bottom-width"] = element.border.bottom.width + element.border.bottom.widthUnit;
+                styleObject["border-bottom-style"] = element.border.bottom.style;
+                if (element.border.bottom.colors.hex8) {
+                  styleObject["border-bottom-color"] = element.border.bottom.colors.hex8;
                 }
               }
-              if(element.border.left.width>0){
-                styleObject["border-left-width"]=element.border.left.width+element.border.left.widthUnit;
-                styleObject["border-left-style"]=element.border.left.style;
-                if(element.border.left.colors.hex8){
-                  styleObject["border-left-color"]=element.border.left.colors.hex8;
+              if (element.border.left.width > 0) {
+                styleObject["border-left-width"] = element.border.left.width + element.border.left.widthUnit;
+                styleObject["border-left-style"] = element.border.left.style;
+                if (element.border.left.colors.hex8) {
+                  styleObject["border-left-color"] = element.border.left.colors.hex8;
                 }
               }
-              
-              styleObject["border-top-left-radius"]=element.radius.leftTop.radius+element.radius.leftTop.radiusUnit;
-              styleObject["border-top-right-radius"]=element.radius.rightTop.radius+element.radius.rightTop.radiusUnit;
-              styleObject["border-bottom-left-radius"]=element.radius.leftBottom.radius+element.radius.leftBottom.radiusUnit;
-              styleObject["border-bottom-right-radius"]=element.radius.rightBottom.radius+element.radius.rightBottom.radiusUnit;
+
+              styleObject["border-top-left-radius"] = element.radius.leftTop.radius + element.radius.leftTop.radiusUnit;
+              styleObject["border-top-right-radius"] = element.radius.rightTop.radius + element.radius.rightTop.radiusUnit;
+              styleObject["border-bottom-left-radius"] = element.radius.leftBottom.radius + element.radius.leftBottom.radiusUnit;
+              styleObject["border-bottom-right-radius"] = element.radius.rightBottom.radius + element.radius.rightBottom.radiusUnit;
               break;
             case "font":
-              styleObject["font-family"]=element.fontFamily;
-              if(element.fontColors.hex8){
-                styleObject["color"]=element.fontColors.hex8;
+              styleObject["font-family"] = element.fontFamily;
+              if (element.fontColors.hex8) {
+                styleObject["color"] = element.fontColors.hex8;
               }
-              styleObject["font-weight"]=element.fontWeight&&element.fontWeight.split(" ")[0];
-              styleObject["font-style"]=element.fontStyle;
-              styleObject["font-size"]=element.fontSize+element.fontSizeUnit;
-              styleObject["line-height"]=element.fontLineHeight+(element.fontLineHeightUnit=="-"?"":element.fontLineHeightUnit);
-              styleObject["text-align"]=element.fontTextAlign;
-              styleObject["text-decoration"]=element.fontDecoration;
+              styleObject["font-weight"] = element.fontWeight && element.fontWeight.split(" ")[0];
+              styleObject["font-style"] = element.fontStyle;
+              styleObject["font-size"] = element.fontSize + element.fontSizeUnit;
+              styleObject["line-height"] = element.fontLineHeight + (element.fontLineHeightUnit == "-" ? "" : element.fontLineHeightUnit);
+              styleObject["text-align"] = element.fontTextAlign;
+              styleObject["text-decoration"] = element.fontDecoration;
               break;
           }
         }
       }
-      window.IDM.setStyleToPageHead(this.moduleObject.id,styleObject);
+      window.IDM.setStyleToPageHead(this.moduleObject.id, styleObject);
     },
     /**
      * 组件通信：接收消息的方法
@@ -328,8 +246,8 @@ export default {
      *  isAcross:如果为true则代表发送来源是其他页面的组件，默认为false
      * } object 
      */
-    receiveBroadcastMessage(object){
-      console.log("组件收到消息",object)
+    receiveBroadcastMessage(object) {
+      console.log("组件收到消息", object)
     },
     /**
      * 组件通信：发送消息的方法
@@ -342,25 +260,27 @@ export default {
      *  globalSend:如果为true则全站发送消息，注意全站rangeModule是无效的，只有className才有效，默认为false
      * } object 
      */
-    sendBroadcastMessage(object){
-        window.IDM.broadcast&&window.IDM.broadcast.send(object);
+    sendBroadcastMessage(object) {
+      window.IDM.broadcast && window.IDM.broadcast.send(object);
     }
   }
 }
 </script>
 <style lang="scss">
-.ulog-container{
-    .uc-topbox{
-        display: flex;
-        justify-content: space-between;
-        .uc-title{
-            font-weight: bold;
-        }
-        .uc-search-condition{
-        }
+.ulog-container {
+  .uc-topbox {
+    display: flex;
+    justify-content: space-between;
+
+    .uc-title {
+      font-weight: bold;
     }
-    .uc-table-box{
-      margin-top: 20px;
-    }
+
+    .uc-search-condition {}
+  }
+
+  .uc-table-box {
+    margin-top: 20px;
+  }
 }
 </style>

@@ -26,6 +26,23 @@
                     "text": "卡片标题",
                     "bindKey": "cardTitle",
                     "default": "日志监控"
+                },
+                {
+                    "type": "radio",
+                    "layoutType": "inline",
+                    "text": "默认显示",
+                    "bindKey": "defaultShowTab",
+                    "dictionary": [
+                        {
+                            "label": "控制台",
+                            "value": 0
+                        },
+                        {
+                            "label": "页面配置",
+                            "value": 1
+                        }
+                    ],
+                    "default": 0
                 }
             ]
         },
@@ -254,6 +271,44 @@
                     "layoutType": "block",
                     "text": "文字",
                     "bindKey": "font"
+                }
+            ]
+        },
+        {
+            "type": "group",
+            "text": "高级属性",
+            "desc": "点击？查看高级设置用法指南",
+            "children": [
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "时间标识",
+                    "bindKey": "formFiledKey",
+                    "desc": "如果为空则会时用唯一标识作为key",
+                    "default": ""
+                },
+                {
+                    "type": "group",
+                    "text": "联动组件",
+                    "desc": "当选择的数据有变动会联动这里选择的组件，把当前选中的对象传递给这些组件",
+                    "children": [
+                        {
+                            "type": "pageModuleSelect",
+                            "layoutType": "block",
+                            "text": "需求组件范围",
+                            "desc": "当前选项变更需要联动其他组件需求值（比如下拉选项数据等）的组件范围",
+                            "bindKey": "linkageDemandPageModule",
+                            "multiple": true
+                        },
+                        {
+                            "type": "pageModuleSelect",
+                            "layoutType": "block",
+                            "text": "结果组件范围",
+                            "desc": "当前选项变更需要联动其他组件变更结果值的组件范围",
+                            "bindKey": "linkageResultPageModule",
+                            "multiple": true
+                        }
+                    ]
                 }
             ]
         }
