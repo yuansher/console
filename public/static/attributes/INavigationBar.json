@@ -115,6 +115,28 @@
                             "multiple": true
                         }
                     ]
+                },
+                {
+                    "type": "table",
+                    "text": "用户下拉菜单",
+                    "bindKey": "userMenuList",
+                    "tabText": "菜单[index]",
+                    "children": [
+                        {
+                            "type": "input",
+                            "layoutType": "inline",
+                            "text": "菜单名称",
+                            "bindKey": "title",
+                            "default": ""
+                        },{
+                            "type": "actionSelect",
+                            "layoutType": "block",
+                            "text": "点击时动作",
+                            "bindKey": "clickFunction",
+                            "desc": "点击此菜单的时候会调用设置的自定义函数，接收参数为格式为{...自定义的}",
+                            "multiple": true
+                        }
+                    ]
                 }
             ]
         },
@@ -365,6 +387,23 @@
                     "layoutType": "block",
                     "text": "用户名显示自定义函数",
                     "bindKey": "userInfoFunction",
+                    "desc": "接收参数格式为{customParam:自定义的}",
+                    "multiple": false
+                },
+                {
+                    "type": "textarea",
+                    "layoutType": "block",
+                    "text": "用户头像显示字段",
+                    "bindKey": "userPhotoField",
+                    "desc": "根据用户信息接口返回数据格式指定字段，比如用户信息的值为{data:{userPhoto:''}}，则这里应该填写data.userPhoto",
+                    "default": "",
+                    "placeholder": "示例：data.userPhoto 或者 [0].data[0].userPhoto"
+                },
+                {
+                    "type": "actionSelect",
+                    "layoutType": "block",
+                    "text": "用户头像显示自定义函数",
+                    "bindKey": "userPhotoFunction",
                     "desc": "接收参数格式为{customParam:自定义的}",
                     "multiple": false
                 }

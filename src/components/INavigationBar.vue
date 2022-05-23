@@ -32,7 +32,14 @@
             </a-menu-item>
           </a-menu>
         </a-dropdown>
-        <div class="user-info"><a-avatar icon="user" /> {{userName}}</div>
+        <a-dropdown>
+          <div class="user-info"><a-avatar icon="user" :src="userPhoto||IDM.url.getModuleAssetsWebPath(require('../assets/default_bg_userphoto.png'),moduleObject)"/> {{userName}}</div>
+          <a-menu slot="overlay" @click="clickUserMenuHandle">
+            <a-menu-item v-for="(item,index) in propData.userMenuList" :key="index">
+              <a href="javascript:;">{{item.title}}</a>
+            </a-menu-item>
+          </a-menu>
+        </a-dropdown>
       </div>
     </div>
   </div>
@@ -45,7 +52,8 @@ export default {
     return {
       moduleObject:{},
       propData:this.$root.propData.compositeAttr||{},
-      userName:"用户名"
+      userName:"用户名",
+      userPhoto:""
     }
   },
   props: {
@@ -55,30 +63,37 @@ export default {
     // console.log(this.moduleObject)
     this.convertAttrToStyleObject();
     if(this.moduleObject.env=="production"){
-      var dataObject = {IDM:window.IDM};
-          dataObject["userInfo"] = IDM.user.getCurrentUserInfo();
-
-          var _defaultVal = "";
-          if(this.propData.userInfoField){
-            var filedExp = this.propData.userInfoField;
-            filedExp = "userInfo"+(filedExp.startsWiths("[")?"":".")+filedExp;
-            _defaultVal = window.IDM.express.replace.call(this, "@["+filedExp+"]", dataObject);
-          }
-          
-          var dataFunction = this.propData.userInfoFunction;
-          dataFunction&&dataFunction.forEach(item=>{
-            _defaultVal = window[item.name]&&window[item.name].call(this,{
-              customParam:item.param,
-              ...dataObject
-            });
-          })
-          this.userName = _defaultVal;
+      this.userName = this.getUserInfoField("userInfoField","userInfoFunction");
+      this.userPhoto = this.getUserInfoField("userPhotoField","userPhotoFunction");
     }
   },
   mounted() {
   },
   destroyed() {},
   methods:{
+    /**
+     * 用户信息获取
+     */
+    getUserInfoField(fieldName,fieldFun){
+      var dataObject = {IDM:window.IDM};
+      dataObject["userInfo"] = IDM.user.getCurrentUserInfo();
+
+      var _defaultVal = "";
+      if(this.propData[fieldName]){
+        var filedExp = this.propData[fieldName];
+        filedExp = "userInfo"+(filedExp.startsWiths("[")?"":".")+filedExp;
+        _defaultVal = window.IDM.express.replace.call(this, "@["+filedExp+"]", dataObject);
+      }
+      
+      var dataFunction = this.propData[fieldFun];
+      dataFunction&&dataFunction.forEach(item=>{
+        _defaultVal = window[item.name]&&window[item.name].call(this,{
+          customParam:item.param,
+          ...dataObject
+        });
+      })
+      return _defaultVal;
+    },
     menuClick(item){
       if(!item.url){
         return;
@@ -239,6 +254,9 @@ export default {
       }
       window.IDM.setStyleToPageHead(this.moduleObject.id,styleObject);
     },
+    /**
+     * 我要建菜单点击事件
+     */
     clickNewHandle(e){
       let that = this;
       if(this.moduleObject.env=="develop"){
@@ -255,6 +273,40 @@ export default {
        * ]
        */
       var clickNewFunction = this.propData.newMenuList;
+      clickNewFunction.forEach((item,index)=>{
+        if(index==e.key){
+          if(item.clickFunction&&item.clickFunction.length>0){
+            item.clickFunction.forEach(fitem=>{
+              window[fitem.name]&&window[fitem.name].call(this,{
+                urlData:urlObject,
+                pageId,
+                customParam:fitem.param,
+                _this:this
+              });
+            })
+          }
+        }
+      })
+    },
+    /**
+     * 用户菜单点击事件
+     */
+    clickUserMenuHandle(e){
+      let that = this;
+      if(this.moduleObject.env=="develop"){
+        //开发模式下不执行此事件
+        return;
+      }
+      //获取所有的URL参数、页面ID（pageId）、以及所有组件的返回值（用范围值去调用IDM提供的方法取出所有的组件值）
+      let urlObject = window.IDM.url.queryObject(),
+      pageId = window.IDM.broadcast&&window.IDM.broadcast.pageModule?window.IDM.broadcast.pageModule.id:"";
+      //自定义函数
+      /**
+       * [
+       * {name:"",param:{}}
+       * ]
+       */
+      var clickNewFunction = this.propData.userMenuList;
       clickNewFunction.forEach((item,index)=>{
         if(index==e.key){
           if(item.clickFunction&&item.clickFunction.length>0){
