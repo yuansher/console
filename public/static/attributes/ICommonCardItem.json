@@ -829,6 +829,14 @@
                     "placeholder":"示例：modulePreviewImgObject",
                     "default":"modulePreviewImgObject",
                     "display":"@[showImageBox]"
+                },
+                {
+                    "type": "actionSelect",
+                    "layoutType": "block",
+                    "text": "卡片点击事件",
+                    "bindKey": "cardClickFunction",
+                    "desc": "卡片点击的时候需要自定义的时候可以使用这里设置自定义函数执行动作，接收参数为格式为{...自定义的,itemData:整条数据对象}",
+                    "multiple": true
                 }
             ]
         }

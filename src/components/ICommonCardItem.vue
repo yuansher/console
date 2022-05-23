@@ -13,7 +13,7 @@
       idm-container-index  组件的内部容器索引，不重复唯一且不变，必选
     -->
     <div class="common-card-item-outbox">
-      <div class="common-card-item-box" v-for="(item,index) in listData" :key="index">
+      <div class="common-card-item-box" @click="itemClickHandle(item)" v-for="(item,index) in listData" :key="index">
       
         <template v-for="alertItem in propData.alertOptionList">
           <div class="common-card-item-tip" v-if="
@@ -38,8 +38,8 @@
         <div v-if="propData.showImageBox" class="cc-item-img-container">
           <img v-if="item[propData.imageObjectDataFiled].length>0" :style="getStyle('itemimg',item[propData.imageObjectDataFiled][0])" :src="IDM.url.getWebPath(item[propData.imageObjectDataFiled][0].ourl)"/>
           <div class="cc-item-img-shade"></div>
-          <div class="cc-item-img-preview-button" v-if="propData.showPreviewButton" @click="previewComponent(item)">点击预览</div>
-          <div class="cc-item-img-count-box" @click="showModal(item)">
+          <div class="cc-item-img-preview-button" v-if="propData.showPreviewButton" @click="previewComponent($event,item)">点击预览</div>
+          <div class="cc-item-img-count-box" @click="showModal($event,item)">
             <svg t="1634889265711" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10905"><path d="M833.4016 222.45546667H82.56746667c-26.30506667 0-47.70133333 21.5104-47.70133334 48.04906666v588.0608c0 26.47253333 21.39626667 48.0416 47.70133334 48.0416h750.8352c26.3328 0 47.6928-21.54666667 47.6928-48.0416V270.47466667c-0.05653333-26.5696-21.36-48.0192-47.69386667-48.0192z m-47.6768 96.02453333V751.34933333L676.6784 618.0576c-4.02346667-4.86506667-11.11786667-5.75573333-16.20906667-2.0288l-126.84586666 93.26506667-217.8016-213.3504c-2.5344-2.49493333-6.03306667-3.584-9.42293334-3.3632-3.54773333 0.31146667-6.67306667 2.1952-8.66773333 5.06133333L130.2528 738.92266667V318.48h655.472z m-286.02773333 180.032c0-43.03466667 34.752-78.0448 77.44426666-78.0448 42.7424 0 77.43573333 35.0112 77.43573334 78.0448 0 42.93333333-34.69333333 77.97653333-77.43573334 77.97653333-42.69226667 0-77.44426667-35.0432-77.44426666-77.97653333z m450.928 233.98186667c-19.74293333 0-35.7472-16.12693333-35.7472-35.96373334V188.42133333H171.97546667c-19.74293333 0-35.73333333-16.0736-35.73333334-35.9584 0-19.86986667 15.9904-35.9584 35.73333334-35.9584h778.6496c19.73013333 0 35.76426667 16.08853333 35.76426666 35.9584v544.11093334c-0.00106667 19.79306667-16.03413333 35.92-35.76426666 35.92z" p-id="10906"></path></svg>
             {{item[propData.imageObjectDataFiled].length}}
           </div>
@@ -433,6 +433,34 @@ export default {
             });
         });
     },
+    itemClickHandle(itemData){
+      let that = this;
+      if(this.moduleObject.env=="develop"){
+        //开发模式下不执行此事件
+        return;
+      }
+      //获取所有的URL参数、页面ID（pageId）、以及所有组件的返回值（用范围值去调用IDM提供的方法取出所有的组件值）
+      let urlObject = window.IDM.url.queryObject(),
+      pageId = window.IDM.broadcast&&window.IDM.broadcast.pageModule?window.IDM.broadcast.pageModule.id:"";
+      
+      //自定义函数
+      /**
+       * [
+       * {name:"",param:{}}
+       * ]
+       */
+      var clickFunction = this.propData.cardClickFunction;
+      clickFunction&&clickFunction.forEach(item=>{
+        window[item.name]&&window[item.name].call(this,{
+          urlData:urlObject,
+          pageId,
+          customParam:item.param,
+          _this:this,
+          itemData
+        });
+      })
+      
+    },
     /**
      * 移除事件
      */
@@ -510,6 +538,8 @@ export default {
       return styleObject;
     },
     showModal(item) {
+      e.stopPropagation();
+      e.preventDefault();
       if(!item[this.propData.imageObjectDataFiled]||(item[this.propData.imageObjectDataFiled]&&item[this.propData.imageObjectDataFiled].length==0)){
         return;
       }
@@ -719,7 +749,9 @@ export default {
     /**
      * 预览组件
      */
-    previewComponent(itemData){
+    previewComponent(e,itemData){
+      e.stopPropagation();
+      e.preventDefault();
       let that = this;
       if(this.moduleObject.env=="develop"){
         //开发模式下不执行此事件
