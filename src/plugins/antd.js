@@ -18,6 +18,7 @@ import 'ant-design-vue/lib/input/style/css';
 import 'ant-design-vue/lib/pagination/style/css';
 import 'ant-design-vue/lib/modal/style/css';
 import 'ant-design-vue/lib/empty/style/css';
+import 'ant-design-vue/lib/spin/style/css';
 import {
   Button,
   Dropdown,
@@ -36,7 +37,8 @@ import {
   Pagination,
   ConfigProvider,
   Modal,
-  Empty
+  Empty,
+  Spin
 } from 'ant-design-vue';
 
 /* v1.1.3+ registration methods */
@@ -58,4 +60,5 @@ Vue.use(Pagination);
 Vue.use(ConfigProvider);
 Vue.use(Modal);
 Vue.use(Empty);
+Vue.use(Spin);
 Vue.prototype.$confirm = Modal.confirm;

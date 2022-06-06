@@ -13,7 +13,7 @@
       idm-container-index  组件的内部容器索引，不重复唯一且不变，必选
     -->
     <div class="common-card-item-outbox">
-      <div class="common-card-item-box" @click="itemClickHandle(item)" v-for="(item,index) in listData" :key="index">
+      <div class="common-card-item-box" @click="itemClickHandle(item)" v-for="(item,index) in listData||[]" :key="index">
       
         <template v-for="alertItem in propData.alertOptionList">
           <div class="common-card-item-tip" v-if="
@@ -173,7 +173,8 @@
         </div>
       </div>
       <div v-if="!listData||(listData&&listData.length==0)" style="text-align: center;width:100%">
-        <a-empty :image-style="{margin: '10px auto'}" :description="propData.emptyDescription||'暂无数据'"/>
+        <a-spin v-if="listData==undefined" />
+        <a-empty v-else :image-style="{margin: '10px auto'}" :description="propData.emptyDescription||'暂无数据'"/>
       </div>
     </div>
     <a-modal
@@ -255,7 +256,7 @@ export default {
         subtitleDataFiled:"moduleRemark",
         imageObjectDataFiled:"modulePreviewImgObject"
       },
-      listData:[],
+      listData:undefined,
       visible:false,
       //当前预览图片的组件对象
       CurrentModuleObject:{},
@@ -727,6 +728,10 @@ export default {
       window.IDM.setStyleToPageHead(this.moduleObject.id +" .common-card-item-box",styleObject);
     },
     formatSourceData(data){
+      if(this.listData==undefined){
+        this.listData = [];
+      }
+      
       var filedExp = this.propData.dataFiled;
       var dataObject = {IDM:window.IDM,...data};
       var _defaultVal = window.IDM.express.replace.call(this, "@["+filedExp+"]", dataObject);
