@@ -102,6 +102,13 @@
             "className": "ICommonCardItem",
             "comType": "common",
             "comLangue": "vue"
+        },
+        {
+            "classId": "idm.componet.console.ipoagelistitem",
+            "comName": "页面管理列表",
+            "className": "IPageListItem",
+            "comType": "common",
+            "comLangue": "vue"
         }
     ]
 }

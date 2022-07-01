@@ -33,12 +33,12 @@
       </div>
       <div v-show="tableType==0" class="uc-table-box">
         <div class="drag_container" :idm-ctrl-id="moduleObject.id" idm-container-index="1">
-          
+
         </div>
       </div>
       <div v-show="tableType==1" class="uc-table-box">
         <div class="drag_container" :idm-ctrl-id="moduleObject.id" idm-container-index="2">
-          
+
         </div>
       </div>
     </div>
@@ -74,9 +74,9 @@ export default {
     },
     dateOnChange(date, dateString) {
       console.log(date, dateString);
-      
+
       if(this.propData.linkageDemandPageModule&&this.propData.linkageDemandPageModule.length>0){
-        var moduleIdArray = [];
+        let moduleIdArray = [];
         this.propData.linkageDemandPageModule.forEach(item=>{moduleIdArray.push(item.moduleId)});
         this.sendBroadcastMessage({
           type:"linkageDemand",
@@ -87,7 +87,7 @@ export default {
         })
       }
       if(this.propData.linkageResultPageModule&&this.propData.linkageResultPageModule.length>0){
-        var moduleIdArray = [];
+        let moduleIdArray = [];
         this.propData.linkageResultPageModule.forEach(item=>{moduleIdArray.push(item.moduleId)});
         this.sendBroadcastMessage({
           type:"linkageResult",
@@ -244,7 +244,7 @@ export default {
      *  message:{发送的时候传输的消息对象数据}
      *  messageKey:"消息数据的key值，代表数据类型是什么，常用于表单交互上，比如通过这个key判断是什么数据"
      *  isAcross:如果为true则代表发送来源是其他页面的组件，默认为false
-     * } object 
+     * } object
      */
     receiveBroadcastMessage(object) {
       console.log("组件收到消息", object)
@@ -258,7 +258,7 @@ export default {
      *  rangeModule:"为空发送给全部，根据配置的属性中设定的值（值的内容是组件的packageid数组），不取子表的，比如直接 this.$root.propData.compositeAttr["attrKey"]（注意attrKey是属性中定义的bindKey）,这里的格式为：['1','2']"",
      *  className:"指定的组件类型，比如只给待办组件发送，然后再去过滤上面的值"
      *  globalSend:如果为true则全站发送消息，注意全站rangeModule是无效的，只有className才有效，默认为false
-     * } object 
+     * } object
      */
     sendBroadcastMessage(object) {
       window.IDM.broadcast && window.IDM.broadcast.send(object);
