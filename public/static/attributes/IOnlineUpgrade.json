@@ -40,6 +40,58 @@
                     "text": "上传接口",
                     "bindKey": "uploadUrl",
                     "default": "/ctrl/idm/console/fileupload"
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "弹窗标题",
+                    "bindKey": "modalTitle",
+                    "default": "导入选项"
+                },
+                {
+                    "type": "switch",
+                    "layoutType": "inline",
+                    "text": "显示弹窗",
+                    "bindKey": "modalShow",
+                    "desc":"设置是否默认显示弹窗，建议配置的时候才设置为true，方便只管看出效果",
+                    "default": false
+                }
+            ]
+        },
+        {
+            "type": "table",
+            "text": "导入选项",
+            "bindKey": "importOptionList",
+            "tabText": "选项[index]",
+            "children": [
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "选项标识",
+                    "bindKey": "value",
+                    "default": ""
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "选项名称",
+                    "bindKey": "title",
+                    "default": ""
+                },
+                {
+                    "type": "textarea",
+                    "layoutType": "block",
+                    "text": "子标题",
+                    "bindKey": "subTitle",
+                    "default": ""
+                },
+                {
+                    "type": "switch",
+                    "layoutType": "inline",
+                    "text": "默认选中",
+                    "bindKey": "defaultCheck",
+                    "desc":"设置是否默认选中",
+                    "default": true
                 }
             ]
         },
@@ -290,6 +342,14 @@
                             "multiple": true
                         }
                     ]
+                },
+                {
+                    "type": "actionSelect",
+                    "layoutType": "block",
+                    "text": "导入弹窗确认自定义函数",
+                    "bindKey": "modalClickFunction",
+                    "desc": "导入弹窗确认点击触发的事件，接收参数为格式为{...自定义的,checkedValues:当前选择的value数组,importOptionList:整个选项数组,UploadResultInfo:上传的文件返回信息}",
+                    "multiple": true
                 }
             ]
         }
