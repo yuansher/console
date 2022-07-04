@@ -789,6 +789,18 @@
           flex-shrink: 0;
           flex-direction: column;
           justify-content: space-between;
+          overflow: hidden;
+          overflow-y: auto;
+          &::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+          }
+          &::-webkit-scrollbar {
+            background: transparent;
+          }
+          &::-webkit-scrollbar-thumb {
+            background: rgba(37,36,36,.57);
+          }
 
           .overflowHidden {
             white-space: nowrap;

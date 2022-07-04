@@ -136,7 +136,6 @@ export default {
       });
     },
     onCheckAllChange(e) {
-      debugger
       Object.assign(this, {
         checkedList: e.target.checked ? this.optionList : [],
         indeterminate: false,
@@ -257,11 +256,11 @@ export default {
               break;
             case "positionX":
               //背景横向偏移
-              
+
               break;
             case "positionY":
               //背景纵向偏移
-              
+
               break;
             case "bgRepeat":
               //平铺模式
@@ -300,7 +299,7 @@ export default {
                   styleObject["border-left-color"]=element.border.left.colors.hex8;
                 }
               }
-              
+
               styleObject["border-top-left-radius"]=element.radius.leftTop.radius+element.radius.leftTop.radiusUnit;
               styleObject["border-top-right-radius"]=element.radius.rightTop.radius+element.radius.rightTop.radiusUnit;
               styleObject["border-bottom-left-radius"]=element.radius.leftBottom.radius+element.radius.leftBottom.radiusUnit;
@@ -318,7 +317,7 @@ export default {
               styleObject1["line-height"]=element.fontLineHeight+(element.fontLineHeightUnit=="-"?"":element.fontLineHeightUnit);
               styleObject1["text-align"]=element.fontTextAlign;
               styleObject1["text-decoration"]=element.fontDecoration;
-              
+
                 window.IDM.setStyleToPageHead(this.moduleObject.id+" .online-upgrade-container .ant-upload-notice",styleObject1);
               break;
           }
@@ -413,7 +412,7 @@ export default {
      *  message:{发送的时候传输的消息对象数据}
      *  messageKey:"消息数据的key值，代表数据类型是什么，常用于表单交互上，比如通过这个key判断是什么数据"
      *  isAcross:如果为true则代表发送来源是其他页面的组件，默认为false
-     * } object 
+     * } object
      */
     receiveBroadcastMessage(object){
       console.log("组件收到消息",object)
@@ -427,7 +426,7 @@ export default {
      *  rangeModule:"为空发送给全部，根据配置的属性中设定的值（值的内容是组件的packageid数组），不取子表的，比如直接 this.$root.propData.compositeAttr["attrKey"]（注意attrKey是属性中定义的bindKey）,这里的格式为：['1','2']"",
      *  className:"指定的组件类型，比如只给待办组件发送，然后再去过滤上面的值"
      *  globalSend:如果为true则全站发送消息，注意全站rangeModule是无效的，只有className才有效，默认为false
-     * } object 
+     * } object
      */
     sendBroadcastMessage(object){
         window.IDM.broadcast&&window.IDM.broadcast.send(object);
