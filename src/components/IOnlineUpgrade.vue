@@ -43,6 +43,33 @@
             </div>
           </a-upload-dragger>
         </a-spin>
+        <a-modal
+          :title="propData.modalTitle"
+          :visible="visible"
+          :confirm-loading="confirmLoading"
+          okText="确定"
+          cancelText="取消"
+          :bodyStyle="{maxHeight:'500px',overflow:'auto'}"
+          :width="800"
+          @ok="handleOk"
+          @cancel="handleCancel"
+        >
+          <div :style="{ borderBottom: '1px solid #E9E9E9',paddingBottom:'10px',marginBottom:'10px' }">
+            <a-checkbox :indeterminate="indeterminate" :checked="checkAll" @change="onCheckAllChange">
+              全选
+            </a-checkbox>
+          </div>
+          <a-checkbox-group v-model="checkedValues" @change="onChange" >
+            <div v-for="(item,index) in propData.importOptionList" :key="index">
+               <a-checkbox :value="item.value">
+                <b>{{item.title}}</b>
+                <div style="color:#999">
+                  {{item.subTitle}}
+                </div>
+              </a-checkbox>
+            </div>
+          </a-checkbox-group>
+        </a-modal>
     </div>
   </div>
 </template>
@@ -55,11 +82,39 @@ export default {
       moduleObject:{},
       thisValue: [
       ],
-      propData:this.$root.propData.compositeAttr||{},
+      propData:this.$root.propData.compositeAttr||{
+        importOptionList:[
+          {
+            value:"pageUpdateNew",
+            title:"更新页面最新版本",
+            subTitle:"更新页面最新版本更新页面最新版本更新页面最新版本更新页面最新版本更新页面最新版本更新页面最新版本更新页面最新版本更新页面最新版本",
+            defaultCheck:true
+          },
+          {
+            value:"pageUpdateNew1",
+            title:"更新页面最新版本",
+            subTitle:"更新页面最新版本更新页面最新版本更新页面最新版本更新页面最新版本更新页面最新版本更新页面最新版本更新页面最新版本更新页面最新版本",
+            defaultCheck:false
+          },
+          {
+            value:"pageUpdateNew2",
+            title:"更新页面最新版本",
+            subTitle:"更新页面最新版本更新页面最新版本更新页面最新版本更新页面最新版本更新页面最新版本更新页面最新版本更新页面最新版本更新页面最新版本",
+            defaultCheck:true
+          }
+        ]
+      },
       spinning:false,
       spinningTip:"正在上传解析升级中...",
       alertMsg:"",
-      msgType:""
+      msgType:"",
+      visible: true,
+      confirmLoading: false,
+      UploadResultInfo:{},
+      indeterminate: false,
+      optionList:[],
+      checkAll:false,
+      checkedValues:[]
     }
   },
   props: {
@@ -73,6 +128,65 @@ export default {
   },
   destroyed() {},
   methods:{
+     onChange(checkedValues) {
+      console.log('checked = ', checkedValues);
+      this.checkAll = checkedValues.length==this.propData.importOptionList.length;
+      this.propData.importOptionList&&this.propData.importOptionList.forEach(item=>{
+        item.defaultCheck = checkedValues.indexOf(item.value)>-1
+      });
+    },
+    onCheckAllChange(e) {
+      debugger
+      Object.assign(this, {
+        checkedList: e.target.checked ? this.optionList : [],
+        indeterminate: false,
+        checkAll: e.target.checked,
+      });
+      this.propData.importOptionList&&this.propData.importOptionList.forEach(item=>{
+        item.defaultCheck=e.target.checked;
+      });
+      this.initStartCheck();
+    },
+    initStartCheck(){
+      this.checkedValues = [];
+      this.propData.importOptionList&&this.propData.importOptionList.forEach(item=>{
+        item.defaultCheck&&this.checkedValues.push(item.value)
+      });
+      this.checkAll = this.checkedValues.length==this.propData.importOptionList.length;
+    },
+    showModal() {
+      this.visible = true;
+    },
+    handleOk(e) {
+      let that = this;
+      this.confirmLoading = true;
+      let urlObject = window.IDM.url.queryObject(),
+      pageId = window.IDM.broadcast&&window.IDM.broadcast.pageModule?window.IDM.broadcast.pageModule.id:"";
+      if(this.propData.modalClickFunction&&this.propData.modalClickFunction.length>0){
+        var modalClickFunction = this.propData.modalClickFunction;
+        modalClickFunction.forEach(item=>{
+          window[item.name]&&window[item.name].call(this,{
+            urlData:urlObject,
+            pageId,
+            customParam:item.param,
+            _this:this,
+            checkedValues:this.checkedValues,
+            importOptionList:this.propData.importOptionList,
+            UploadResultInfo:this.UploadResultInfo,
+            done:function(){
+              that.visible = false;
+              that.confirmLoading = false;
+              that.onClose();
+            }
+          });
+        })
+      }
+      // setTimeout(() => {
+      // }, 2000);
+    },
+    handleCancel(e) {
+      this.visible = false;
+    },
     /**
      * 提供父级组件调用的刷新prop数据组件
      */
@@ -211,6 +325,9 @@ export default {
         }
       }
       window.IDM.setStyleToPageHead(this.moduleObject.id,styleObject);
+
+      this.initStartCheck();
+      this.visible = this.propData.modalShow;
     },
     // 上传
     uploadFile(file) {
@@ -238,7 +355,13 @@ export default {
          * }
          */
         // console.log("上传数据结果",resultData);
+        that.UploadResultInfo = resultData;
         if(res.data.code=="200"){
+          //判断类型
+          if(resultData.upgradeType=="setting"){
+            //弹出层
+            that.visible = true;
+          }
           that.alertMsg = resultData.msgText;
           that.msgType = "success";
           //发送消息通知

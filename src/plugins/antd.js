@@ -19,6 +19,7 @@ import 'ant-design-vue/lib/pagination/style/css';
 import 'ant-design-vue/lib/modal/style/css';
 import 'ant-design-vue/lib/empty/style/css';
 import 'ant-design-vue/lib/spin/style/css';
+import 'ant-design-vue/lib/checkbox/style/css';
 import {
   Button,
   Dropdown,
@@ -63,5 +64,4 @@ Vue.use(Modal);
 Vue.use(Empty);
 Vue.use(Spin);
 Vue.use(Checkbox);
-
 Vue.prototype.$confirm = Modal.confirm;
