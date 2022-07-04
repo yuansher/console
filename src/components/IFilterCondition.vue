@@ -25,9 +25,67 @@
           </div>
         </div>
         <div v-else></div>
-        <a-button v-if="propData.rightButtonDisplay" class="icc-op-button" @click="clickButtonHandle" :type="propData.rightButtoType||'default'">
-          {{propData.rightButtoTitle}}
-        </a-button>
+        <div v-if="propData.showActionMenu" class="cc-item-bottom-right-action">
+          <!--按钮类型的-->
+          <template v-for="btnItem in propData.buttonOptionList" >
+            <a-button v-if="
+                    btnItem.type=='button'&&(btnItem.iconSvg || btnItem.buttonText) &&
+                    (btnItem.buttonShowType == 'default' ||
+                      (btnItem.buttonShowType == 'custom' &&
+                        getFieldCustomRender(
+                          btnItem,
+                          'buttonDataFunction'
+                        )))
+                  " :key="btnItem.key" :type="btnItem.buttoType" @click="commonEventFunHandle(btnItem.buttonCustomFunction, {configObject: btnItem })">
+            <svg
+                :style="
+                  getButtonSvgIconCustomFont(btnItem, 'iconSvgFont',true)
+                "
+                class="idm-common-filed-svg-icon"
+                v-if="btnItem.iconSvg && btnItem.iconSvg.length > 0"
+                aria-hidden="true"
+              >
+                <use :xlink:href="`#${btnItem.iconSvg[0]}`"></use>
+              </svg>
+              {{btnItem.buttonText}}
+            </a-button>
+          </template>
+          <!--菜单类型的-->
+          <a-dropdown v-show="isShowMoreIcon()" placement="bottomRight" :overlayClassName="moduleObject.id+'-ddbox'">
+            <svg-icon className="cc-item-svg-icon" iconClass="gengduo-shuxiang"></svg-icon>
+            <a-menu slot="overlay" @click="btnClickEventFunHandle($event,item)">
+              <template v-for="btnItem in propData.buttonOptionList">
+                <a-menu-item v-if="
+                    btnItem.type=='menu'&&(btnItem.iconSvg || btnItem.buttonText) &&
+                    (btnItem.buttonShowType == 'default' ||
+                      (btnItem.buttonShowType == 'custom' &&
+                        getFieldCustomRender(
+                          btnItem,
+                          'buttonDataFunction'
+                        )))
+                  " :key="btnItem.key">
+                  <svg
+                    :style="
+                      getButtonSvgIconCustomFont(btnItem, 'iconSvgFont',true)
+                    "
+                    class="idm-common-filed-svg-icon"
+                    v-if="btnItem.iconSvg && btnItem.iconSvg.length > 0"
+                    aria-hidden="true"
+                  >
+                    <use :xlink:href="`#${btnItem.iconSvg[0]}`"></use>
+                  </svg>
+                  <span v-if="btnItem.buttonText"
+                    :style="
+                      getButtonSvgIconCustomFont(btnItem, 'buttonTextFont')
+                    "
+                  >
+                    {{ btnItem.buttonText }}
+                  </span>
+                </a-menu-item>
+              </template>
+            </a-menu>
+          </a-dropdown>
+        </div>
       </div>
       <template v-for="(item,index) in conditionList">
         <div class="icc-condition-box" :key="index" v-show="!propData.defaultConditionNumber||(propData.defaultConditionNumber&&propData.defaultConditionNumber>=index+1)||isOpenAllCondition">
@@ -79,6 +137,95 @@ export default {
   },
   destroyed() {},
   methods:{
+    /**
+     * 按钮点击事件
+     */
+    btnClickEventFunHandle(event){
+      console.log(event,item);
+      this.propData.buttonOptionList&&this.propData.buttonOptionList.forEach(btnItem=>{
+        if(btnItem.key==event.key){
+          //自定义函数
+          this.commonEventFunHandle(btnItem.buttonCustomFunction, {
+            configObject: btnItem
+          });
+        }
+      })
+    },
+    /**
+     * 判断是否显示更多图标
+     */
+    isShowMoreIcon(){
+      let count = 0;
+      this.propData.buttonOptionList&&this.propData.buttonOptionList.forEach(btnItem=>{
+        if(btnItem.type=='menu'&&(btnItem.iconSvg || btnItem.buttonText) &&
+                        (btnItem.buttonShowType == 'default'||
+                          (btnItem.buttonShowType == 'custom' &&
+                            this.getFieldCustomRender(
+                              btnItem,
+                              'buttonDataFunction'
+                            )))){
+                              count=count+1;
+                            }
+      })
+      return count!==0;
+    },
+    /**
+     * 获取操作列按钮自定义图标的大小
+     */
+    getButtonSvgIconCustomFont(fobj, fontAttr, issvg) {
+      let styleObject = {};
+      const element = fobj[fontAttr];
+      if (element) {
+        styleObject["font-family"] = element.fontFamily;
+        if (element.fontColors && element.fontColors.hex8) {
+          styleObject["color"] = element.fontColors.hex8;
+        }
+        styleObject["font-weight"] =
+          element.fontWeight && element.fontWeight.split(" ")[0];
+        styleObject["font-style"] = element.fontStyle;
+        styleObject["font-size"] = element.fontSize + element.fontSizeUnit;
+        styleObject["line-height"] =
+          element.fontLineHeight +
+          (element.fontLineHeightUnit == "-" ? "" : element.fontLineHeightUnit);
+        styleObject["text-align"] = element.fontTextAlign;
+        styleObject["text-decoration"] = element.fontDecoration;
+        if (issvg) {
+          styleObject["max-height"] = element.fontSize + element.fontSizeUnit;
+          styleObject["width"] = element.fontSize + element.fontSizeUnit;
+        }
+      }
+      return styleObject;
+    },
+    /**
+     * 通用自定义函数
+     * customFunctionList：忽略name直接传自定义函数集合
+     * otherObject：其他参数对象
+     */
+    commonEventFunHandle(customFunctionList, otherObject) {
+      let that = this;
+      var customHandle = customFunctionList;
+      customHandle &&
+        customHandle.forEach((item) => {
+          window[item.name] &&
+            window[item.name].call(this, {
+              customParam: item.param,
+              that: this,
+              ...otherObject,
+            });
+        });
+    },
+    /**
+     * 获取自定义函数处理后的结果
+     */
+    getFieldCustomRender(configObject,funname) {
+      return (
+        window[configObject[funname][0].name] &&
+        window[configObject[funname][0].name].call(this, {
+          customParam: configObject[funname][0].param,
+          configObject
+        })
+      );
+    },
     /**
      * 提供父级组件调用的刷新prop数据组件
      */
@@ -340,31 +487,6 @@ export default {
       //嵌套发现有问题，点击不更新，暂时使用强制刷新
       this.$forceUpdate();
     },
-    clickButtonHandle(e){
-      let that = this;
-      if(this.moduleObject.env=="develop"){
-        //开发模式下不执行此事件
-        return;
-      }
-      //获取所有的URL参数、页面ID（pageId）、以及所有组件的返回值（用范围值去调用IDM提供的方法取出所有的组件值）
-      let urlObject = window.IDM.url.queryObject(),
-      pageId = window.IDM.broadcast&&window.IDM.broadcast.pageModule?window.IDM.broadcast.pageModule.id:"";
-      //自定义函数
-      /**
-       * [
-       * {name:"",param:{}}
-       * ]
-       */
-      var clickFunction = this.propData.clickRightButtonFunction;
-      clickFunction&&clickFunction.forEach(item=>{
-        window[item.name]&&window[item.name].call(this,{
-          urlData:urlObject,
-          pageId,
-          customParam:item.param,
-          _this:this
-        });
-      })
-    },
     change(index){
       let selectObject={};
       this.conditionList.forEach(item=>{
@@ -526,6 +648,11 @@ export default {
           max-height: 12px;
           vertical-align: -1px;
         }
+      }
+    }
+    .cc-item-bottom-right-action{
+      >*{
+        margin-left: 5px;
       }
     }
   }
