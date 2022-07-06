@@ -12,14 +12,28 @@ oacommon@1.0.1
 - 标识：`ctrlId`
 - 默认值：@[packageid]
 ### 基本属性
-#### 获取消息列表的接口【listUrl】
-get请求，参数通过地址栏获取
-- 标识：`listUrl`
-- 默认值：空
 #### 为空描述【emptyDescription】
 内容为空的时候描述文字提示
 - 标识：`emptyDescription`
 - 默认值：暂无数据
+#### 显示字段【dataFiled】
+根据其他组件传输的数据格式指定结果集的字段，比如传输的数据格式为{data:{rows:[{}]}}，则这里应该填写data.rows
+- 标识：`dataFiled`
+- 默认值：data.rows
+#### 图片
+##### 是否显示【imgShow】
+是否显示图片
+- 标识：`imgShow`
+- 默认值：true
+##### 显示字段【imgParam】
+自定义显示的字段，例：url
+- 标识：`imgParam`
+- 默认值：url
+##### 自定义显示函数【imgParamFun】
+当点击每一条通知信息的时候会调用此函数，接收参数为格式为{customParam:自定义的，itemObject:每条数据对象数据，urlData:url数据}
+- 标识：`imgParamFun`
+- 默认值：空
+- 可设置函数数量：单个
 #### 标题
 ##### 是否显示【titleShow】
 是否显示标题
@@ -60,12 +74,45 @@ get请求，参数通过地址栏获取
 - 默认值：10
 - 显示：@[contentType=='hiddenNum']
 ##### 显示字段【contentParam】
-自定义显示的字段，例：content 或 title
+自定义显示的字段，例：pageRemark 或 title
 - 标识：`contentParam`
-- 默认值：content
+- 默认值：pageRemark
 ##### 自定义显示函数【contentParamFun】
 当点击每一条通知信息的时候会调用此函数，接收参数为格式为{customParam:自定义的，itemObject:每条数据对象数据，urlData:url数据}
 - 标识：`contentParamFun`
+- 默认值：空
+- 可设置函数数量：单个
+#### 类名
+##### 是否显示【componentShow】
+是否显示类名
+- 标识：`componentShow`
+- 默认值：true
+##### 显示字段【componentParam】
+自定义显示的字段，例：moduleClassName
+- 标识：`componentParam`
+- 默认值：moduleClassName
+##### 自定义显示函数【componentParamFun】
+当点击每一条通知信息的时候会调用此函数，接收参数为格式为{customParam:自定义的，itemObject:每条数据对象数据，urlData:url数据}
+- 标识：`componentParamFun`
+- 默认值：空
+- 可设置函数数量：单个
+#### 版本号
+##### 版本号列表字段【versionListParam】
+自定义显示的字段，例：versionList
+- 标识：`versionListParam`
+- 默认值：versionList
+##### 自定义版本号列表显示函数【versionListParamFun】
+当点击每一条通知信息的时候会调用此函数，接收参数为格式为{customParam:自定义的，itemObject:每条数据对象数据，urlData:url数据}
+- 标识：`versionListParamFun`
+- 默认值：空
+- 可设置函数数量：单个
+##### 列表中版本号字段【versionParam】
+自定义显示的字段，例：versionText 或 title
+- 标识：`versionParam`
+- 默认值：versionText
+##### 自定义版本号显示函数【versionParamFun】
+当点击每一条通知信息的时候会调用此函数，接收参数为格式为{customParam:自定义的，itemObject:每条数据对象数据，urlData:url数据}
+- 标识：`versionParamFun`
 - 默认值：空
 - 可设置函数数量：单个
 ### 样式设置

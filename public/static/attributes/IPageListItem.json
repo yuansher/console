@@ -21,15 +21,6 @@
       "desc": "提供设置组件能达到展示效果的基本属性设置信息",
       "children": [
         {
-          "type": "input",
-          "layoutType": "block",
-          "text": "获取消息列表的接口",
-          "desc": "get请求，参数通过地址栏获取",
-          "placeholder": "get请求，参数通过地址栏获取",
-          "bindKey": "listUrl",
-          "default": ""
-        },
-        {
           "type": "textarea",
           "layoutType": "inline",
           "text": "为空描述",
@@ -37,6 +28,46 @@
           "desc": "内容为空的时候描述文字提示",
           "default": "暂无数据",
           "placeholder": "示例：暂无数据"
+        },
+        {
+          "type": "textarea",
+          "layoutType": "inline",
+          "text": "显示字段",
+          "bindKey": "dataFiled",
+          "desc": "根据其他组件传输的数据格式指定结果集的字段，比如传输的数据格式为{data:{rows:[{}]}}，则这里应该填写data.rows",
+          "default": "data.rows",
+          "placeholder": "示例：data.rows 或者 [0].data[0].rows"
+        },
+        {
+          "type": "group",
+          "text": "图片",
+          "desc": "设置图片相关信息",
+          "children": [
+            {
+              "type": "switch",
+              "layoutType": "inline",
+              "text": "是否显示",
+              "bindKey": "imgShow",
+              "desc":"是否显示图片",
+              "default": true
+            },
+            {
+              "type": "input",
+              "layoutType": "block",
+              "text": "显示字段",
+              "desc": "自定义显示的字段，例：url",
+              "placeholder": "例：url",
+              "bindKey": "imgParam",
+              "default": "url"
+            },
+            {
+              "type": "actionSelect",
+              "layoutType": "block",
+              "text": "自定义显示函数",
+              "bindKey": "imgParamFun",
+              "desc": "当点击每一条通知信息的时候会调用此函数，接收参数为格式为{customParam:自定义的，itemObject:每条数据对象数据，urlData:url数据}"
+            }
+          ]
         },
         {
           "type": "group",
@@ -148,16 +179,86 @@
               "type": "input",
               "layoutType": "block",
               "text": "显示字段",
-              "desc": "自定义显示的字段，例：content 或 title",
-              "placeholder": "例：content",
+              "desc": "自定义显示的字段，例：pageRemark 或 title",
+              "placeholder": "例：pageRemark",
               "bindKey": "contentParam",
-              "default": "content"
+              "default": "pageRemark"
             },
             {
               "type": "actionSelect",
               "layoutType": "block",
               "text": "自定义显示函数",
               "bindKey": "contentParamFun",
+              "desc": "当点击每一条通知信息的时候会调用此函数，接收参数为格式为{customParam:自定义的，itemObject:每条数据对象数据，urlData:url数据}"
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "text": "类名",
+          "desc": "设置类名相关信息",
+          "children": [
+            {
+              "type": "switch",
+              "layoutType": "inline",
+              "text": "是否显示",
+              "bindKey": "componentShow",
+              "desc":"是否显示类名",
+              "default": true
+            },
+            {
+              "type": "input",
+              "layoutType": "block",
+              "text": "显示字段",
+              "desc": "自定义显示的字段，例：moduleClassName",
+              "placeholder": "例：moduleClassName",
+              "bindKey": "componentParam",
+              "default": "moduleClassName"
+            },
+            {
+              "type": "actionSelect",
+              "layoutType": "block",
+              "text": "自定义显示函数",
+              "bindKey": "componentParamFun",
+              "desc": "当点击每一条通知信息的时候会调用此函数，接收参数为格式为{customParam:自定义的，itemObject:每条数据对象数据，urlData:url数据}"
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "text": "版本号",
+          "desc": "设置版本号相关信息",
+          "children": [
+            {
+              "type": "input",
+              "layoutType": "block",
+              "text": "版本号列表字段",
+              "desc": "自定义显示的字段，例：versionList",
+              "placeholder": "例：versionList",
+              "bindKey": "versionListParam",
+              "default": "versionList"
+            },
+            {
+              "type": "actionSelect",
+              "layoutType": "block",
+              "text": "自定义版本号列表显示函数",
+              "bindKey": "versionListParamFun",
+              "desc": "当点击每一条通知信息的时候会调用此函数，接收参数为格式为{customParam:自定义的，itemObject:每条数据对象数据，urlData:url数据}"
+            },
+            {
+              "type": "input",
+              "layoutType": "block",
+              "text": "列表中版本号字段",
+              "desc": "自定义显示的字段，例：versionText 或 title",
+              "placeholder": "例：versionText",
+              "bindKey": "versionParam",
+              "default": "versionText"
+            },
+            {
+              "type": "actionSelect",
+              "layoutType": "block",
+              "text": "自定义版本号显示函数",
+              "bindKey": "versionParamFun",
               "desc": "当点击每一条通知信息的时候会调用此函数，接收参数为格式为{customParam:自定义的，itemObject:每条数据对象数据，urlData:url数据}"
             }
           ]

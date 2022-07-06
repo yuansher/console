@@ -16,7 +16,7 @@
       <div class="item" v-for="(item,index) in listData||[]" :key="index">
         <div class="item-top">
           <div class="item-top-img">
-            <img :src="item.url" class="item-top-img-img"/>
+            <img :src="item.__url" class="item-top-img-img"/>
             <div class="item-top-img-layer" @click="preview(item)">
               <div class="item-top-img-layer-btn">点击预览</div>
             </div>
@@ -30,7 +30,7 @@
             </div>
             <div class="item-top-right-type">
               <span class="item-top-right-name">类名：</span>
-              <span class="item-top-right-type-id">{{item.componentId}}</span>
+              <span class="item-top-right-type-id">{{item.__componentId}}</span>
             </div>
           </div>
         </div>
@@ -38,7 +38,7 @@
           <a-checkbox class="item-bottom-item" :checked="item.__checked" @change="onChange(item, index)">全部版本
           </a-checkbox>
           <a-checkbox class="item-bottom-item" :checked="version.__checked" @change="onChange(version, index)"
-                      v-for="version in item.versionList" :key="version.id">{{version.num}}
+                      v-for="version in item.__versionList" :key="version.id">{{version.__version}}
           </a-checkbox>
         </div>
       </div>
@@ -58,17 +58,18 @@
     let versionList = []
     for (let j = 100; j < 115; j++) {
       let vData = {
-        num: j.toString().split('').join('.'),
+        versionText: j.toString().split('').join('.'),
+        version: j.toString().split('').join('.'),
         id: j
       }
       versionList.push(vData)
     }
     let data = {
       id: i + 1,
-      content: `IDM控制台的页面管理页面，主要用于所有页面配置的管理，是一个列表页面IDM控制台的页面管理页面，主要用于所有页面配置的管理${i + 1}`,
+      pageRemark: `IDM控制台的页面管理页面，主要用于所有页面配置的管理，是一个列表页面IDM控制台的页面管理页面，主要用于所有页面配置的管理${i + 1}`,
       url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
       title: 'IDM页面控制台-页面管理列表',
-      componentId: `idm_console_homepage_${i}`,
+      moduleClassName: `idm_console_homepage_${i}`,
       versionList
     }
     SAMPLE_DATA.push(data)
@@ -87,8 +88,12 @@
         propData: this.$root.propData.compositeAttr || {
           titleShow: true,
           contentShow: true,
+          imgParam: 'url',
           titleParam: 'title',
-          contentParam: 'content',
+          contentParam: 'pageRemark',
+          versionParam: 'versionText',
+          componentParam: 'moduleClassName',
+          versionListParam: 'versionList'
         },
         listData: undefined,
       }
@@ -127,35 +132,38 @@
       // 处理全选案件和单选案件之间关系
       checkedAllStatus(item, index) {
         // 判断是否是全选 如果是 则对全部子集处理
-        if (item.versionList && item.versionList.length > 0) {
-          item.versionList.map(v => {
+        if (item.__versionList && item.__versionList.length > 0) {
+          item.__versionList.map(v => {
             v.__checked = item.__checked;
           })
         } else {
           // 如果不是全选 检查父级
           let pItem = this.listData[index];
           let checked = true;
-          for (let i = 0; i < pItem.versionList.length; i++) {
-            let v = pItem.versionList[i];
+          for (let i = 0; i < pItem.__versionList.length; i++) {
+            let v = pItem.__versionList[i];
             if (!v.__checked) {
               checked = false; // 有一项为false 则为false
             }
           }
           pItem.__checked = checked;
         }
+        this.listData = JSON.parse(JSON.stringify(this.listData))
       },
       // 查询当前选择的结果，广播发送
       sendCheckedStatus() {
         const checkedList = [];
         this.listData.map(item => {
           const list = [];
-          item.versionList && item.versionList.length > 0 && item.versionList.map(v => {
+          item.__versionList && item.__versionList.length > 0 && item.__versionList.map(v => {
             if (v.__checked) {
               list.push(v);
             }
           })
           if (list && list.length > 0) {
-            checkedList.push(list);
+            let data = JSON.parse(JSON.stringify(item));
+            data.checkVersionList = list;
+            checkedList.push(data);
           }
         })
         // 判断当前选择的事件通知类型
@@ -163,6 +171,8 @@
           case 'linkModules': this.sendToComponents('versionModule', checkedList); break;
           case 'itemAction': this.customFun('clickItemFunction', checkedList); break;
         }
+
+        console.log('checkedList=====', checkedList)
       },
       // 发送数据给指定组件
       sendToComponents(key, data, type = 'linkageResult') {
@@ -198,27 +208,20 @@
       initAttrToModule() {
         // 处理属性样式
         this.convertAttr();
-        this.initData(); //异步请求数据
+        this.initData(this.listData); //异步请求数据
+        console.log("组件内属性发生变化，变化后====》", this.propData);
       },
       // 异步获取数据
-      async initData() {
+      initData(messageData) {
+        console.log('messageData=====', messageData)
+        messageData = messageData || [];
         let listData = [];
         if (this.moduleObject.env == "develop" || !this.moduleObject.env) {
           //开发模式下不执行此事件
           listData = SAMPLE_DATA;
         } else {
-          if (!this.propData.listUrl) {
-            listData = SAMPLE_DATA;
-            this.listData = this.initRes(listData)
-            return; // 如果没有请求地址 return
-          }
-
-          const params = this.commonParam(); //所有地址的url参数转换
-
-          let res = await window.IDM.http.get(this.propData.listUrl, params)
-          listData = res.data;
+          listData = messageData;
         }
-
         this.listData = this.initRes(listData); //数据处理
 
       },
@@ -231,53 +234,55 @@
           // 添加checked 属性
           item.__checked = false;
           let newVersionList = [];
-          item.versionList.map(v => {
+          // 先确定版本号列表对应的数据
+          item.__versionList = this.getParamData('versionListParam', 'versionListParamFun', item);
+          item.__versionList.map(v => {
+            v.__version = this.getParamData('versionParam', 'versionParamFun', v); // 标题
             v.__checked = false;
             newVersionList.push(v);
           });
-          item.versionList = newVersionList;
+          item.__versionList = newVersionList;
 
-          // 自定义展示字段处理
-          const titleParamFun = this.propData.titleParamFun && this.propData.titleParamFun.length > 0; // 判断是否使用了自定义显示函数
-          const contentParamFun = this.propData.contentParamFun && this.propData.contentParamFun.length > 0; // 判断是否使用了自定义显示函数
-          if (titleParamFun) { // 标题
-            item.__title = this.getParamFun('titleParamFun', item);
-            item.__titleTitle = item.__title; // 鼠标放上显示的title
+          item.__title = this.getParamData('titleParam', 'titleParamFun', item); // 标题
+          item.__titleTitle = item.__title; // 鼠标放上显示的title
+          item.__content = this.getParamData('contentParam', 'contentParamFun', item); // 内容
+          item.__contentTitle = item.__content; // 鼠标放上显示的title
+          item.__url = this.getParamData('imgParam', 'imgParamFun', item); // 图片
+          item.__componentId = this.getParamData('componentParam', 'componentParamFun', item); // 类名
+
+          // 根据字数隐藏处理
+          if (this.propData.titleType == 'hiddenNum') { // 标题
+            let newContent = this.propData.titleHiddenNum < item.__title.length ?
+                (item.__title.slice(0, this.propData.titleHiddenNum) + '...') :
+                item.__title;
+            item.__title = newContent
           }
-          if (contentParamFun) { // 内容
-            item.__content = this.getParamFun('contentParamFun', item);
-            item.__contentTitle = item.__content; // 鼠标放上显示的title
-          } else { // 默认初始化赋值数据
-            console.log('默认初始化赋值数据')
-            console.log('titleParam=====', this.propData.titleParam)
-            console.log('contentParam=====', this.propData.contentParam)
-            item.__title = item[this.propData.titleParam]; // 当前展示的内容
-            item.__titleTitle = item.__title; // 鼠标放上显示的title
-
-            item.__content = item[this.propData.contentParam]; // 当前展示的内容
-            item.__contentTitle = item.__content; // 鼠标放上显示的title
-
-            // 根据字数隐藏处理
-            if (this.propData.titleType == 'hiddenNum') { // 标题
-              let newContent = this.propData.titleHiddenNum < item.__title.length ?
-                  (item.__title.slice(0, this.propData.titleHiddenNum) + '...') :
-                  item.__title;
-              item.__title = newContent
-            }
-
-            // 根据字数隐藏处理
-            if (this.propData.contentType == 'hiddenNum') { // 内容
-              let newContent = this.propData.contentHiddenNum < item.__content.length ?
-                  (item.__content.slice(0, this.propData.contentHiddenNum) + '...') :
-                  item.__content;
-              item.__content = newContent
-            }
+          // 根据字数隐藏处理
+          if (this.propData.contentType == 'hiddenNum') { // 内容
+            let newContent = this.propData.contentHiddenNum < item.__content.length ?
+                (item.__content.slice(0, this.propData.contentHiddenNum) + '...') :
+                item.__content;
+            item.__content = newContent
           }
 
           newList.push(item)
         })
-        console.log('newList=====', newList)
+        // console.log('newList=====', JSON.stringify(newList))
         return newList;
+      },
+      // 判断参数应取 自定义方法结果 还是 自定义字段结果, 调用 getParamFun 获取自定义方法返回结果,调用 getExpressData 获取自定义字段结果
+      getParamData(field, fun, data) {
+        // 自定义展示字段处理
+        const hasFun = this.propData[fun] && this.propData[fun].length > 0; // 判断是否使用了自定义显示函数
+        let res;
+        console.log('hasFun=====', hasFun, field, fun)
+        if (hasFun) { // 标题
+          res = this.getParamFun(fun, data);
+        } else {
+          res = this.getExpressData('data', this.propData[field], data) // 当前展示的标题
+        }
+        console.log(res)
+        return res;
       },
       /**
        * 自定义显示函数处理每一项数据后返回的结果  (例如 传入key = titleParamFun 传入item  返回__title应有的值)
@@ -330,7 +335,7 @@
       propDataWatchHandle(propData) {
         this.propData = propData.compositeAttr || {};
         this.initAttrToModule();
-        console.log("组件内属性发生变化，变化后====》", this.propData);
+
       },
 
       /**
@@ -652,24 +657,10 @@
           this.listData = [];
         }
 
-        var filedExp = this.propData.dataFiled;
-        var dataObject = {IDM: window.IDM, ...data};
-        var _defaultVal = window.IDM.express.replace.call(this, "@[" + filedExp + "]", dataObject);
-        if (this.propData.showCurrentPage) {
-          _defaultVal.forEach(item => {
-            item.modulePreviewImgObject = JSON.parse(item.modulePreviewImgJson || "[]");
-            item.isEditName = false;
-            item.idmItemChecked = _.findIndex(this.CurrentCheckedArray, item) > -1;
-          })
-          this.listData = _defaultVal;
-        } else {
-          _defaultVal.forEach(item => {
-            item.modulePreviewImgObject = JSON.parse(item.modulePreviewImgJson || "[]");
-            item.isEditName = false;
-            item.idmItemChecked = _.findIndex(this.CurrentCheckedArray, item) > -1;
-            this.listData.push(item);
-          })
-        }
+        let filedExp = this.propData.dataFiled;
+        let dataObject = {IDM: window.IDM, ...data};
+        let _defaultVal = window.IDM.express.replace.call(this, "@[" + filedExp + "]", dataObject);
+        this.initData(_defaultVal); //
       },
       /**
        * 组件通信：接收消息的方法
@@ -685,14 +676,6 @@
         console.log("组件收到消息:" + this.moduleObject.packageid, object);
         if (object.type && object.type == "linkageDemand") {
           this.formatSourceData(object.message);
-        } else if (object.type && object.type == "linkageResult") {
-          //结果值设置
-          this.valueBind(object.message)
-        } else if (object.type && object.type == "linkageClick") {
-          if (object.messageKey && object.messageKey == "selectAll") {
-            //全选
-            this.changeAllCheckStatusHandle();
-          }
         }
       },
       /**
@@ -708,7 +691,29 @@
        */
       sendBroadcastMessage(object) {
         window.IDM.broadcast && window.IDM.broadcast.send(object);
-      }
+      },
+      /**
+       * 根据结果集来执行表达式的结果
+       * dataName：结果集名，建议直接data即可
+       * dataFiled：表达式
+       * resultData：要查下的结果集
+       */
+      getExpressData(dataName, dataFiled, resultData) {
+        //给defaultValue设置dataFiled的值
+        let _defaultVal = undefined;
+        if (dataFiled) {
+          let filedExp = dataFiled;
+          filedExp = dataName + (filedExp.startsWiths("[") ? "" : ".") + filedExp;
+          let dataObject = { IDM: window.IDM };
+          dataObject[dataName] = resultData;
+          _defaultVal = window.IDM.express.replace.call(
+              this,
+              "@[" + filedExp + "]",
+              dataObject
+          );
+        }
+        return _defaultVal;
+      },
     }
   }
 </script>
