@@ -38,47 +38,9 @@
                     "type": "switch",
                     "layoutType": "inline",
                     "text": "右侧按钮",
-                    "bindKey": "rightButtonDisplay",
-                    "desc":"是否显示右上角的按钮",
+                    "bindKey": "showActionMenu",
+                    "desc":"是否显示右上角的操作按钮区域",
                     "default": true
-                },
-                {
-                    "type": "input",
-                    "layoutType": "inline",
-                    "text": "按钮名称",
-                    "bindKey": "rightButtoTitle",
-                    "default": "管理分组",
-                    "display":"@[rightButtonDisplay]"
-                },
-                {
-                    "type": "radio",
-                    "layoutType": "inline",
-                    "text": "按钮类型",
-                    "bindKey": "rightButtoType",
-                    "dictionary": [
-                        {
-                            "label": "主要",
-                            "value": "primary"
-                        },
-                        {
-                            "label": "次要",
-                            "value": "default"
-                        },
-                        {
-                            "label": "虚线",
-                            "value": "dashed"
-                        },
-                        {
-                            "label": "危险",
-                            "value": "danger"
-                        },
-                        {
-                            "label": "链接",
-                            "value": "link"
-                        }
-                    ],
-                    "default": "default",
-                    "display":"@[rightButtonDisplay]"
                 },
                 {
                     "type": "inputNumber",
@@ -446,12 +408,122 @@
             "desc": "点击？查看高级设置用法指南",
             "children": [
                 {
-                    "type": "actionSelect",
-                    "layoutType": "block",
-                    "text": "点击右侧按钮时动作",
-                    "bindKey": "clickRightButtonFunction",
-                    "desc": "点击右侧按钮组件的时候会调用设置的自定义函数，接收参数为格式为{...自定义的}",
-                    "multiple": true
+                    "type": "table",
+                    "text": "右上角操作按钮",
+                    "bindKey": "buttonOptionList",
+                    "tabText": "按钮[index]",
+                    "children": [
+                        {
+                            "type": "input",
+                            "layoutType": "inline",
+                            "text": "按钮标识",
+                            "desc":"主要用于标识按钮，可以在需要使用的时候使用此标识进行判断，建议设置为唯一或者菜单的英文、拼音作为标识",
+                            "bindKey": "key"
+                        },{
+                            "type": "input",
+                            "layoutType": "inline",
+                            "text": "按钮名称",
+                            "bindKey": "buttonText",
+                            "default": ""
+                        },{
+                            "type": "select",
+                            "layoutType": "inline",
+                            "text": "按钮方式",
+                            "bindKey": "type",
+                            "desc":"设置菜单类型将会隐藏再更多的菜单中，以菜单的类型出现，设置为按钮类型将会直接显示在右上角卡片中，以按钮的方式出现，注意按钮不能过多，否则影响使用",
+                            "dictionary": [
+                                {
+                                    "label": "菜单类型",
+                                    "value": "menu"
+                                },
+                                {
+                                    "label": "按钮类型",
+                                    "value": "button"
+                                }
+                            ],
+                            "default": "menu"
+                        },{
+                            "type": "radio",
+                            "layoutType": "inline",
+                            "text": "按钮类型",
+                            "bindKey": "buttoType",
+                            "display":"@[type=='button']",
+                            "dictionary": [
+                                {
+                                    "label": "主要",
+                                    "value": "primary"
+                                },
+                                {
+                                    "label": "次要",
+                                    "value": "default"
+                                },
+                                {
+                                    "label": "虚线",
+                                    "value": "dashed"
+                                },
+                                {
+                                    "label": "危险",
+                                    "value": "danger"
+                                },
+                                {
+                                    "label": "链接",
+                                    "value": "link"
+                                }
+                            ],
+                            "default": "default"
+                        },{
+                            "type": "iconSelect",
+                            "layoutType": "inline",
+                            "text": "显示图标",
+                            "bindKey": "iconSvg",
+                            "desc":"菜单显示名称前面的图标显示",
+                            "placeholder": "请选择"
+                        },
+                        {
+                            "type": "font",
+                            "layoutType": "block",
+                            "text": "图标字体设置",
+                            "bindKey": "iconSvgFont"
+                        },
+                        {
+                            "type": "font",
+                            "layoutType": "block",
+                            "text": "菜单文字字体",
+                            "bindKey": "buttonTextFont"
+                        },{
+                            "type": "select",
+                            "layoutType": "inline",
+                            "text": "显示方式",
+                            "bindKey": "buttonShowType",
+                            "desc":"可以根据切换显示方式对每个按钮进行更高级的控制，更多使用方法请点击参考更详细的说明",
+                            "dictionary": [
+                                {
+                                    "label": "始终显示",
+                                    "value": "default"
+                                },
+                                {
+                                    "label": "自定义函数显示",
+                                    "value": "custom"
+                                }
+                            ],
+                            "default": "default"
+                        },{
+                            "type": "actionSelect",
+                            "layoutType": "block",
+                            "text": "自定义函数依据显示",
+                            "bindKey": "buttonDataFunction",
+                            "display":"@[buttonShowType=='custom']",
+                            "desc": "当数据加载的时候会调用此处自定义函数返回的值控制是否显示，接收参数为格式为{customParam:自定义的,configObject:当前配置项}",
+                            "multiple": false
+                        },{
+                            "type": "actionSelect",
+                            "layoutType": "block",
+                            "text": "事件自定义函数",
+                            "bindKey": "buttonCustomFunction",
+                            "desc": "当点击按钮的时候会调用此函数，接收参数格式为{customParam:自定义的,configObject:当前按钮配置项}",
+                            "multiple": true
+                        }
+                    ]
                 },
                 {
                     "type": "group",
