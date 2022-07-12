@@ -13,7 +13,7 @@
       idm-container-index  组件的内部容器索引，不重复唯一且不变，必选
     -->
     <div class="component-card-item-outbox">
-      <div class="component-card-item-box" v-for="(item,index) in listData" :key="index">
+      <div class="component-card-item-box" v-for="(item,index) in listData||[]" :key="index">
         <div class="cc-item-img-container">
           <img v-if="item.modulePreviewImgObject.length>0" :style="getStyle('itemimg',item.modulePreviewImgObject[0])" :src="IDM.url.getWebPath(item.modulePreviewImgObject[0].ourl)"/>
           <div class="cc-item-img-shade"></div>
@@ -72,7 +72,8 @@
         </div>
       </div>
       <div v-if="!listData||(listData&&listData.length==0)" style="text-align: center;width:100%">
-        <a-empty :image-style="{margin: '10px auto'}" :description="propData.emptyDescription||'暂无数据'"/>
+        <a-spin v-if="listData==undefined" />
+        <a-empty v-else :image-style="{margin: '10px auto'}" :description="propData.emptyDescription||'暂无数据'"/>
       </div>
     </div>
     <a-modal
@@ -106,7 +107,7 @@ export default {
     return {
       moduleObject:{},
       propData:this.$root.propData.compositeAttr||{},
-      listData:[],
+      listData:undefined,
       visible:false,
       //当前预览图片的组件对象
       CurrentModuleObject:{},
@@ -558,6 +559,9 @@ export default {
       window.IDM.setStyleToPageHead(this.moduleObject.id +" .component-card-item-box",styleObject);
     },
     formatSourceData(data){
+      if(this.listData==undefined){
+        this.listData = [];
+      }
       var filedExp = this.propData.dataFiled;
       var dataObject = {IDM:window.IDM,...data};
       var _defaultVal = window.IDM.express.replace.call(this, "@["+filedExp+"]", dataObject);
