@@ -1,6 +1,6 @@
 {
   "classId": "idm.componet.console.ipoagelistitem",
-  "comName": "页面管理列表",
+  "comName": " ",
   "className": "IPageListItem",
   "comType": "common",
   "comLangue": "vue",
@@ -53,7 +53,7 @@
             },
             {
               "type": "input",
-              "layoutType": "block",
+              "layoutType": "inline",
               "text": "显示字段",
               "desc": "自定义显示的字段，例：url",
               "placeholder": "例：url",
@@ -106,7 +106,7 @@
             },
             {
               "type": "inputNumber",
-              "layoutType": "block",
+              "layoutType": "inline",
               "text": "字数限制",
               "desc": "超出字数限制后会隐藏",
               "bindKey": "titleHiddenNum",
@@ -115,7 +115,7 @@
             },
             {
               "type": "input",
-              "layoutType": "block",
+              "layoutType": "inline",
               "text": "显示字段",
               "desc": "自定义显示的字段，例：content 或 title",
               "placeholder": "例：title",
@@ -168,7 +168,7 @@
             },
             {
               "type": "inputNumber",
-              "layoutType": "block",
+              "layoutType": "inline",
               "text": "字数限制",
               "desc": "超出字数限制后会隐藏",
               "bindKey": "contentHiddenNum",
@@ -177,7 +177,7 @@
             },
             {
               "type": "input",
-              "layoutType": "block",
+              "layoutType": "inline",
               "text": "显示字段",
               "desc": "自定义显示的字段，例：pageRemark 或 title",
               "placeholder": "例：pageRemark",
@@ -208,7 +208,7 @@
             },
             {
               "type": "input",
-              "layoutType": "block",
+              "layoutType": "inline",
               "text": "显示字段",
               "desc": "自定义显示的字段，例：moduleClassName",
               "placeholder": "例：moduleClassName",
@@ -278,7 +278,7 @@
           "children": [
             {
               "type": "input",
-              "layoutType": "block",
+              "layoutType": "inline",
               "text": "宽度",
               "desc": "填写auto则为自适应，或者使用px、%、vh等单位，比如100%、100px、100vw等等",
               "bindKey": "boxWidth",
@@ -332,7 +332,7 @@
               "children": [
                 {
                   "type": "input",
-                  "layoutType": "block",
+                  "layoutType": "inline",
                   "text": "图片宽度",
                   "desc": "填写auto则为自适应，或者使用px、%、vw等单位，比如100%、100px、100vw等等",
                   "bindKey": "imgWidth",
@@ -341,7 +341,7 @@
                 },
                 {
                   "type": "input",
-                  "layoutType": "block",
+                  "layoutType": "inline",
                   "text": "图片高度",
                   "desc": "填写auto则为自适应，或者使用px、%、vh等单位，比如100%、100px、100vh等等",
                   "bindKey": "imgHeight",
@@ -352,8 +352,8 @@
             },
             {
               "type": "inputNumber",
-              "layoutType": "block",
-              "text": "距离右侧距离",
+              "layoutType": "inline",
+              "text": "右侧距离",
               "desc": "只填写数字，单位为px",
               "bindKey": "imgRight",
               "default": "20"
