@@ -142,11 +142,15 @@ oacommon@1.0.1
 - 标识：`boxBorder`
 - 默认值：空
 #### 图片样式
-##### 宽高【undefined】
-
-- 标识：`undefined`
-- 默认值：空
-##### 距离右侧距离【imgRight】
+##### 图片宽度【imgWidth】
+填写auto则为自适应，或者使用px、%、vw等单位，比如100%、100px、100vw等等
+- 标识：`imgWidth`
+- 默认值：200px
+##### 图片高度【imgHeight】
+填写auto则为自适应，或者使用px、%、vh等单位，比如100%、100px、100vh等等
+- 标识：`imgHeight`
+- 默认值：120px
+##### 右侧距离【imgRight】
 只填写数字，单位为px
 - 标识：`imgRight`
 - 默认值：20
