@@ -90,6 +90,14 @@
           "default": false
         },
         {
+          "type": "switch",
+          "layoutType": "inline",
+          "text": "初始状态",
+          "bindKey": "cardInitSelected",
+          "desc": "设置当前卡片在加载数据的时候是否应用于数据本身的初始选择状态",
+          "default": false
+        },
+        {
           "type": "inputNumber",
           "layoutType": "inline",
           "text": "最多可选",
@@ -100,13 +108,81 @@
           "display": "@[cardIsSelect]"
         },
         {
+          "type": "switch",
+          "layoutType": "inline",
+          "text": "超选提示",
+          "bindKey": "maxSelectedTip",
+          "desc": "当超出上述设置的最多可选数量时候是否给予提示，如果不提示则会自动移除最开始的一个并且往后追加一条",
+          "default": true,
+          "display": "@[cardIsSelect&&maxSelectedNum>0]"
+        },
+        {
           "type": "input",
           "layoutType": "inline",
           "text": "超出提示",
           "bindKey": "selectedOverTips",
           "desc": "设置当选择数超出时，提示信息的内容",
           "default": "当前已选中项过多！",
-          "display": "@[cardIsSelect&&maxSelectedNum>0]"
+          "display": "@[cardIsSelect&&maxSelectedNum>0&&maxSelectedTip]"
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "text": "数据来源",
+      "desc": "提供设置组件要展示的数据来自哪里",
+      "children": [
+        {
+            "type": "select",
+            "layoutType": "inline",
+            "text": "动态内容",
+            "bindKey": "dataSourceType",
+            "desc": "通过这些方式去动态获取结果值显示成文本内容",
+            "dictionary": [
+                {
+                  "label": "接收联动消息",
+                  "value": "receiveMessage"
+                },
+                {
+                    "label": "自定义接口",
+                    "value": "customInterface"
+                },
+                {
+                    "label": "页面统一接口",
+                    "value": "pageCommonInterface"
+                },
+                {
+                    "label": "自定义函数",
+                    "value": "customFunction"
+                }
+            ],
+            "default": "receiveMessage"
+        },
+        {
+            "type": "input",
+            "layoutType": "inline",
+            "text": "接口地址",
+            "bindKey": "customInterfaceUrl",
+            "desc": "用于获取数据源的接口地址，请按照统一标准的返回格式返回文本数据，格式如下：{\"code\":\"200\",\"data\":\"\",...}",
+            "display": "@[dataSourceType=='customInterface']"
+        },
+        {
+            "type": "input",
+            "layoutType": "inline",
+            "text": "结果集名",
+            "bindKey": "dataName",
+            "desc": "页面接口设定的结果集名称，位置为：页面设置》高级设置》页面接口",
+            "default": "",
+            "placeholder": "示例：resultData",
+            "display": "@[dataSourceType=='pageCommonInterface']"
+        },
+        {
+            "type": "actionSelect",
+            "layoutType": "block",
+            "text": "自定义函数",
+            "bindKey": "customFunction",
+            "desc": "获取动态内容、自定义接口回调、页面统一接口回调的时候会调用此方法，返回数据格式为字符串，接收参数：{...自定义,interfaceData:自定义接口或页面统一接口的返回结果,moduleObject:组件对象,receiveData:接收到的消息数据}",
+            "multiple": false
         }
       ]
     },
@@ -357,6 +433,24 @@
       "type": "group",
       "text": "模板字段配置",
       "children": [
+        {
+          "type": "input",
+          "layoutType": "inline",
+          "text": "唯一标识",
+          "desc": "设置每个ITEM数据对象中的唯一标识字段名称",
+          "bindKey": "keyDataFiled",
+          "placeholder": "示例：id",
+          "default":"id"
+        },
+        {
+          "type": "input",
+          "layoutType": "inline",
+          "text": "选中标识",
+          "desc": "设置每个ITEM数据对象中的作为选中标识的字段",
+          "bindKey": "checkDataFiled",
+          "placeholder": "示例：idmItemChecked",
+          "default":"idmItemChecked"
+        },
         {
           "type": "group",
           "text": "标题字段配置",
@@ -680,6 +774,10 @@
               "bindKey": "colorType",
               "dictionary": [
                 {
+                  "label": "default",
+                  "value": ""
+                },
+                {
                   "label": "blue",
                   "value": "blue"
                 },
@@ -716,7 +814,7 @@
                   "value": "custom"
                 }
               ],
-              "default": "blue"
+              "default": "default"
             },
             {
               "type": "colorPicker",

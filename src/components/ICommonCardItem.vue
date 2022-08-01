@@ -109,7 +109,7 @@
                           getFieldCustomRender(tagItem, 'tagDataFunction', item)))
                   "
                   :key="tagItem.key"
-                  :color="tagItem.colorType == 'custom' ? tagItem.colorValue : tagItem.colorType"
+                  :color="tagItem.colorType == 'custom' ? IDM.hex8ToRgbaString(tagItem.colorValue?(tagItem.colorValue.hex8||'#F1F1F1'):'#F1F1F1') : tagItem.colorType"
                 >
                   {{
                     tagItem.tagTextFunction && tagItem.tagTextFunction.length > 0
@@ -195,12 +195,12 @@
         <div
           v-if="propData.cardIsSelect"
           class="cc-item-layer-shadow"
-          :class="{ 'item-checked': item.idmItemChecked }"
+          :class="{ 'item-checked': item[propData.checkDataFiled||'idmItemChecked'] }"
         ></div>
         <div
           v-if="propData.cardIsSelect"
           class="cc-item-check-icon"
-          :class="{ 'item-checked': item.idmItemChecked }"
+          :class="{ 'item-checked': item[propData.checkDataFiled||'idmItemChecked'] }"
           @click="changeCheckStatusHandle(item, index)"
         >
           <svg
@@ -229,7 +229,7 @@
       </div>
     </div>
     <a-modal
-      :title="'【' + CurrentModuleObject.moduleComName + '】效果图预览'"
+      :title="'【' + CurrentModuleObject[propData.titleDataFiled] + '】效果图预览'"
       :visible="visible"
       cancelText="关闭"
       okText=""
@@ -828,6 +828,76 @@ export default {
         }
       }
       window.IDM.setStyleToPageHead(this.moduleObject.id + ' .common-card-item-box', styleObject);
+      this.initData();
+    },
+    
+    /**
+     * 通用的url参数对象
+     * 所有地址的url参数转换
+     */
+    commonParam(){
+      let urlObject = IDM.url.queryObject();
+      var params = {
+        pageId:
+          window.IDM.broadcast && window.IDM.broadcast.pageModule
+            ? window.IDM.broadcast.pageModule.id
+            : "",
+        urlData: JSON.stringify(urlObject),
+      };
+      return params;
+    },
+    /**
+     * 重新加载
+     */
+    reload(){
+      //请求数据源
+      this.initData();
+    },
+    /**
+     * 加载动态数据
+     */
+    initData(){
+      let that = this;
+      //所有地址的url参数转换
+      var params = that.commonParam();
+      switch (this.propData.dataSourceType) {
+        case "customInterface":
+          this.propData.customInterfaceUrl&&window.IDM.http.get(this.propData.customInterfaceUrl,params)
+          .then((res) => {
+            var resValue = res.data;
+            if(that.propData.customFunction&&that.propData.customFunction.length>0){
+              var params = that.commonParam();
+              try {
+                resValue = window[that.propData.customFunction[0].name]&&window[that.propData.customFunction[0].name].call(that,{
+                  ...params,
+                  ...that.propData.customFunction[0].param,
+                  moduleObject:that.moduleObject,
+                  interfaceData:res.data
+                });
+              } catch (error) {
+              }
+            }
+            //res.data
+            that.formatSourceData(resValue);
+          })
+          .catch(function (error) {
+            
+          });
+          break;
+        case "pageCommonInterface":
+          //使用通用接口直接跳过，在setContextValue执行
+          break;
+        case "customFunction":
+          if(this.propData.customFunction&&this.propData.customFunction.length>0){
+            var resValue = "";
+            try {
+              resValue = window[this.propData.customFunction[0].name]&&window[this.propData.customFunction[0].name].call(this,{...params,...this.propData.customFunction[0].param,moduleObject:this.moduleObject});
+            } catch (error) {
+            }
+            that.formatSourceData(resValue);
+          }
+          break;
+      }
     },
     formatSourceData(data) {
       if (this.listData == undefined) {
@@ -841,17 +911,26 @@ export default {
         _defaultVal.forEach(item => {
           item.modulePreviewImgObject = JSON.parse(item.modulePreviewImgJson || '[]');
           item.isEditName = false;
-          item.idmItemChecked = _.findIndex(this.CurrentCheckedArray, item) > -1;
+          if(!this.propData.cardInitSelected){
+            item[this.propData.checkDataFiled||'idmItemChecked'] = _.findIndex(this.CurrentCheckedArray, item) > -1;
+          }else if(item[this.propData.checkDataFiled||'idmItemChecked']){
+            this.CurrentCheckedArray.push(_.cloneDeep(item))
+          }
         });
         this.listData = _defaultVal;
       } else {
         _defaultVal.forEach(item => {
           item.modulePreviewImgObject = JSON.parse(item.modulePreviewImgJson || '[]');
           item.isEditName = false;
-          item.idmItemChecked = _.findIndex(this.CurrentCheckedArray, item) > -1;
+          if(!this.propData.cardInitSelected){
+            item[this.propData.checkDataFiled||'idmItemChecked'] = _.findIndex(this.CurrentCheckedArray, item) > -1;
+          }else if(item[this.propData.checkDataFiled||'idmItemChecked']){
+            this.CurrentCheckedArray.push(_.cloneDeep(item))
+          }
           this.listData.push(item);
         });
       }
+      this.sendItemCheckMsg();
     },
     /**
      * 预览组件
@@ -928,20 +1007,34 @@ export default {
     changeCheckStatusHandle(item, index) {
       const seletedNum = this.CurrentCheckedArray && this.CurrentCheckedArray.length;
       if (
-        !item.idmItemChecked &&
+        !item[this.propData.checkDataFiled||'idmItemChecked'] &&
         seletedNum &&
         this.propData.maxSelectedNum > 0 &&
-        seletedNum >= this.propData.maxSelectedNum
+        seletedNum >= this.propData.maxSelectedNum&&this.propData.maxSelectedTip
       ) {
         IDM.message['warning'](this.propData.selectedOverTips);
         return;
       }
-      item.idmItemChecked = !item.idmItemChecked;
-      if (item.idmItemChecked) {
+      //不提示，直接移除第一个
+      if(!item[this.propData.checkDataFiled||'idmItemChecked'] &&
+        seletedNum &&
+        this.propData.maxSelectedNum > 0 &&
+        seletedNum >= this.propData.maxSelectedNum&&!this.propData.maxSelectedTip){
+        const firstKey = this.CurrentCheckedArray[0][this.propData.keyDataFiled];
+        this.listData.forEach(sitem => {
+          if(sitem[this.propData.keyDataFiled]==firstKey){
+            sitem[this.propData.checkDataFiled||'idmItemChecked'] = false;
+          }
+        });
+        this.CurrentCheckedArray.splice(0, 1);
+      }
+
+      item[this.propData.checkDataFiled||'idmItemChecked'] = !item[this.propData.checkDataFiled||'idmItemChecked'];
+      if (item[this.propData.checkDataFiled||'idmItemChecked']) {
         this.CurrentCheckedArray.push(_.cloneDeep(item));
       } else {
         //移除
-        this.CurrentCheckedArray.forEach(sitem => (sitem.idmItemChecked = false));
+        this.CurrentCheckedArray.forEach(sitem => (sitem[this.propData.checkDataFiled||'idmItemChecked'] = false));
         let itemIndex = _.findIndex(this.CurrentCheckedArray, item);
         if (itemIndex > -1) {
           this.CurrentCheckedArray.splice(itemIndex, 1);
@@ -976,8 +1069,8 @@ export default {
     changeAllCheckStatusHandle() {
       let changeCount = 0;
       this.listData.forEach(sitem => {
-        if (!sitem.idmItemChecked) {
-          sitem.idmItemChecked = true;
+        if (!sitem[this.propData.checkDataFiled||'idmItemChecked']) {
+          sitem[this.propData.checkDataFiled||'idmItemChecked'] = true;
           this.CurrentCheckedArray.push(_.cloneDeep(sitem));
           changeCount++;
         }
@@ -1001,22 +1094,22 @@ export default {
           if (byValData && byValData.type) {
             if (byValData.type == 'remove' && byValData.itemObject) {
               //单个移除
-              byValData.itemObject.idmItemChecked = false;
-              this.CurrentCheckedArray.forEach(sitem => (sitem.idmItemChecked = false));
+              byValData.itemObject[this.propData.checkDataFiled||'idmItemChecked'] = false;
+              this.CurrentCheckedArray.forEach(sitem => (sitem[this.propData.checkDataFiled||'idmItemChecked'] = false));
               let itemIndex = _.findIndex(this.CurrentCheckedArray, byValData.itemObject);
               if (itemIndex > -1) {
                 this.CurrentCheckedArray.splice(itemIndex, 1);
               }
               //取消选中效果
-              byValData.itemObject.idmItemChecked = true;
+              byValData.itemObject[this.propData.checkDataFiled||'idmItemChecked'] = true;
               itemIndex = _.findIndex(this.listData, byValData.itemObject);
               if (itemIndex > -1) {
-                this.listData[itemIndex].idmItemChecked = false;
+                this.listData[itemIndex][this.propData.checkDataFiled||'idmItemChecked'] = false;
               }
             } else if (byValData.type == 'removeAll') {
               //移除全部
               this.CurrentCheckedArray = [];
-              this.listData.forEach(sitem => (sitem.idmItemChecked = false));
+              this.listData.forEach(sitem => (sitem[this.propData.checkDataFiled||'idmItemChecked'] = false));
             }
             this.$forceUpdate();
             this.sendItemCheckMsg();
@@ -1038,6 +1131,20 @@ export default {
       }
     },
     /**
+     * 交互功能：设置组件的上下文内容值
+     * @param {
+     *  type:"定义的类型，已知类型：pageCommonInterface（页面统一接口返回值）、"
+     *  key:"数据key标识，页面每个接口设置的数据集名称，方便识别获取自己需要的数据"
+     *  data:"数据集，内容为：字符串 or 数组 or 对象"
+     * }
+     */
+    setContextValue(object){
+      if(object.type!="pageCommonInterface"){
+        return;
+      }
+      object.key == this.propData.dataName&&this.formatSourceData(object.data);
+    },
+    /**
      * 组件通信：接收消息的方法
      * @param {
      *  type:"发送消息的时候定义的类型，这里可以自己用来要具体做什么，统一规定的type：linkageResult（组件联动传结果值）、linkageDemand（组件联动传需求值）、linkageReload（联动组件重新加载）
@@ -1050,7 +1157,7 @@ export default {
     receiveBroadcastMessage(object) {
       // console.log('组件收到消息:' + this.moduleObject.packageid, object);
       if (object.type && object.type == 'linkageDemand') {
-        this.formatSourceData(object.message);
+        (this.propData.dataSourceType=="receiveMessage"||!this.propData.dataSourceType)&&this.formatSourceData(object.message);
       } else if (object.type && object.type == 'linkageResult') {
         //结果值设置
         this.valueBind(object.message);
@@ -1302,7 +1409,7 @@ export default {
       opacity: 1;
     }
     svg {
-      color: #40a9ff;
+      color: #FFFFFF;
       fill: currentColor;
       width: 30px;
       max-height: 30px;
