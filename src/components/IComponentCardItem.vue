@@ -379,10 +379,10 @@ export default {
           result="其他页面";
           break;
         case "ptym":
-          result="平台页面";
+          result="平台";
           break;
         case "xmym":
-          result="项目页面";
+          result="项目";
           break;
       }
       return result;
