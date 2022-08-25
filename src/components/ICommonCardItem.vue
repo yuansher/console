@@ -42,7 +42,7 @@
         </template>
         <div v-if="propData.showImageBox" class="cc-item-img-container">
           <img
-            v-if="item[propData.imageObjectDataFiled].length > 0"
+            v-if="item[propData.imageObjectDataFiled] && item[propData.imageObjectDataFiled].length > 0"
             :style="getStyle('itemimg', item[propData.imageObjectDataFiled][0])"
             :src="IDM.url.getWebPath(item[propData.imageObjectDataFiled][0].ourl)"
           />
@@ -67,7 +67,7 @@
                 p-id="10906"
               ></path>
             </svg>
-            {{ item[propData.imageObjectDataFiled].length }}
+            {{ item[propData.imageObjectDataFiled] ? item[propData.imageObjectDataFiled].length : '' }}
           </div>
         </div>
         <div class="cc-item-info-container">
