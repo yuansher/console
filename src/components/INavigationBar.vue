@@ -19,7 +19,12 @@
         <span>{{propData.leftTitle||"IDM页面控制台"}}<label>{{propData.betaTitle}}</label></span>
       </div>
       <div class="nc-menu">
-        <div v-for="(item,index) in propData.menuList" :key="index" :class="item.checked?'active':''" @click="menuClick(item)">{{item.title}}</div>
+        <!-- <div v-for="(item,index) in propData.menuList" :key="index" :class="item.checked?'active':''" @click="menuClick(item)">{{item.title}}</div> -->
+        <a-menu mode="horizontal" :selectedKeys="checkMenu" @click="menuObjClick">
+          <a-menu-item v-for="(item,index) in propData.menuList" :key="index">
+            {{item.title}}
+          </a-menu-item>
+        </a-menu>
       </div>
       <div class="nc-user">
         <a-dropdown>
@@ -51,9 +56,79 @@ export default {
   data(){
     return {
       moduleObject:{},
-      propData:this.$root.propData.compositeAttr||{},
+      propData:this.$root.propData.compositeAttr||{
+        menuList:[
+          {
+            title:"首页",
+            url:"",
+            checked:true,
+            openType:"_self"
+          },
+          {
+            title:"IDM文档",
+            url:"https://yunit-code.github.io/zh/",
+            checked:false,
+            openType:"_blank"
+          },
+          {
+            title:"IDM文档",
+            url:"https://yunit-code.github.io/zh/",
+            checked:false,
+            openType:"_blank"
+          },
+          {
+            title:"IDM文档",
+            url:"https://yunit-code.github.io/zh/",
+            checked:false,
+            openType:"_blank"
+          },
+          {
+            title:"IDM文档",
+            url:"https://yunit-code.github.io/zh/",
+            checked:false,
+            openType:"_blank"
+          },
+          {
+            title:"IDM文档",
+            url:"https://yunit-code.github.io/zh/",
+            checked:false,
+            openType:"_blank"
+          },
+          {
+            title:"IDM文档",
+            url:"https://yunit-code.github.io/zh/",
+            checked:false,
+            openType:"_blank"
+          },
+          {
+            title:"IDM文档",
+            url:"https://yunit-code.github.io/zh/",
+            checked:false,
+            openType:"_blank"
+          },
+          {
+            title:"IDM文档",
+            url:"https://yunit-code.github.io/zh/",
+            checked:false,
+            openType:"_blank"
+          },
+          {
+            title:"IDM文档",
+            url:"https://yunit-code.github.io/zh/",
+            checked:false,
+            openType:"_blank"
+          },
+          {
+            title:"IDM文档",
+            url:"https://yunit-code.github.io/zh/",
+            checked:false,
+            openType:"_blank"
+          }
+        ]
+      },
       userName:"用户名",
-      userPhoto:""
+      userPhoto:"",
+      checkMenu:[]
     }
   },
   props: {
@@ -66,6 +141,7 @@ export default {
       this.userName = this.getUserInfoField("userInfoField","userInfoFunction");
       this.userPhoto = this.getUserInfoField("userPhotoField","userPhotoFunction");
     }
+    this.resetCheckMenu();
   },
   mounted() {
   },
@@ -118,12 +194,35 @@ export default {
           break;
       }
     },
+    menuObjClick(e){
+      let that = this;
+      if(this.moduleObject.env=="develop"){
+        //开发模式下不执行此事件
+        return;
+      }
+      var clickObject = this.propData.menuList;
+      clickObject.forEach((item,index)=>{
+        if(index==e.key){
+          that.menuClick(item);
+        }
+      });
+    },
+    resetCheckMenu(){
+      this.checkMenu=[];
+      var clickObject = this.propData.menuList;
+      clickObject.forEach((item,index)=>{
+        if(item.checked){
+          this.checkMenu.push(index);
+        }
+      });
+    },
     /**
      * 提供父级组件调用的刷新prop数据组件
      */
     propDataWatchHandle(propData){
       this.propData = propData.compositeAttr||{};
       this.convertAttrToStyleObject();
+      this.resetCheckMenu();
     },
     /**
      * 把属性转换成样式对象
@@ -383,11 +482,17 @@ export default {
   }
   .nc-menu{
     width: 50%;
-    display: flex;
-    justify-content:center;
-    font-size: 16px;
+    // display: flex;
+    // justify-content:center;
+    font-size: 16px !important;
     white-space: nowrap;
-    
+    .ant-menu-horizontal{
+      border: none;
+      line-height: 58px;
+    }
+    .ant-menu{
+      font-size: 16px !important;
+    }
     >div{
       padding:0px 18px;
       position: relative;

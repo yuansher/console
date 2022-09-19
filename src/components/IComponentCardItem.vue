@@ -58,7 +58,7 @@
           </div>
           <div class="cc-item-info-classid">
             <div class="cc-item-info-classid-font">类名：<span>{{item.moduleClassName}}</span></div>
-            <div class="cc-item-info-button" v-if="propData.buttonList&&propData.buttonList.length>0">
+            <div class="cc-item-info-button" style="white-space: nowrap;" v-if="propData.buttonList&&propData.buttonList.length>0">
               <template v-for="(bitem,bindex) in propData.buttonList" >
                 <a-button v-if="bitem.buttonName" :key="bindex" :type="bitem.buttoType" shape="round" size="small" @click="clickButtonHandle(item,bitem)">{{bitem.buttonName}}</a-button>
               </template>
