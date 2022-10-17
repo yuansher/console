@@ -486,6 +486,7 @@ export default {
     // justify-content:center;
     font-size: 16px !important;
     white-space: nowrap;
+    text-align: center;
     .ant-menu-horizontal{
       border: none;
       line-height: 58px;
