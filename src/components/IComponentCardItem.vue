@@ -55,6 +55,9 @@
             <a-tag v-if="item.moduleTypeText||getCode(item.moduleType)">
               {{item.moduleTypeText||getCode(item.moduleType)}}
             </a-tag>
+            <a-tag v-if="item.productName">
+              {{item.productName}}
+            </a-tag>
           </div>
           <div class="cc-item-info-classid">
             <div class="cc-item-info-classid-font">类名：<span>{{item.moduleClassName}}</span></div>

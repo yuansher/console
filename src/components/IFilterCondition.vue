@@ -53,7 +53,7 @@
           <!--菜单类型的-->
           <a-dropdown v-show="isShowMoreIcon()" placement="bottomRight" :overlayClassName="moduleObject.id+'-ddbox'">
             <svg-icon className="cc-item-svg-icon" iconClass="gengduo-shuxiang"></svg-icon>
-            <a-menu slot="overlay" @click="btnClickEventFunHandle($event,item)">
+            <a-menu slot="overlay" @click="btnClickEventFunHandle($event)">
               <template v-for="btnItem in propData.buttonOptionList">
                 <a-menu-item v-if="
                     btnItem.type=='menu'&&(btnItem.iconSvg || btnItem.buttonText) &&
@@ -141,7 +141,6 @@ export default {
      * 按钮点击事件
      */
     btnClickEventFunHandle(event){
-      console.log(event,item);
       this.propData.buttonOptionList&&this.propData.buttonOptionList.forEach(btnItem=>{
         if(btnItem.key==event.key){
           //自定义函数
