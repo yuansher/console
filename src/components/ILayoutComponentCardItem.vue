@@ -23,7 +23,8 @@
       <div class="layout-component-card-item-box" @click="itemClickHandle(item)" v-for="(item,index) in listData" :key="index">
         <img v-if="item.previewImgObject.length>0" :style="getStyle('itemimg',item.previewImgObject[0])" :src="IDM.url.getWebPath(item.previewImgObject[0].ourl)"/>
         <div class="cc-item-img-shade"></div>
-        <div class="cc-item-img-count-box" @click="showModal(item)">
+        <div class="cc-item-img-preview-button" v-if="propData.showPreviewButton" @click.stop="previewComponent(item)">点击预览</div>
+        <div class="cc-item-img-count-box" @click.stop="showModal(item)">
           <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10905"><path d="M833.4016 222.45546667H82.56746667c-26.30506667 0-47.70133333 21.5104-47.70133334 48.04906666v588.0608c0 26.47253333 21.39626667 48.0416 47.70133334 48.0416h750.8352c26.3328 0 47.6928-21.54666667 47.6928-48.0416V270.47466667c-0.05653333-26.5696-21.36-48.0192-47.69386667-48.0192z m-47.6768 96.02453333V751.34933333L676.6784 618.0576c-4.02346667-4.86506667-11.11786667-5.75573333-16.20906667-2.0288l-126.84586666 93.26506667-217.8016-213.3504c-2.5344-2.49493333-6.03306667-3.584-9.42293334-3.3632-3.54773333 0.31146667-6.67306667 2.1952-8.66773333 5.06133333L130.2528 738.92266667V318.48h655.472z m-286.02773333 180.032c0-43.03466667 34.752-78.0448 77.44426666-78.0448 42.7424 0 77.43573333 35.0112 77.43573334 78.0448 0 42.93333333-34.69333333 77.97653333-77.43573334 77.97653333-42.69226667 0-77.44426667-35.0432-77.44426666-77.97653333z m450.928 233.98186667c-19.74293333 0-35.7472-16.12693333-35.7472-35.96373334V188.42133333H171.97546667c-19.74293333 0-35.73333333-16.0736-35.73333334-35.9584 0-19.86986667 15.9904-35.9584 35.73333334-35.9584h778.6496c19.73013333 0 35.76426667 16.08853333 35.76426666 35.9584v544.11093334c-0.00106667 19.79306667-16.03413333 35.92-35.76426666 35.92z" p-id="10906"></path></svg>
           {{item.previewImgObject.length}}
         </div>
@@ -292,6 +293,37 @@ export default {
       }
     },
     /**
+     * 预览组件
+     */
+    previewComponent(itemData){
+      let that = this;
+      if(this.moduleObject.env=="develop"){
+        //开发模式下不执行此事件
+        return;
+      }
+      //获取所有的URL参数、页面ID（pageId）、以及所有组件的返回值（用范围值去调用IDM提供的方法取出所有的组件值）
+      let urlObject = window.IDM.url.queryObject(),
+      pageId = window.IDM.broadcast&&window.IDM.broadcast.pageModule?window.IDM.broadcast.pageModule.id:"";
+      
+      //自定义函数
+      /**
+       * [
+       * {name:"",param:{}}
+       * ]
+       */
+      var clickFunction = this.propData.previewClickFunction;
+      clickFunction&&clickFunction.forEach(item=>{
+        window[item.name]&&window[item.name].call(this,{
+          urlData:urlObject,
+          pageId,
+          customParam:item.param,
+          _this:this,
+          itemData
+        });
+      })
+      // window.open(IDM.url.getWebPath("@"+item.codePackageClassName+"/"+item.codePackageVersion+"/index.html#/?className="+item.moduleClassName))
+    },
+    /**
      * 点击组件
      */
     itemClickHandle(itemData,propName){
@@ -460,6 +492,29 @@ export default {
     left: 10px;
     top: 10px;
   }
+  .cc-item-img-preview-button{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 90px;
+    height: 24px;
+    line-height: 22px;
+    border-radius: 11px;
+    text-align: center;
+    color: rgba(255,255,255,0.85);
+    border:1px solid rgba(255,255,255,0.85);
+    z-index: 2;
+    margin-left: -45px;
+    margin-top: -12px;
+    cursor: pointer;
+    transition: all linear 0.3s;
+    opacity: 0;
+    transition: all linear 0.3s;
+    // &:hover{
+    //   background: white;
+    //   color: #333;
+    // }
+  }
   .cc-item-grid-count-box{
     right: 10px;
     top: 10px;
@@ -467,7 +522,7 @@ export default {
   &:hover{
     box-shadow: 0px 0px 15px rgba(0,0,0,0.15);
     border: 5px solid #40A9FF;
-    .cc-item-title-box{
+    .cc-item-title-box,.cc-item-img-preview-button,.cc-item-img-shade{
       opacity: 1;
     }
     // .cc-item-img-shade{

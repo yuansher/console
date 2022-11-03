@@ -19,17 +19,9 @@
             </div>
       </div>
       <div class="vic-content-box">
-        <div>
-          <div class="vic-item-title">V1.0.1</div>
-          <div class="vic-item-remark">框架底层版本</div>
-        </div>
-        <div>
-          <div class="vic-item-title">V1.0.1</div>
-          <div class="vic-item-remark">控制台版本</div>
-        </div>
-        <div>
-          <div class="vic-item-title">20201219</div>
-          <div class="vic-item-remark">基于DreamWeb最低版本</div>
+        <div v-for="(item,index) in propData.versionList||[]" :key="index">
+          <div class="vic-item-title">{{getObjectValue(item)}}</div>
+          <div class="vic-item-remark">{{item.title}}</div>
         </div>
       </div>
     </div>
@@ -56,6 +48,16 @@ export default {
   },
   destroyed() {},
   methods:{
+    getObjectValue(fitem){
+      let returnVal = fitem.defaultValue;
+      var dataFunction = fitem.dataFunction;
+          dataFunction&&dataFunction.forEach(item=>{
+            returnVal = window[item.name]&&window[item.name].call(this,{
+              ...item.param
+            });
+          })
+      return returnVal;
+    },
     /**
      * 提供父级组件调用的刷新prop数据组件
      */

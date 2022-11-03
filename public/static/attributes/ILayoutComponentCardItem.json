@@ -306,6 +306,22 @@
                     "multiple": true
                 },
                 {
+                    "type": "switch",
+                    "layoutType": "inline",
+                    "text": "显示预览",
+                    "bindKey": "showPreviewButton",
+                    "desc":"设置是否显示卡片上的预览按钮",
+                    "default": true
+                },
+                {
+                    "type": "actionSelect",
+                    "layoutType": "block",
+                    "text": "预览自定义函数",
+                    "bindKey": "previewClickFunction",
+                    "desc": "预览按钮需要自定义的时候可以使用这里设置自定义函数执行动作，接收参数为格式为{...自定义的,itemData:整条数据对象}",
+                    "multiple": true
+                },
+                {
                     "type": "actionSelect",
                     "layoutType": "block",
                     "text": "新建点击自定义函数",

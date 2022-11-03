@@ -256,6 +256,36 @@
                     "bindKey": "font"
                 }
             ]
+        },
+        {
+            "type": "table",
+            "text": "集合信息",
+            "bindKey": "versionList",
+            "tabText": "信息[index]",
+            "children": [
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "信息名称",
+                    "bindKey": "title",
+                    "default": "最低版本"
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "默认值",
+                    "bindKey": "defaultValue",
+                    "default": ""
+                },
+                {
+                    "type": "actionSelect",
+                    "layoutType": "block",
+                    "text": "信息值自定义函数",
+                    "bindKey": "dataFunction",
+                    "desc": "自定义值的显示，通过函数可以实现更加灵活的信息获取，返回需要的值，函数接收以下格式：{...自定义参数}",
+                    "multiple": false
+                }
+            ]
         }
     ]
 }
