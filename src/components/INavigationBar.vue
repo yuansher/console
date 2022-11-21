@@ -14,34 +14,40 @@
     -->
     <div class="navigationbar-container">
       <div class="nc-logo">
-        <img v-if="propData.leftLogo" :src="IDM.url.getWebPath(propData.leftLogo)"/>
-        <img v-else :src="IDM.url.getModuleAssetsWebPath(require('../assets/logo.png'),moduleObject)"/>
-        <span>{{propData.leftTitle||"IDM页面控制台"}}<label>{{propData.betaTitle}}</label></span>
+        <img v-if="propData.leftLogo" :src="IDM.url.getWebPath(propData.leftLogo)" />
+        <img v-else :src="IDM.url.getModuleAssetsWebPath(require('../assets/logo.png'), moduleObject)" />
+        <span>{{ propData.leftTitle || "IDM页面控制台" }}<label>{{ propData.betaTitle }}</label></span>
       </div>
       <div class="nc-menu">
-        <!-- <div v-for="(item,index) in propData.menuList" :key="index" :class="item.checked?'active':''" @click="menuClick(item)">{{item.title}}</div> -->
-        <a-menu mode="horizontal" :selectedKeys="checkMenu" @click="menuObjClick">
-          <a-menu-item v-for="(item,index) in propData.menuList" :key="index">
-            {{item.title}}
-          </a-menu-item>
+        <a-menu mode="horizontal" :selectedKeys="selectedKeys" @click="menuObjClick" @select="handleSelect">
+          <template v-for="item in menuList">
+            <i-sub-menu v-if="item.children && item.children.length > 0" :key="item.id" :menu-info="item" />
+            <a-menu-item v-else :key="item.id">
+              <span>{{ item.title }}</span>
+            </a-menu-item>
+          </template>
         </a-menu>
       </div>
       <div class="nc-user">
         <a-dropdown>
           <a-button type="danger">
-            {{propData.newBtnTitle||'我要建'}}
+            {{ propData.newBtnTitle || '我要建' }}
           </a-button>
           <a-menu slot="overlay" @click="clickNewHandle">
-            <a-menu-item v-for="(item,index) in propData.newMenuList" :key="index">
-              <a href="javascript:;">{{item.title}}</a>
+            <a-menu-item v-for="(item, index) in propData.newMenuList" :key="index">
+              <a href="javascript:;">{{ item.title }}</a>
             </a-menu-item>
           </a-menu>
         </a-dropdown>
         <a-dropdown>
-          <div class="user-info"><a-avatar icon="user" :src="userPhoto||IDM.url.getModuleAssetsWebPath(require('../assets/default_bg_userphoto.png'),moduleObject)"/> {{userName}}</div>
+          <div class="user-info">
+            <a-avatar icon="user"
+              :src="userPhoto || IDM.url.getModuleAssetsWebPath(require('../assets/default_bg_userphoto.png'), moduleObject)" />
+            {{ userName }}
+          </div>
           <a-menu slot="overlay" @click="clickUserMenuHandle">
-            <a-menu-item v-for="(item,index) in propData.userMenuList" :key="index">
-              <a href="javascript:;">{{item.title}}</a>
+            <a-menu-item v-for="(item, index) in propData.userMenuList" :key="index">
+              <a href="javascript:;">{{ item.title }}</a>
             </a-menu-item>
           </a-menu>
         </a-dropdown>
@@ -51,127 +57,134 @@
 </template>
 
 <script>
+import ISubMenu from '../innerComponents/ISubMenu.vue'
+const defaultSelectedKeys = ['1', '1-1'],  // 默认选中的菜单
+  menuList = [
+    {
+      id: '1',            // 菜单id
+      title: '首页',      // 菜单标题
+      openType: '_self',  // 打开窗口方式
+      children: [         //Array<MenuItem>
+        {
+          id: '1-1',
+          title: '首页 -1',
+          url: '/sdaf',
+          openType: '_self'
+        }
+      ]
+    },
+    {
+      id: '2',
+      title: '组件工厂',
+      openType: '_self'
+    },
+    {
+      id: '3',
+      title: '组件市场',
+      openType: '_self'
+    },
+    {
+      id: '4',
+      title: '业务组件',
+      openType: '_self'
+    },
+    {
+      id: '5',
+      title: '页面管理',
+      openType: '_self'
+    },
+    {
+      id: '6',
+      title: '在线升级',
+      openType: '_self'
+    },
+    {
+      id: '7',
+      title: '数据源',
+      openType: '_blank'
+    },
+    {
+      id: '8',
+      title: '数据建模',
+      openType: '_blank',
+      url: ''
+    },
+    {
+      id: '9',
+      title: 'IDM学院',
+      openType: '_blank'
+    },
+    {
+      id: '10',
+      title: '帮助文档',
+      openType: '_blank',
+      url: 'https://yunit-code.github.io/zh/'
+    }
+  ]
 export default {
   name: 'INavigationBar',
-  data(){
-    return {
-      moduleObject:{},
-      propData:this.$root.propData.compositeAttr||{
-        menuList:[
-          {
-            title:"首页",
-            url:"",
-            checked:true,
-            openType:"_self"
-          },
-          {
-            title:"IDM文档",
-            url:"https://yunit-code.github.io/zh/",
-            checked:false,
-            openType:"_blank"
-          },
-          {
-            title:"IDM文档",
-            url:"https://yunit-code.github.io/zh/",
-            checked:false,
-            openType:"_blank"
-          },
-          {
-            title:"IDM文档",
-            url:"https://yunit-code.github.io/zh/",
-            checked:false,
-            openType:"_blank"
-          },
-          {
-            title:"IDM文档",
-            url:"https://yunit-code.github.io/zh/",
-            checked:false,
-            openType:"_blank"
-          },
-          {
-            title:"IDM文档",
-            url:"https://yunit-code.github.io/zh/",
-            checked:false,
-            openType:"_blank"
-          },
-          {
-            title:"IDM文档",
-            url:"https://yunit-code.github.io/zh/",
-            checked:false,
-            openType:"_blank"
-          },
-          {
-            title:"IDM文档",
-            url:"https://yunit-code.github.io/zh/",
-            checked:false,
-            openType:"_blank"
-          },
-          {
-            title:"IDM文档",
-            url:"https://yunit-code.github.io/zh/",
-            checked:false,
-            openType:"_blank"
-          },
-          {
-            title:"IDM文档",
-            url:"https://yunit-code.github.io/zh/",
-            checked:false,
-            openType:"_blank"
-          },
-          {
-            title:"IDM文档",
-            url:"https://yunit-code.github.io/zh/",
-            checked:false,
-            openType:"_blank"
-          }
-        ]
-      },
-      userName:"用户名",
-      userPhoto:"",
-      checkMenu:[]
-    }
+  components: {
+    ISubMenu
   },
-  props: {
+  data() {
+    return {
+      moduleObject: {},
+      propData: this.$root.propData.compositeAttr || {},
+      userName: "用户名",
+      userPhoto: "",
+      menuList: [],
+      selectedKeys: [],
+      clickItem: null
+    }
   },
   created() {
     this.moduleObject = this.$root.moduleObject
     // console.log(this.moduleObject)
     this.convertAttrToStyleObject();
-    if(this.moduleObject.env=="production"){
-      this.userName = this.getUserInfoField("userInfoField","userInfoFunction");
-      this.userPhoto = this.getUserInfoField("userPhotoField","userPhotoFunction");
+    if (this.moduleObject.env == "production") {
+      this.userName = this.getUserInfoField("userInfoField", "userInfoFunction");
+      this.userPhoto = this.getUserInfoField("userPhotoField", "userPhotoFunction");
     }
-    this.resetCheckMenu();
   },
   mounted() {
   },
-  destroyed() {},
-  methods:{
+  destroyed() { },
+  methods: {
+    handleFindMenuItem(menuList, key) {
+      menuList.forEach(el => {
+        if (el.id == key) {
+          this.clickItem = el
+          return
+        }
+        if (!el.children || el.children.length == 0) return
+        this.handleFindMenuItem(el.children, key)
+      })
+    },
     /**
      * 用户信息获取
      */
-    getUserInfoField(fieldName,fieldFun){
-      var dataObject = {IDM:window.IDM};
+    getUserInfoField(fieldName, fieldFun) {
+      var dataObject = { IDM: window.IDM };
       dataObject["userInfo"] = IDM.user.getCurrentUserInfo();
 
       var _defaultVal = "";
-      if(this.propData[fieldName]){
+      if (this.propData[fieldName]) {
         var filedExp = this.propData[fieldName];
-        filedExp = "userInfo"+(filedExp.startsWiths("[")?"":".")+filedExp;
-        _defaultVal = window.IDM.express.replace.call(this, "@["+filedExp+"]", dataObject);
+        filedExp = "userInfo" + (filedExp.startsWiths("[") ? "" : ".") + filedExp;
+        _defaultVal = window.IDM.express.replace.call(this, "@[" + filedExp + "]", dataObject);
       }
-      
+
       var dataFunction = this.propData[fieldFun];
-      dataFunction&&dataFunction.forEach(item=>{
-        _defaultVal = window[item.name]&&window[item.name].call(this,{
-          customParam:item.param,
+      dataFunction && dataFunction.forEach(item => {
+        _defaultVal = window[item.name] && window[item.name].call(this, {
+          customParam: item.param,
           ...dataObject
         });
       })
       return _defaultVal;
     },
-    menuClick(item){
-      if(!item.url){
+    menuClick(item) {
+      if (!item.url) {
         return;
       }
       switch (item.openType) {
@@ -194,177 +207,191 @@ export default {
           break;
       }
     },
-    menuObjClick(e){
-      let that = this;
-      if(this.moduleObject.env=="develop"){
+    handleSelect({ selectedKeys }) {
+      this.selectedKeys = selectedKeys
+    },
+    menuObjClick(e) {
+      if (this.moduleObject.env == "develop") {
         //开发模式下不执行此事件
         return;
       }
-      var clickObject = this.propData.menuList;
-      clickObject.forEach((item,index)=>{
-        if(index==e.key){
-          that.menuClick(item);
-        }
-      });
-    },
-    resetCheckMenu(){
-      this.checkMenu=[];
-      var clickObject = this.propData.menuList;
-      clickObject.forEach((item,index)=>{
-        if(item.checked){
-          this.checkMenu.push(index);
-        }
-      });
+      this.clickItem = null
+      this.handleFindMenuItem(this.menuList, e.key)
+      this.menuClick(this.clickItem)
     },
     /**
      * 提供父级组件调用的刷新prop数据组件
      */
-    propDataWatchHandle(propData){
-      this.propData = propData.compositeAttr||{};
+    propDataWatchHandle(propData) {
+      this.propData = propData.compositeAttr || {};
       this.convertAttrToStyleObject();
-      this.resetCheckMenu();
     },
     /**
      * 把属性转换成样式对象
      */
-    convertAttrToStyleObject(){
+    convertAttrToStyleObject() {
       var styleObject = {};
-      if(this.propData.bgSize&&this.propData.bgSize=="custom"){
-        styleObject["background-size"]=(this.propData.bgSizeWidth?this.propData.bgSizeWidth.inputVal+this.propData.bgSizeWidth.selectVal:"auto")+" "+(this.propData.bgSizeHeight?this.propData.bgSizeHeight.inputVal+this.propData.bgSizeHeight.selectVal:"auto")
-      }else if(this.propData.bgSize){
-        styleObject["background-size"]=this.propData.bgSize;
+      if (this.propData.bgSize && this.propData.bgSize == "custom") {
+        styleObject["background-size"] = (this.propData.bgSizeWidth ? this.propData.bgSizeWidth.inputVal + this.propData.bgSizeWidth.selectVal : "auto") + " " + (this.propData.bgSizeHeight ? this.propData.bgSizeHeight.inputVal + this.propData.bgSizeHeight.selectVal : "auto")
+      } else if (this.propData.bgSize) {
+        styleObject["background-size"] = this.propData.bgSize;
       }
-      if(this.propData.positionX&&this.propData.positionX.inputVal){
-        styleObject["background-position-x"]=this.propData.positionX.inputVal+this.propData.positionX.selectVal;
+      if (this.propData.positionX && this.propData.positionX.inputVal) {
+        styleObject["background-position-x"] = this.propData.positionX.inputVal + this.propData.positionX.selectVal;
       }
-      if(this.propData.positionY&&this.propData.positionY.inputVal){
-        styleObject["background-position-y"]=this.propData.positionY.inputVal+this.propData.positionY.selectVal;
+      if (this.propData.positionY && this.propData.positionY.inputVal) {
+        styleObject["background-position-y"] = this.propData.positionY.inputVal + this.propData.positionY.selectVal;
       }
       for (const key in this.propData) {
         if (this.propData.hasOwnProperty.call(this.propData, key)) {
           const element = this.propData[key];
-          if(!element&&element!==false&&element!=0){
+          if (!element && element !== false && element != 0) {
             continue;
           }
           switch (key) {
             case "width":
             case "height":
-              styleObject[key]=element;
+              styleObject[key] = element;
               break;
             case "bgColor":
-              if(element&&element.hex8){
-                styleObject["background-color"]=element.hex8;
+              if (element && element.hex8) {
+                styleObject["background-color"] = element.hex8;
               }
               break;
             case "box":
-              if(element.marginTopVal){
-                styleObject["margin-top"]=`${element.marginTopVal}`;
+              if (element.marginTopVal) {
+                styleObject["margin-top"] = `${element.marginTopVal}`;
               }
-              if(element.marginRightVal){
-                styleObject["margin-right"]=`${element.marginRightVal}`;
+              if (element.marginRightVal) {
+                styleObject["margin-right"] = `${element.marginRightVal}`;
               }
-              if(element.marginBottomVal){
-                styleObject["margin-bottom"]=`${element.marginBottomVal}`;
+              if (element.marginBottomVal) {
+                styleObject["margin-bottom"] = `${element.marginBottomVal}`;
               }
-              if(element.marginLeftVal){
-                styleObject["margin-left"]=`${element.marginLeftVal}`;
+              if (element.marginLeftVal) {
+                styleObject["margin-left"] = `${element.marginLeftVal}`;
               }
-              if(element.paddingTopVal){
-                styleObject["padding-top"]=`${element.paddingTopVal}`;
+              if (element.paddingTopVal) {
+                styleObject["padding-top"] = `${element.paddingTopVal}`;
               }
-              if(element.paddingRightVal){
-                styleObject["padding-right"]=`${element.paddingRightVal}`;
+              if (element.paddingRightVal) {
+                styleObject["padding-right"] = `${element.paddingRightVal}`;
               }
-              if(element.paddingBottomVal){
-                styleObject["padding-bottom"]=`${element.paddingBottomVal}`;
+              if (element.paddingBottomVal) {
+                styleObject["padding-bottom"] = `${element.paddingBottomVal}`;
               }
-              if(element.paddingLeftVal){
-                styleObject["padding-left"]=`${element.paddingLeftVal}`;
+              if (element.paddingLeftVal) {
+                styleObject["padding-left"] = `${element.paddingLeftVal}`;
               }
               break;
             case "bgImgUrl":
-              styleObject["background-image"]=`url(${window.IDM.url.getWebPath(element)})`;
+              styleObject["background-image"] = `url(${window.IDM.url.getWebPath(element)})`;
               break;
             case "positionX":
               //背景横向偏移
-              
+
               break;
             case "positionY":
               //背景纵向偏移
-              
+
               break;
             case "bgRepeat":
               //平铺模式
-                styleObject["background-repeat"]=element;
+              styleObject["background-repeat"] = element;
               break;
             case "bgAttachment":
               //背景模式
-                styleObject["background-attachment"]=element;
+              styleObject["background-attachment"] = element;
               break;
             case "border":
-              if(element.border.top.width>0){
-                styleObject["border-top-width"]=element.border.top.width+element.border.top.widthUnit;
-                styleObject["border-top-style"]=element.border.top.style;
-                if(element.border.top.colors.hex8){
-                  styleObject["border-top-color"]=element.border.top.colors.hex8;
+              if (element.border.top.width > 0) {
+                styleObject["border-top-width"] = element.border.top.width + element.border.top.widthUnit;
+                styleObject["border-top-style"] = element.border.top.style;
+                if (element.border.top.colors.hex8) {
+                  styleObject["border-top-color"] = element.border.top.colors.hex8;
                 }
               }
-              if(element.border.right.width>0){
-                styleObject["border-right-width"]=element.border.right.width+element.border.right.widthUnit;
-                styleObject["border-right-style"]=element.border.right.style;
-                if(element.border.right.colors.hex8){
-                  styleObject["border-right-color"]=element.border.right.colors.hex8;
+              if (element.border.right.width > 0) {
+                styleObject["border-right-width"] = element.border.right.width + element.border.right.widthUnit;
+                styleObject["border-right-style"] = element.border.right.style;
+                if (element.border.right.colors.hex8) {
+                  styleObject["border-right-color"] = element.border.right.colors.hex8;
                 }
               }
-              if(element.border.bottom.width>0){
-                styleObject["border-bottom-width"]=element.border.bottom.width+element.border.bottom.widthUnit;
-                styleObject["border-bottom-style"]=element.border.bottom.style;
-                if(element.border.bottom.colors.hex8){
-                  styleObject["border-bottom-color"]=element.border.bottom.colors.hex8;
+              if (element.border.bottom.width > 0) {
+                styleObject["border-bottom-width"] = element.border.bottom.width + element.border.bottom.widthUnit;
+                styleObject["border-bottom-style"] = element.border.bottom.style;
+                if (element.border.bottom.colors.hex8) {
+                  styleObject["border-bottom-color"] = element.border.bottom.colors.hex8;
                 }
               }
-              if(element.border.left.width>0){
-                styleObject["border-left-width"]=element.border.left.width+element.border.left.widthUnit;
-                styleObject["border-left-style"]=element.border.left.style;
-                if(element.border.left.colors.hex8){
-                  styleObject["border-left-color"]=element.border.left.colors.hex8;
+              if (element.border.left.width > 0) {
+                styleObject["border-left-width"] = element.border.left.width + element.border.left.widthUnit;
+                styleObject["border-left-style"] = element.border.left.style;
+                if (element.border.left.colors.hex8) {
+                  styleObject["border-left-color"] = element.border.left.colors.hex8;
                 }
               }
-              
-              styleObject["border-top-left-radius"]=element.radius.leftTop.radius+element.radius.leftTop.radiusUnit;
-              styleObject["border-top-right-radius"]=element.radius.rightTop.radius+element.radius.rightTop.radiusUnit;
-              styleObject["border-bottom-left-radius"]=element.radius.leftBottom.radius+element.radius.leftBottom.radiusUnit;
-              styleObject["border-bottom-right-radius"]=element.radius.rightBottom.radius+element.radius.rightBottom.radiusUnit;
+
+              styleObject["border-top-left-radius"] = element.radius.leftTop.radius + element.radius.leftTop.radiusUnit;
+              styleObject["border-top-right-radius"] = element.radius.rightTop.radius + element.radius.rightTop.radiusUnit;
+              styleObject["border-bottom-left-radius"] = element.radius.leftBottom.radius + element.radius.leftBottom.radiusUnit;
+              styleObject["border-bottom-right-radius"] = element.radius.rightBottom.radius + element.radius.rightBottom.radiusUnit;
               break;
             case "font":
-              styleObject["font-family"]=element.fontFamily;
-              if(element.fontColors.hex8){
-                styleObject["color"]=element.fontColors.hex8;
+              styleObject["font-family"] = element.fontFamily;
+              if (element.fontColors.hex8) {
+                styleObject["color"] = element.fontColors.hex8;
               }
-              styleObject["font-weight"]=element.fontWeight&&element.fontWeight.split(" ")[0];
-              styleObject["font-style"]=element.fontStyle;
-              styleObject["font-size"]=element.fontSize+element.fontSizeUnit;
-              styleObject["line-height"]=element.fontLineHeight+(element.fontLineHeightUnit=="-"?"":element.fontLineHeightUnit);
-              styleObject["text-align"]=element.fontTextAlign;
-              styleObject["text-decoration"]=element.fontDecoration;
+              styleObject["font-weight"] = element.fontWeight && element.fontWeight.split(" ")[0];
+              styleObject["font-style"] = element.fontStyle;
+              styleObject["font-size"] = element.fontSize + element.fontSizeUnit;
+              styleObject["line-height"] = element.fontLineHeight + (element.fontLineHeightUnit == "-" ? "" : element.fontLineHeightUnit);
+              styleObject["text-align"] = element.fontTextAlign;
+              styleObject["text-decoration"] = element.fontDecoration;
               break;
           }
         }
       }
-      window.IDM.setStyleToPageHead(this.moduleObject.id,styleObject);
+      window.IDM.setStyleToPageHead(this.moduleObject.id, styleObject);
+      this.initData()
+    },
+    reload() {
+      //请求数据源
+      this.initData();
+    },
+    initData() {
+      //reset
+      if (this.moduleObject.env === 'develop') {
+        this.menuList = menuList
+        this.selectedKeys = defaultSelectedKeys
+        return
+      }
+      IDM.datasource.request(this.propData?.dataSource?.[0]?.id, {
+        moduleObject: this.moduleObject,
+        param: {}
+      }, (res) => {
+        if (res.code == 200) {
+          this.menuList = res.data.menuList
+          this.selectedKeys = res.data.defaultSelectedKeys
+          console.log(this.selectedKeys)
+        } else {
+          IDM.message.error(res.message)
+        }
+      })
     },
     /**
      * 我要建菜单点击事件
      */
-    clickNewHandle(e){
+    clickNewHandle(e) {
       let that = this;
-      if(this.moduleObject.env=="develop"){
+      if (this.moduleObject.env == "develop") {
         //开发模式下不执行此事件
         return;
       }
       //获取所有的URL参数、页面ID（pageId）、以及所有组件的返回值（用范围值去调用IDM提供的方法取出所有的组件值）
       let urlObject = window.IDM.url.queryObject(),
-      pageId = window.IDM.broadcast&&window.IDM.broadcast.pageModule?window.IDM.broadcast.pageModule.id:"";
+        pageId = window.IDM.broadcast && window.IDM.broadcast.pageModule ? window.IDM.broadcast.pageModule.id : "";
       //自定义函数
       /**
        * [
@@ -372,15 +399,15 @@ export default {
        * ]
        */
       var clickNewFunction = this.propData.newMenuList;
-      clickNewFunction.forEach((item,index)=>{
-        if(index==e.key){
-          if(item.clickFunction&&item.clickFunction.length>0){
-            item.clickFunction.forEach(fitem=>{
-              window[fitem.name]&&window[fitem.name].call(this,{
-                urlData:urlObject,
+      clickNewFunction.forEach((item, index) => {
+        if (index == e.key) {
+          if (item.clickFunction && item.clickFunction.length > 0) {
+            item.clickFunction.forEach(fitem => {
+              window[fitem.name] && window[fitem.name].call(this, {
+                urlData: urlObject,
                 pageId,
-                customParam:fitem.param,
-                _this:this
+                customParam: fitem.param,
+                _this: this
               });
             })
           }
@@ -390,15 +417,15 @@ export default {
     /**
      * 用户菜单点击事件
      */
-    clickUserMenuHandle(e){
+    clickUserMenuHandle(e) {
       let that = this;
-      if(this.moduleObject.env=="develop"){
+      if (this.moduleObject.env == "develop") {
         //开发模式下不执行此事件
         return;
       }
       //获取所有的URL参数、页面ID（pageId）、以及所有组件的返回值（用范围值去调用IDM提供的方法取出所有的组件值）
       let urlObject = window.IDM.url.queryObject(),
-      pageId = window.IDM.broadcast&&window.IDM.broadcast.pageModule?window.IDM.broadcast.pageModule.id:"";
+        pageId = window.IDM.broadcast && window.IDM.broadcast.pageModule ? window.IDM.broadcast.pageModule.id : "";
       //自定义函数
       /**
        * [
@@ -406,15 +433,15 @@ export default {
        * ]
        */
       var clickNewFunction = this.propData.userMenuList;
-      clickNewFunction.forEach((item,index)=>{
-        if(index==e.key){
-          if(item.clickFunction&&item.clickFunction.length>0){
-            item.clickFunction.forEach(fitem=>{
-              window[fitem.name]&&window[fitem.name].call(this,{
-                urlData:urlObject,
+      clickNewFunction.forEach((item, index) => {
+        if (index == e.key) {
+          if (item.clickFunction && item.clickFunction.length > 0) {
+            item.clickFunction.forEach(fitem => {
+              window[fitem.name] && window[fitem.name].call(this, {
+                urlData: urlObject,
                 pageId,
-                customParam:fitem.param,
-                _this:this
+                customParam: fitem.param,
+                _this: this
               });
             })
           }
@@ -431,8 +458,8 @@ export default {
      *  isAcross:如果为true则代表发送来源是其他页面的组件，默认为false
      * } object 
      */
-    receiveBroadcastMessage(object){
-      console.log("组件收到消息",object)
+    receiveBroadcastMessage(object) {
+      console.log("组件收到消息", object)
     },
     /**
      * 组件通信：发送消息的方法
@@ -445,32 +472,36 @@ export default {
      *  globalSend:如果为true则全站发送消息，注意全站rangeModule是无效的，只有className才有效，默认为false
      * } object 
      */
-    sendBroadcastMessage(object){
-        window.IDM.broadcast&&window.IDM.broadcast.send(object);
+    sendBroadcastMessage(object) {
+      window.IDM.broadcast && window.IDM.broadcast.send(object);
     }
   }
 }
 </script>
 <style lang="scss">
-.navigationbar-container{
+.navigationbar-container {
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
   height: 60px;
-  box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
   line-height: 60px;
-  .nc-logo{
+
+  .nc-logo {
     white-space: nowrap;
     width: 25%;
     padding: 0px 20px;
-    img{
+
+    img {
       width: 36px;
     }
-    span{
+
+    span {
       font-size: 18px;
       font-weight: bold;
       margin-left: 10px;
       position: relative;
-      label{
+
+      label {
         color: red;
         position: absolute;
         top: -30px;
@@ -480,31 +511,38 @@ export default {
       }
     }
   }
-  .nc-menu{
+
+  .nc-menu {
     width: 50%;
     // display: flex;
     // justify-content:center;
     font-size: 16px !important;
     white-space: nowrap;
     text-align: center;
-    .ant-menu-horizontal{
+
+    .ant-menu-horizontal {
       border: none;
       line-height: 58px;
     }
-    .ant-menu{
+
+    .ant-menu {
       font-size: 16px !important;
     }
-    >div{
-      padding:0px 18px;
+
+    >div {
+      padding: 0px 18px;
       position: relative;
       cursor: pointer;
-      &:hover{
+
+      &:hover {
         color: #40A9FF;
       }
     }
-    >div.active{
+
+    >div.active {
       color: #40A9FF;
-      &::before{
+
+      &::before {
         content: ' ';
         position: absolute;
         bottom: 0px;
@@ -515,13 +553,15 @@ export default {
       }
     }
   }
-  .nc-user{
+
+  .nc-user {
     width: 25%;
     padding: 0px 20px;
     display: flex;
     justify-content: flex-end;
-    align-items:center;
-    .user-info{
+    align-items: center;
+
+    .user-info {
       margin-left: 20px;
       font-size: 14px;
     }

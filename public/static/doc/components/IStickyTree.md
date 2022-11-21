@@ -27,6 +27,27 @@ oacommon@1.0.1
 
 #### 数据源
 
+##### 点击事件
+
+```js
+handleTreeSelect(selectedKeys, e) {
+    if (this.propData?.customClickFunction?.length > 0) {
+      const funcName = this.propData.customClickFunction[0].name
+      window?.[funcName].call(this, selectKeys)
+      return
+    }
+    if (!this.propData?.triggerComponents?.length > 0) {
+      return IDM.message.warning('请配置菜单的联动组件')
+    }
+    this.sendBroadcastMessage({
+      type: 'stickyTreeKeysChange',
+      rangeModule: this.propData.triggerComponents.map(el => el.moduleId),
+      message: selectedKeys
+    })
+}
+
+```
+
 ##### 接口返回数据格式
 
 ```js

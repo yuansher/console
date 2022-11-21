@@ -41,53 +41,6 @@
                     "default": "Beta"
                 },
                 {
-                    "type": "table",
-                    "text": "菜单导航",
-                    "bindKey": "menuList",
-                    "tabText": "菜单[index]",
-                    "children": [
-                        {
-                            "type": "input",
-                            "layoutType": "inline",
-                            "text": "菜单名称",
-                            "bindKey": "title",
-                            "default": ""
-                        },
-                        {
-                            "type": "input",
-                            "layoutType": "inline",
-                            "text": "跳转地址",
-                            "bindKey": "url",
-                            "default": ""
-                        },
-                        {
-                            "type": "switch",
-                            "layoutType": "inline",
-                            "text": "是否选中",
-                            "bindKey": "checked",
-                            "default": ""
-                        },
-                        {
-                            "type": "radio",
-                            "layoutType": "inline",
-                            "text": "跳转方式",
-                            "bindKey": "openType",
-                            "disabled": false,
-                            "dictionary": [
-                                {
-                                    "label": "当前窗口",
-                                    "value": "_self"
-                                },
-                                {
-                                    "label": "新窗口",
-                                    "value": "_blank"
-                                }
-                            ],
-                            "default": "_self"
-                        }
-                    ]
-                },
-                {
                     "type": "input",
                     "layoutType": "inline",
                     "text": "新建名称",
@@ -373,6 +326,13 @@
             "text": "高级",
             "desc": "点击？查看高级设置用法指南",
             "children": [
+                {
+                    "type": "dataSourceSelect",
+                    "layoutType": "inline",
+                    "text": "导航数据",
+                    "desc": "导航数据源，返回格式见组件文档详情",
+                    "bindKey": "dataSource"
+                },
                 {
                     "type": "textarea",
                     "layoutType": "block",
