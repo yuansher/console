@@ -95,6 +95,7 @@ export {
 /**
  * 组件的图标按需引入放到这下面
  */
+
 export {
     default as SoundOutline
 } from '@ant-design/icons/lib/outline/SoundOutline';
@@ -105,8 +106,20 @@ export {
     default as PaperClipOutline
 } from '@ant-design/icons/lib/outline/PaperClipOutline';
 export {
+    default as MinusSquareOutline
+} from '@ant-design/icons/lib/outline/MinusSquareOutline';
+export {
+    default as PlusSquareOutline
+} from '@ant-design/icons/lib/outline/PlusSquareOutline';
+export {
+    default as FileOutline
+} from '@ant-design/icons/lib/outline/FileOutline';
+export {
     default as ExclamationCircleFill
 } from '@ant-design/icons/lib/fill/ExclamationCircleFill';
 export {
     default as InfoCircleFill
 } from '@ant-design/icons/lib/fill/InfoCircleFill';
+export {
+    default as CaretDownFill
+} from '@ant-design/icons/lib/fill/CaretDownFill';
