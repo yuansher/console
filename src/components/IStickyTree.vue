@@ -2,15 +2,18 @@
   <div idm-ctrl="idm_module" :style="stickyObject" class="idm-sticky-tree" :id="moduleObject.id"
     :idm-ctrl-id="moduleObject.id">
     <a-input-search v-if="propData.isShowSearch" class="search-input" placeholder="输入关键字搜索" @change="onChange" />
-    <a-tree :expanded-keys="expandedKeys" :show-line="propData.isShowLine" @select="handleTreeSelect"
-      :auto-expand-parent="autoExpandParent" :tree-data="gData" @expand="onExpand">
-      <template slot="title" slot-scope="{ title }">
-        <span class="title-text" v-if="title.indexOf(searchValue) > -1">
-          {{ title.substr(0, title.indexOf(searchValue)) }}
+    <a-tree :expanded-keys="expandedKeys" :replace-fields="replaceFieldsObj" :show-line="propData.isShowLine"
+      @select="handleTreeSelect" :auto-expand-parent="autoExpandParent" :tree-data="gData" @expand="onExpand">
+      <template slot="title" slot-scope="scope">
+        <span class="title-text"
+          v-if="scope[replaceFieldsObj.title] && scope[replaceFieldsObj.title].indexOf(searchValue) > -1">
+          {{ scope[replaceFieldsObj.title].substr(0, scope[replaceFieldsObj.title].indexOf(searchValue)) }}
           <span class="match-title-text">{{ searchValue }}</span>
-          {{ title.substr(title.indexOf(searchValue) + searchValue.length) }}
+          {{ scope[replaceFieldsObj.title].substr(scope[replaceFieldsObj.title].indexOf(searchValue) +
+              searchValue.length)
+          }}
         </span>
-        <span class="title-text" v-else>{{ title }}</span>
+        <span class="title-text" v-else>{{ scope[replaceFieldsObj.title] }}</span>
       </template>
     </a-tree>
   </div>
@@ -20,107 +23,53 @@ const gData = [
   {
     "title": "0-0",
     "key": "0-0",
-    "scopedSlots": {
-      "title": "title"
-    },
     "children": [
       {
         "title": "0-0-0",
         "key": "0-0-0",
-        "scopedSlots": {
-          "title": "title"
-        },
         "children": [
           {
             "title": "0-0-0-0",
-            "key": "0-0-0-0",
-            "scopedSlots": {
-              "title": "title"
-            }
+            "key": "0-0-0-0"
           },
           {
             "title": "0-0-0-1",
-            "key": "0-0-0-1",
-            "scopedSlots": {
-              "title": "title"
-            }
+            "key": "0-0-0-1"
           },
           {
             "title": "0-0-0-2",
-            "key": "0-0-0-2",
-            "scopedSlots": {
-              "title": "title"
-            }
+            "key": "0-0-0-2"
           }
         ]
       },
       {
         "title": "0-0-1",
         "key": "0-0-1",
-        "scopedSlots": {
-          "title": "title"
-        },
         "children": [
           {
             "title": "0-0-1-0",
-            "key": "0-0-1-0",
-            "scopedSlots": {
-              "title": "title"
-            }
+            "key": "0-0-1-0"
           },
           {
             "title": "0-0-1-1",
-            "key": "0-0-1-1",
-            "scopedSlots": {
-              "title": "title"
-            }
+            "key": "0-0-1-1"
           },
           {
             "title": "0-0-1-2",
-            "key": "0-0-1-2",
-            "scopedSlots": {
-              "title": "title"
-            }
+            "key": "0-0-1-2"
           }
         ]
       },
       {
         "title": "0-0-2",
-        "key": "0-0-2",
-        "scopedSlots": {
-          "title": "title"
-        }
+        "key": "0-0-2"
       }
     ]
   }
 ];
 
 const dataList = [];
-const generateList = data => {
-  for (let i = 0; i < data.length; i++) {
-    const node = data[i];
-    const key = node.key;
-    dataList.push({ key, title: key });
-    if (node.children) {
-      generateList(node.children);
-    }
-  }
-};
 
-const getParentKey = (key, tree) => {
-  let parentKey;
-  for (let i = 0; i < tree.length; i++) {
-    const node = tree[i];
-    if (node.children) {
-      if (node.children.some(item => item.key === key)) {
-        parentKey = node.key;
-      } else if (getParentKey(key, node.children)) {
-        parentKey = getParentKey(key, node.children);
-      }
-    }
-  }
-  return parentKey;
-};
 export default {
   name: 'IStickyTree',
   data() {
@@ -138,9 +87,45 @@ export default {
     this.moduleObject = this.$root.moduleObject
     this.convertAttrToStyleObject();
   },
-  mounted() {
+  computed: {
+    replaceFieldsObj() {
+      let obj = null
+      try {
+        obj = JSON.parse(this.propData.replaceFieldsStr)
+      } catch { }
+      return Object.assign({ title: 'title', key: 'key', children: 'children' }, obj)
+    }
   },
   methods: {
+    generateList(data) {
+      for (let i = 0; i < data.length; i++) {
+        const node = data[i];
+        const key = node[this.replaceFieldsObj.key];
+        const title = node[this.replaceFieldsObj.title];
+        data[i].scopedSlots = {
+          title: this.replaceFieldsObj.title
+        }
+        dataList.push({ [this.replaceFieldsObj.key]: key, [this.replaceFieldsObj.title]: title });
+        if (node[this.replaceFieldsObj.children]) {
+          this.generateList(node[this.replaceFieldsObj.children]);
+        }
+      }
+    },
+
+    getParentKey(key, tree) {
+      let parentKey;
+      for (let i = 0; i < tree.length; i++) {
+        const node = tree[i];
+        if (node[this.replaceFieldsObj.children]) {
+          if (node[this.replaceFieldsObj.children].some(item => item[this.replaceFieldsObj.key] === key)) {
+            parentKey = node[this.replaceFieldsObj.key];
+          } else if (this.getParentKey(key, node[this.replaceFieldsObj.children])) {
+            parentKey = this.getParentKey(key, node[this.replaceFieldsObj.children]);
+          }
+        }
+      }
+      return parentKey;
+    },
     propDataWatchHandle(propData) {
       this.propData = propData.compositeAttr || {};
       this.convertAttrToStyleObject();
@@ -168,8 +153,8 @@ export default {
       const value = e.target.value;
       const expandedKeys = dataList
         .map(item => {
-          if (item.title.indexOf(value) > -1) {
-            return getParentKey(item.key, gData);
+          if (item[this.replaceFieldsObj.title]?.indexOf(value) > -1) {
+            return this.getParentKey(item[this.replaceFieldsObj.key], gData);
           }
           return null;
         })
@@ -185,7 +170,7 @@ export default {
       let topDis = window.pageYOffset || document.documentElement.scrollTop ||
         document.body.scrollTop || e.target.scrollTop;
       //此处660为测试组件滑动到顶部的距离；
-      if (topDis >= this.propData.stickyTop && this.propData.isOpenSticky) {
+      if (topDis >= this.propData.stickyTop && this.propData.isOpenSticky && this.moduleObject.env !== 'develop') {
         this.stickyObject = {
           position: 'fixed',
           top: this.propData.stickyTop + 'px',
@@ -254,8 +239,9 @@ export default {
     initData() {
       // bind scroll
       window.addEventListener('scroll', this.getScroll, true);
+      console.log(this.replaceFieldsObj)
       if (this.moduleObject.env === 'develop') {
-        generateList(gData)
+        this.generateList(gData)
         this.gData = gData
         return
       }
@@ -265,8 +251,9 @@ export default {
         param: {}
       }, (res) => {
         if (res.code == 200) {
-          generateList(res.data)
+          this.generateList(res.data)
           this.gData = res.data
+          console.log(res.data)
         } else {
           IDM.message.error(res.message)
         }

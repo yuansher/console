@@ -76,6 +76,14 @@
                             "value": false
                         }
                     ]
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "字段替换",
+                    "bindKey": "replaceFieldsStr",
+                    "desc": "替换 treeNode 中 title,key,children 字段为 treeData 中对应的字段",
+                    "default": "{ \"children\": \"children\", \"title\": \"title\", \"key\": \"key\" }"
                 }
             ]
         },
@@ -197,10 +205,10 @@
                 },
                 {
                     "type": "actionSelect",
-                    "layoutType": "inline",
-                    "text": "设置自定义点击函数后，默认点击事件取消",
+                    "layoutType": "block",
+                    "text": "自定义点击函数",
                     "bindKey": "customClickFunction",
-                    "desc": "自定义点击函数，接受参数selectKeys",
+                    "desc": "设置自定义点击函数后，默认点击事件取消，接受参数selectKeys",
                     "multiple": false
                 }
             ]
