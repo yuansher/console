@@ -190,6 +190,14 @@
             "desc": "点击？查看高级设置用法指南",
             "children": [
                 {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "表单标识",
+                    "bindKey": "formFiledKey",
+                    "desc": "如果为空则会提交表单时用唯一标识作为key",
+                    "default": ""
+                },
+                {
                     "type": "dataSourceSelect",
                     "layoutType": "inline",
                     "text": "数据源",

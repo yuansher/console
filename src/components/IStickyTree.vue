@@ -144,6 +144,13 @@ export default {
         rangeModule: this.propData.triggerComponents.map(el => el.moduleId),
         message: selectedKeys
       })
+      //传递联动需求值，因为很多地方都是指定这个消息类型的消息作为接收组件本身所需要的需求值
+      this.sendBroadcastMessage({
+        type: "linkageDemand",
+        message: selectedKeys,
+        rangeModule: this.propData.triggerComponents.map(el => el.moduleId),
+        messageKey: this.propData.formFiledKey || this.propData.ctrlId,
+      });
     },
     onExpand(expandedKeys) {
       this.expandedKeys = expandedKeys;
@@ -249,14 +256,17 @@ export default {
       IDM.datasource.request(this.propData?.dataSource?.[0]?.id, {
         moduleObject: this.moduleObject,
         param: {}
-      }, (res) => {
-        if (res.code == 200) {
-          this.generateList(res.data)
-          this.gData = res.data
-          console.log(res.data)
-        } else {
-          IDM.message.error(res.message)
-        }
+      }, (resData) => {
+        this.generateList(resData)
+        this.gData = resData
+        console.log(resData)
+        // if (res.code == 200) {
+        //   this.generateList(res.data)
+        //   this.gData = res.data
+        //   console.log(res.data)
+        // } else {
+        //   IDM.message.error(res.message)
+        // }
       })
     },
     receiveBroadcastMessage(object) {
