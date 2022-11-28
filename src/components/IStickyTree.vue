@@ -185,13 +185,12 @@ export default {
       let topDis = window.pageYOffset || document.documentElement.scrollTop ||
         document.body.scrollTop || e.target.scrollTop;
       //此处660为测试组件滑动到顶部的距离；
-      if (topDis >= this.propData.stickyTop) {
+      if (topDis >= this.propData.stickyTop && this.propData.isOpenSticky) {
         this.stickyObject = {
           position: 'fixed',
           top: this.propData.stickyTop + 'px',
           zIndex: this.propData.zIndex
         }
-
       } else {
         this.stickyObject = {
           position: 'relative'

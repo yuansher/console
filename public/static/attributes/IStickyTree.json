@@ -24,6 +24,25 @@
                     "type": "radio",
                     "styleType": "radio",
                     "layoutType": "inline",
+                    "text": "粘性布局",
+                    "bindKey": "isOpenSticky",
+                    "desc": "是否开启粘性布局，开启后在设计器内失效，可在预览页面时效果正常",
+                    "default": true,
+                    "dictionary": [
+                        {
+                            "label": "开启",
+                            "value": true
+                        },
+                        {
+                            "label": "关闭",
+                            "value": false
+                        }
+                    ]
+                },
+                {
+                    "type": "radio",
+                    "styleType": "radio",
+                    "layoutType": "inline",
                     "text": "搜索框",
                     "bindKey": "isShowSearch",
                     "desc": "是否显示搜索框",
