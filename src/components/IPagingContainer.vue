@@ -56,6 +56,7 @@ export default {
       current: 1,
       listResultData:null,
       conditionObject:{},
+      conditionObjectRetain:{},
       searchText:"",
       totalCount:0
     }
@@ -501,6 +502,9 @@ export default {
       this.conditionObject&&Object.keys(this.conditionObject).forEach(key=>{
         params[key] = typeof this.conditionObject[key]=='object'?JSON.stringify(this.conditionObject[key]):this.conditionObject[key];
       })
+      this.conditionObjectRetain&&Object.keys(this.conditionObjectRetain).forEach(key=>{
+        params[key] = typeof this.conditionObjectRetain[key]=='object'?JSON.stringify(this.conditionObjectRetain[key]):this.conditionObjectRetain[key];
+      })
       params["pageIndex"] = this.current;
       params["pageSize"] = this.pageSize;
       switch (this.propData.dataSourceType) {
@@ -571,11 +575,15 @@ export default {
       this.reload(true);
     },
     onReInitData(conditionObject){
-      this.conditionObject = conditionObject||{};
+      this.conditionObject = conditionObject||this.conditionObject||{};
       this.reload(true);
     },
     onReInitDataMsgKey(conditionObject,messageKey){
-      this.conditionObject[messageKey] = conditionObject;
+      if(this.propData.conditionRetainArray&&this.propData.conditionRetainArray.split(",").indexOf(messageKey)>-1){
+        this.conditionObjectRetain[messageKey] = conditionObject;
+      }else{
+        this.conditionObject[messageKey] = conditionObject;
+      }
       this.reload(true);
     },
     getHeaderFontText(){
