@@ -101,7 +101,8 @@ export default {
     selectedKeys:{
       handler(newV) {
         this.handleTreeSelect(newV)
-      }
+      },
+      deep: true
     }
   },
   computed: {
