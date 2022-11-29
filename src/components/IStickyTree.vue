@@ -318,11 +318,17 @@ export default {
         this.isLoading = false
       })
     },
-    receiveBroadcastMessage(object) {
-      console.log("组件收到消息", object)
-      switch (object.type) {
-        case 'refreshTreeData': // 消息刷新数据
-          this.initData()
+    receiveBroadcastMessage(messageObject) {
+      console.log("组件收到消息", messageObject)
+      switch (messageObject.type) {
+        case 'websocket':
+          if (this.propData.messageRefreshKey && messageObject.message) {
+            const messageData = typeof messageObject.message === 'string' && JSON.parse(messageObject.message) || messageObject.message
+            const arr = Array.isArray(this.propData.messageRefreshKey) ? this.propData.messageRefreshKey : [this.propData.messageRefreshKey]
+            if (messageData.badgeType && arr.includes(messageData.badgeType)) {
+              this.initData()
+            }
+          }
           break
       }
     },

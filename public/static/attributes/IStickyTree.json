@@ -24,6 +24,8 @@
                     "type": "inputNumber",
                     "layoutType": "inline",
                     "text": "展开层数",
+                    "min": 0,
+                    "max": 10,
                     "bindKey": "defaultExpendNumber",
                     "desc": "设置默认展开的树结构层数",
                     "default": 2
@@ -212,6 +214,19 @@
                     "bindKey": "formFiledKey",
                     "desc": "如果为空则会提交表单时用唯一标识作为key",
                     "default": ""
+                },
+                {
+                    "type": "select",
+                    "layoutType": "inline",
+                    "text": "刷新KEY",
+                    "bindKey": "messageRefreshKey",
+                    "desc": "根据组件接收到消息的刷新KEY来刷新数据",
+                    "multiple": true,
+                    "placeholder": "请选择刷新KEY",
+                    "ctrlAttrObject": {
+                        "mode": "tags"
+                    },
+                    "dictionary": []
                 },
                 {
                     "type": "dataSourceSelect",
