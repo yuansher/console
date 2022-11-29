@@ -7,7 +7,7 @@
       <a-icon type="redo" class="refresh-icon" @click.native="initData" :class="[isLoading ? 'refresh-animate' : '']" />
     </div>
     <a-tree :expanded-keys="expandedKeys" :selectedKeys.sync="selectedKeys" class="tree-container scrollbar_style"
-      :replace-fields="replaceFieldsObj" :show-line="propData.isShowLine" @select="handleTreeSelect"
+      :replace-fields="replaceFieldsObj" :show-line="propData.isShowLine"
       :auto-expand-parent="autoExpandParent" :tree-data="gData" @expand="onExpand">
       <template slot="title" slot-scope="scope">
         <span class="title-text"
@@ -97,6 +97,13 @@ export default {
   mounted() {
     window.addEventListener('scroll', this.getScroll, true);
   },
+  watch: {
+    selectedKeys:{
+      handler(newV) {
+        this.handleTreeSelect(newV)
+      }
+    }
+  },
   computed: {
     replaceFieldsObj() {
       let obj = null
@@ -140,8 +147,8 @@ export default {
       this.propData = propData.compositeAttr || {};
       this.convertAttrToStyleObject();
     },
-    handleTreeSelect(selectedKeys, e) {
-      console.log(selectedKeys, this.selectedKeys)
+    handleTreeSelect(selectedKeys) {
+      console.log(selectedKeys)
       if (this.propData?.customClickFunction?.length > 0) {
         const funcName = this.propData.customClickFunction[0].name
         window?.[funcName].call(this, selectKeys)
