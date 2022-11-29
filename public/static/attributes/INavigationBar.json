@@ -334,6 +334,14 @@
                     "bindKey": "dataSource"
                 },
                 {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "默认选中",
+                    "bindKey": "menuDefaultSelectKeys",
+                    "desc":"用于设置当前默认选中了哪些菜单，方便用于区别当前页面是哪个菜单哪个页面，这里只需要填上ID即可，如果多个用逗号隔开",
+                    "default": ""
+                },
+                {
                     "type": "textarea",
                     "layoutType": "block",
                     "text": "用户名显示字段",

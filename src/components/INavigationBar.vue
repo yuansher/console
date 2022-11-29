@@ -373,7 +373,12 @@ export default {
       }, (res) => {
         if (res.code == 200) {
           this.menuList = res.data.menuList
-          this.selectedKeys = res.data.defaultSelectedKeys
+          if(this.propData.menuDefaultSelectKeys){
+            this.selectedKeys = this.propData.menuDefaultSelectKeys.split(",");
+          }
+          if(res.data.defaultSelectedKeys){
+            this.selectedKeys = res.data.defaultSelectedKeys
+          }
           console.log(this.selectedKeys)
         } else {
           IDM.message.error(res.message)
