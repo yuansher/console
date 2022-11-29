@@ -7,8 +7,8 @@
       <a-icon type="redo" class="refresh-icon" @click.native="initData" :class="[isLoading ? 'refresh-animate' : '']" />
     </div>
     <a-tree :expanded-keys="expandedKeys" :selectedKeys.sync="selectedKeys" class="tree-container scrollbar_style"
-      :replace-fields="replaceFieldsObj" :show-line="propData.isShowLine"
-      :auto-expand-parent="autoExpandParent" :tree-data="gData" @expand="onExpand">
+      :replace-fields="replaceFieldsObj" :show-line="propData.isShowLine" :auto-expand-parent="autoExpandParent"
+      :tree-data="gData" @expand="onExpand">
       <template slot="title" slot-scope="scope">
         <span class="title-text"
           v-if="scope[replaceFieldsObj.title] && scope[replaceFieldsObj.title].indexOf(searchValue) > -1">
@@ -73,7 +73,7 @@ const gData = [
   }
 ];
 
-const dataList = [];
+let dataList = [];
 
 export default {
   name: 'IStickyTree',
@@ -98,7 +98,7 @@ export default {
     window.addEventListener('scroll', this.getScroll, true);
   },
   watch: {
-    selectedKeys:{
+    selectedKeys: {
       handler(newV) {
         this.handleTreeSelect(newV)
       },
@@ -180,7 +180,7 @@ export default {
       const expandedKeys = dataList
         .map(item => {
           if (item[this.replaceFieldsObj.title]?.indexOf(value) > -1) {
-            return this.getParentKey(item[this.replaceFieldsObj.key], gData);
+            return this.getParentKey(item[this.replaceFieldsObj.key], this.gData);
           }
           return null;
         })
@@ -278,6 +278,7 @@ export default {
       })
     },
     initData(isFirst = false) {
+      dataList = []
       this.isLoading = true
       if (this.moduleObject.env === 'develop') {
         this.generateList(gData)
@@ -306,13 +307,6 @@ export default {
           this.expandedKeys = expandedKeys
           this.selectedKeys = selectedKeys
         }
-        // if (res.code == 200) {
-        //   this.generateList(res.data)
-        //   this.gData = res.data
-        //   console.log(res.data)
-        // } else {
-        //   IDM.message.error(res.message)
-        // }
       }, () => { }, () => {
 
         this.isLoading = false
