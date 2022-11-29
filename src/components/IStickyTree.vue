@@ -129,7 +129,6 @@ export default {
         }
       }
     },
-
     getParentKey(key, tree) {
       let parentKey;
       for (let i = 0; i < tree.length; i++) {
@@ -196,6 +195,7 @@ export default {
       let topDis = window.pageYOffset || document.documentElement.scrollTop ||
         document.body.scrollTop || e.target.scrollTop;
       //此处660为测试组件滑动到顶部的距离；
+      if(e.target != document) return
       if (topDis >= this.propData.fixedValue && this.propData.isOpenSticky && this.moduleObject.env !== 'develop') {
         this.stickyObject = {
           position: 'fixed',
