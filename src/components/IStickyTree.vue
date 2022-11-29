@@ -288,23 +288,15 @@ export default {
         moduleObject: this.moduleObject,
         param: {}
       }, (resData) => {
-        this.generateList(resData.treeData)
-        this.gData = resData.treeData
-        console.log(resData)
+        this.generateList(resData)
+        this.gData = resData
         if (isFirst) {
-          this.selectedKeys = resData.selectedKeys
-          if (resData?.expandedKeys?.length > 0) {
-            this.expandedKeys = resData.expandedKeys
-          } else {
-            // 组件配置展开几层
-            let arr = []
-            this.handleExpendNumber(resData.treeData, arr, this.propData.defaultExpendNumber)
-            this.expandedKeys = arr
-          }
+          let arr = []
+          this.handleExpendNumber(resData, arr, this.propData.defaultExpendNumber)
+          this.expandedKeys = arr
         } else {
           this.expandedKeys = expandedKeys
           this.selectedKeys = selectedKeys
-
         }
         // if (res.code == 200) {
         //   this.generateList(res.data)

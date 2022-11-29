@@ -123,7 +123,7 @@
                     "type": "inputNumber",
                     "layoutType": "inline",
                     "text": "显示层级",
-                    "desc": "z-index的值",
+                    "desc": "fixed定位时z-index的值",
                     "bindKey": "zIndex",
                     "default": "10"
                 },
@@ -138,7 +138,7 @@
                 {
                     "type": "input",
                     "layoutType": "inline",
-                    "text": "宽",
+                    "text": "组件宽度",
                     "desc": "填写auto则为自适应，或者使用px、%、vw等单位，比如100%、100px、100vw等等",
                     "bindKey": "width",
                     "default": "100%"
@@ -146,7 +146,7 @@
                 {
                     "type": "input",
                     "layoutType": "inline",
-                    "text": "高",
+                    "text": "组件高度",
                     "desc": "填写auto则为自适应，或者使用px、%、vh等单位，比如100%、100px、100vh等等",
                     "bindKey": "height",
                     "default": "auto"
