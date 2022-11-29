@@ -115,6 +115,9 @@ export {
     default as FileOutline
 } from '@ant-design/icons/lib/outline/FileOutline';
 export {
+    default as RedoOutline
+} from '@ant-design/icons/lib/outline/RedoOutline';
+export {
     default as ExclamationCircleFill
 } from '@ant-design/icons/lib/fill/ExclamationCircleFill';
 export {

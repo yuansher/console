@@ -21,6 +21,14 @@
             "desc": "提供设置组件能达到展示效果的基本属性设置信息",
             "children": [
                 {
+                    "type": "inputNumber",
+                    "layoutType": "inline",
+                    "text": "展开层数",
+                    "bindKey": "defaultExpendNumber",
+                    "desc": "设置默认展开的树结构层数",
+                    "default": 2
+                },
+                {
                     "type": "radio",
                     "styleType": "radio",
                     "layoutType": "inline",
@@ -94,20 +102,20 @@
             "helpUrl": "",
             "children": [
                 {
-                    "type": "input",
+                    "type": "inputNumber",
                     "layoutType": "inline",
-                    "text": "搜索框宽",
-                    "desc": "搜索框宽度",
-                    "bindKey": "searchWidth",
-                    "default": ""
+                    "text": "滚动阈值",
+                    "desc": "设置滚动条滚动到阈值时，开始fixed定义",
+                    "bindKey": "fixedValue",
+                    "default": 60
                 },
                 {
                     "type": "inputNumber",
                     "layoutType": "inline",
-                    "text": "顶部吸顶",
-                    "desc": "sticky布局top值,单位：px",
+                    "text": "顶部距离",
+                    "desc": "fixed布局时的距离",
                     "bindKey": "stickyTop",
-                    "default": 80
+                    "default": 0
                 },
                 {
                     "type": "inputNumber",
@@ -118,28 +126,36 @@
                     "default": "10"
                 },
                 {
-                    "type": "inlineGroup",
-                    "text": "宽高",
-                    "children": [
-                        {
-                            "type": "input",
-                            "layoutType": "block",
-                            "text": "宽",
-                            "desc": "填写auto则为自适应，或者使用px、%、vw等单位，比如100%、100px、100vw等等",
-                            "bindKey": "width",
-                            "width": "60px",
-                            "default": "100%"
-                        },
-                        {
-                            "type": "input",
-                            "layoutType": "block",
-                            "text": "高",
-                            "desc": "填写auto则为自适应，或者使用px、%、vh等单位，比如100%、100px、100vh等等",
-                            "bindKey": "height",
-                            "width": "60px",
-                            "default": "auto"
-                        }
-                    ]
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "搜索框宽",
+                    "desc": "搜索框容器宽度，含刷新icon",
+                    "bindKey": "searchWidth",
+                    "default": ""
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "宽",
+                    "desc": "填写auto则为自适应，或者使用px、%、vw等单位，比如100%、100px、100vw等等",
+                    "bindKey": "width",
+                    "default": "100%"
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "高",
+                    "desc": "填写auto则为自适应，或者使用px、%、vh等单位，比如100%、100px、100vh等等",
+                    "bindKey": "height",
+                    "default": "auto"
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "树最大高",
+                    "desc": "设置树容器的最大高度，超出则滚动",
+                    "bindKey": "treeMaxHeight",
+                    "default": "500px"
                 },
                 {
                     "type": "box",
