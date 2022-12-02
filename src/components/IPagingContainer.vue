@@ -32,6 +32,7 @@
           show-quick-jumper
           show-size-changer
           :default-current="1"
+          :show-total="showTotalFormat"
           :page-size.sync="pageSize"
           :total="totalCount"
           :pageSizeOptions="propData.pageSizeOptions?propData.pageSizeOptions.split(','):['10', '20', '30', '40']"
@@ -76,6 +77,15 @@ export default {
   },
   destroyed() {},
   methods:{
+    showTotalFormat(total, range) {
+      return (
+        IDM.express &&
+        IDM.express.replace.call(this, this.propData.showTotalFormat, {
+          total,
+          range,
+        })
+      );
+    },
     /**
      * 提供父级组件调用的刷新prop数据组件
      */

@@ -62,6 +62,15 @@
                     "minLength": 1,
                     "desc":"默认的每页条数，一般指定分页条数设置的其中一个即可",
                     "default": 10
+                },
+                {
+                    "type": "textarea",
+                    "layoutType": "block",
+                    "text": "总量显示格式化",
+                    "bindKey": "showTotalFormat",
+                    "desc":"设置用于显示数据总量和当前数据顺序，示例：@[range[0]]-@[range[1]] of @[total] items",
+                    "placeholder":"示例：@[range[0]]-@[range[1]] of @[total] items",
+                    "default": ""
                 }
             ]
         },

@@ -134,7 +134,8 @@ export default {
       userPhoto: "",
       menuList: [],
       selectedKeys: [],
-      clickItem: null
+      clickItem: null,
+      lastReceiveMessage:null
     }
   },
   created() {
@@ -464,6 +465,7 @@ export default {
      * } object 
      */
     receiveBroadcastMessage(object) {
+      this.lastReceiveMessage = object;
       console.log("组件收到消息", object)
     },
     /**

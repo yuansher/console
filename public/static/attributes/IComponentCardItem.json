@@ -411,6 +411,134 @@
                     ]
                 },
                 {
+                  "type": "table",
+                  "text": "标签显示项",
+                  "bindKey": "tagsOptionList",
+                  "tabText": "标签[index]",
+                  "children": [
+                    {
+                      "type": "input",
+                      "layoutType": "inline",
+                      "text": "标签标识",
+                      "desc": "主要用于标识标签，可以在需要使用的时候使用此标识进行判断，建议设置为唯一或者标识的英文、拼音作为标识",
+                      "bindKey": "key"
+                    },
+                    {
+                      "type": "input",
+                      "layoutType": "inline",
+                      "text": "标识文字",
+                      "bindKey": "tagText",
+                      "default": ""
+                    },
+                    {
+                      "type": "actionSelect",
+                      "layoutType": "block",
+                      "text": "自定义显示函数",
+                      "bindKey": "tagTextFunction",
+                      "desc": "当标识文字不满足要求的时候会使用此函数来执行自定义返回的结果，接收参数为格式为{customParam:自定义的,configObject:当前页签配置项,itemObject:整条数据对象}",
+                      "multiple": false
+                    },
+                    {
+                      "type": "select",
+                      "layoutType": "inline",
+                      "text": "显示方式",
+                      "bindKey": "tagShowType",
+                      "desc": "可以根据切换显示方式对每个标签进行更高级的控制，更多使用方法请点击参考更详细的说明",
+                      "dictionary": [
+                        {
+                          "label": "始终显示",
+                          "value": "default"
+                        },
+                        {
+                          "label": "数据字段依据显示",
+                          "value": "field"
+                        },
+                        {
+                          "label": "自定义函数显示",
+                          "value": "custom"
+                        }
+                      ],
+                      "default": "default"
+                    },
+                    {
+                      "type": "input",
+                      "layoutType": "inline",
+                      "text": "显示依据",
+                      "desc": "当显示方式为“数据字段依据显示”的时候可以在此处填写表达式，表达式可以使用每行的数据对象，返回结果为true则显示，false则不显示，此处填写表达式，更多详细用法点击查看",
+                      "bindKey": "tagDataFiled",
+                      "display": "@[tagShowType=='field']",
+                      "placeholder": "示例：isShow 或者 [0].isShow"
+                    },
+                    {
+                      "type": "actionSelect",
+                      "layoutType": "block",
+                      "text": "自定义函数依据显示",
+                      "bindKey": "tagDataFunction",
+                      "display": "@[tagShowType=='custom']",
+                      "desc": "当数据加载的时候会调用此处自定义函数返回的值控制是否显示，接收参数为格式为{customParam:自定义的,configObject:当前图标配置项,itemObject:整条数据对象}",
+                      "multiple": false
+                    },
+                    {
+                      "type": "select",
+                      "layoutType": "inline",
+                      "text": "标签颜色",
+                      "bindKey": "colorType",
+                      "dictionary": [
+                        {
+                          "label": "default",
+                          "value": ""
+                        },
+                        {
+                          "label": "blue",
+                          "value": "blue"
+                        },
+                        {
+                          "label": "red",
+                          "value": "red"
+                        },
+                        {
+                          "label": "pink",
+                          "value": "pink"
+                        },
+                        {
+                          "label": "orange",
+                          "value": "orange"
+                        },
+                        {
+                          "label": "green",
+                          "value": "green"
+                        },
+                        {
+                          "label": "cyan",
+                          "value": "cyan"
+                        },
+                        {
+                          "label": "purple",
+                          "value": "purple"
+                        },
+                        {
+                          "label": "pink",
+                          "value": "pink"
+                        },
+                        {
+                          "label": "自定义",
+                          "value": "custom"
+                        }
+                      ],
+                      "default": "default"
+                    },
+                    {
+                      "type": "colorPicker",
+                      "layoutType": "inline",
+                      "text": "颜色选择",
+                      "bindKey": "colorValue",
+                      "placeholder": "请选择颜色",
+                      "default": {},
+                      "display": "@[colorType=='custom']"
+                    }
+                  ]
+                },
+                {
                     "type": "switch",
                     "layoutType": "inline",
                     "text": "显示预览",

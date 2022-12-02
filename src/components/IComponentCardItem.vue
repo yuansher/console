@@ -46,7 +46,27 @@
             {{item.moduleRemark}}
           </div>
           <div class="cc-item-info-tags">
-            <a-tag v-if="item.moduleBelongText||getCode(item.moduleBelongId)">
+              <template v-for="tagItem in propData.tagsOptionList">
+                <a-tag
+                  v-if="
+                    tagItem.tagText &&
+                      (tagItem.tagShowType == 'default' ||
+                        (tagItem.tagShowType == 'field' &&
+                          getExpressData('data', tagItem.tagDataFiled, item)) ||
+                        (tagItem.tagShowType == 'custom' &&
+                          getFieldCustomRender(tagItem, 'tagDataFunction', item)))
+                  "
+                  :key="tagItem.key"
+                  :color="tagItem.colorType == 'custom' ? IDM.hex8ToRgbaString(tagItem.colorValue?(tagItem.colorValue.hex8||'#F1F1F1'):'#F1F1F1') : tagItem.colorType"
+                >
+                  {{
+                    tagItem.tagTextFunction && tagItem.tagTextFunction.length > 0
+                      ? getFieldCustomRender(tagItem, 'tagTextFunction', item)
+                      : tagItem.tagText
+                  }}
+                </a-tag>
+              </template>
+            <!-- <a-tag v-if="item.moduleBelongText||getCode(item.moduleBelongId)">
               {{item.moduleBelongText||getCode(item.moduleBelongId)}}
             </a-tag>
             <a-tag v-if="item.moduleGroupText||getCode(item.moduleGroupId)">
@@ -57,7 +77,7 @@
             </a-tag>
             <a-tag v-if="item.productName">
               {{item.productName}}
-            </a-tag>
+            </a-tag> -->
           </div>
           <div class="cc-item-info-classid">
             <div class="cc-item-info-classid-font">类名：<span>{{item.moduleClassName}}</span></div>
@@ -167,6 +187,19 @@ export default {
   },
   destroyed() {},
   methods:{
+    /**
+     * 获取自定义函数处理后的结果
+     */
+    getFieldCustomRender(configObject, funname, itemObject) {
+      return (
+        window[configObject[funname][0].name] &&
+        window[configObject[funname][0].name].call(this, {
+          customParam: configObject[funname][0].param,
+          configObject,
+          itemObject
+        })
+      );
+    },
     changeNameEdit(item){
       item.isEditName=true;
       //点击不更新，暂时使用强制刷新
