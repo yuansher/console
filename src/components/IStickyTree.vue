@@ -284,6 +284,14 @@ export default {
       }
       return arr
     },
+    getCustomFunctionParams() {
+      let obj = []
+      const func = this.propData?.customParamFunction?.[0]
+      if(func) {
+        obj = window?.[func.name]?.call(this, func.param)
+      }
+      return obj
+    },
     initData(isFirst = false) {
       dataList = []
       this.isLoading = true
@@ -302,7 +310,9 @@ export default {
       let expandedKeys = _.cloneDeep(this.expandedKeys), selectedKeys = _.cloneDeep(this.selectedKeys);
       IDM.datasource.request(this.propData?.dataSource?.[0]?.id, {
         moduleObject: this.moduleObject,
-        param: {}
+        param: {
+          ...this.getCustomFunctionParams
+        }
       }, (resData) => {
         this.generateList(resData)
         this.gData = resData

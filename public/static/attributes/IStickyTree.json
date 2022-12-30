@@ -257,6 +257,14 @@
                     "bindKey": "customSelectFunction",
                     "desc": "自定义默认选中函数，返回selectKeys",
                     "multiple": false
+                },
+                {
+                    "type": "actionSelect",
+                    "layoutType": "block",
+                    "text": "自定义参数函数",
+                    "bindKey": "customParamFunction",
+                    "desc": "自定义参数函数，返回的对象则会被合并到数据源参数中",
+                    "multiple": false
                 }
             ]
         }
