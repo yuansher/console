@@ -249,6 +249,14 @@
                     "bindKey": "customClickFunction",
                     "desc": "设置自定义点击函数后，默认点击事件取消，接受参数selectKeys",
                     "multiple": false
+                },
+                {
+                    "type": "actionSelect",
+                    "layoutType": "block",
+                    "text": "自定义默认选中函数",
+                    "bindKey": "customSelectFunction",
+                    "desc": "自定义默认选中函数，返回selectKeys",
+                    "multiple": false
                 }
             ]
         }

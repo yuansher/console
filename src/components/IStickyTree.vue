@@ -194,7 +194,6 @@ export default {
       //手机端只能通过e.target.scrollTop获取组件的滑动距离
       let topDis = window.pageYOffset || document.documentElement.scrollTop ||
         document.body.scrollTop || e.target.scrollTop;
-      //此处660为测试组件滑动到顶部的距离；
       if(e.target != document) return
       if (topDis >= this.propData.fixedValue && this.propData.isOpenSticky && this.moduleObject.env !== 'develop') {
         this.stickyObject = {
@@ -277,6 +276,14 @@ export default {
         }
       })
     },
+    getDefaultSelect() {
+      let arr = []
+      const func = this.propData?.customSelectFunction?.[0]
+      if(func) {
+        arr = window?.[func.name]?.call(this, func.param)
+      }
+      return arr
+    },
     initData(isFirst = false) {
       dataList = []
       this.isLoading = true
@@ -303,6 +310,7 @@ export default {
           let arr = []
           this.handleExpendNumber(resData, arr, this.propData.defaultExpendNumber)
           this.expandedKeys = arr
+          this.selectedKeys = this.getDefaultSelect()
         } else {
           this.expandedKeys = expandedKeys
           this.selectedKeys = selectedKeys
