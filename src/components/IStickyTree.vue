@@ -311,7 +311,7 @@ export default {
       IDM.datasource.request(this.propData?.dataSource?.[0]?.id, {
         moduleObject: this.moduleObject,
         param: {
-          ...this.getCustomFunctionParams
+          ...this.getCustomFunctionParams()
         }
       }, (resData) => {
         this.generateList(resData)
