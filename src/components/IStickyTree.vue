@@ -342,6 +342,9 @@ export default {
             }
           }
           break
+        case 'linkageReload':
+          this.initData()
+          break
       }
     },
     setContextValue(object) {
