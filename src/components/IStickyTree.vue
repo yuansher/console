@@ -6,7 +6,7 @@
       </a-input>
       <a-icon type="redo" class="refresh-icon" @click.native="initData" :class="[isLoading ? 'refresh-animate' : '']" />
     </div>
-    <a-tree :expanded-keys="expandedKeys" :selectedKeys.sync="selectedKeys" class="tree-container scrollbar_style"
+    <a-tree :expanded-keys="expandedKeys" :selectedKeys.sync="selectedKeys" @select="handleSelect" class="tree-container scrollbar_style"
       :replace-fields="replaceFieldsObj" :show-line="propData.isShowLine" :auto-expand-parent="autoExpandParent"
       :tree-data="gData" @expand="onExpand">
       <template slot="title" slot-scope="scope">
@@ -74,7 +74,7 @@ const gData = [
 ];
 
 let dataList = [];
-
+let oldSelectedKeys = []
 export default {
   name: 'IStickyTree',
   data() {
@@ -99,8 +99,9 @@ export default {
   },
   watch: {
     selectedKeys: {
-      handler(newV) {
+      handler(newV, oldV) {
         this.handleTreeSelect(newV)
+        oldSelectedKeys = newV
       },
       deep: true
     }
@@ -115,17 +116,26 @@ export default {
     }
   },
   methods: {
+    handleSelect(selectedKeys, {selected}) {
+      if(!selected && !this.propData.clickCancel) {
+        console.log(selected, this.selectedKeys, oldSelectedKeys)
+        this.selectedKeys = oldSelectedKeys
+      }
+    },
     generateList(data) {
       for (let i = 0; i < data.length; i++) {
         const node = data[i];
         const key = node[this.replaceFieldsObj.key];
         const title = node[this.replaceFieldsObj.title];
-        data[i].scopedSlots = {
+        node.scopedSlots = {
           title: this.replaceFieldsObj.title
         }
         dataList.push({ [this.replaceFieldsObj.key]: key, [this.replaceFieldsObj.title]: title });
-        if (node[this.replaceFieldsObj.children]) {
+        if (node[this.replaceFieldsObj.children] && node[this.replaceFieldsObj.children].length > 0) {
           this.generateList(node[this.replaceFieldsObj.children]);
+        }else {
+          // 叶子节点选则
+          node.disabled = !this.propData.isClickLeaf
         }
       }
     },
@@ -148,7 +158,6 @@ export default {
       this.convertAttrToStyleObject();
     },
     handleTreeSelect(selectedKeys) {
-      console.log(selectedKeys)
       if (this.propData?.customClickFunction?.length > 0) {
         const funcName = this.propData.customClickFunction[0].name
         window?.[funcName].call(this, selectedKeys)

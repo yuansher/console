@@ -53,6 +53,44 @@
                     "type": "radio",
                     "styleType": "radio",
                     "layoutType": "inline",
+                    "text": "叶子节点",
+                    "bindKey": "isClickLeaf",
+                    "desc": "设置叶子节点是否能点击选中",
+                    "default": true,
+                    "dictionary": [
+                        {
+                            "label": "选择",
+                            "value": true
+                        },
+                        {
+                            "label": "禁用",
+                            "value": false
+                        }
+                    ]
+                },
+                {
+                    "type": "radio",
+                    "styleType": "radio",
+                    "layoutType": "inline",
+                    "text": "点击取消",
+                    "bindKey": "clickCancel",
+                    "desc": "设置选中后，是否可以取消",
+                    "default": true,
+                    "dictionary": [
+                        {
+                            "label": "开始",
+                            "value": true
+                        },
+                        {
+                            "label": "关闭",
+                            "value": false
+                        }
+                    ]
+                },
+                {
+                    "type": "radio",
+                    "styleType": "radio",
+                    "layoutType": "inline",
                     "text": "搜索框",
                     "bindKey": "isShowSearch",
                     "desc": "是否显示搜索框",
