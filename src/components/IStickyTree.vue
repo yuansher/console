@@ -132,10 +132,10 @@ export default {
         }
         dataList.push({ [this.replaceFieldsObj.key]: key, [this.replaceFieldsObj.title]: title });
         if (node[this.replaceFieldsObj.children] && node[this.replaceFieldsObj.children].length > 0) {
+          if(this.propData.isOnlyLeaf) {
+            node.disabled = true
+          }
           this.generateList(node[this.replaceFieldsObj.children]);
-        }else {
-          // 叶子节点选则
-          node.disabled = !this.propData.isClickLeaf
         }
       }
     },

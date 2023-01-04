@@ -54,16 +54,16 @@
                     "styleType": "radio",
                     "layoutType": "inline",
                     "text": "叶子节点",
-                    "bindKey": "isClickLeaf",
-                    "desc": "设置叶子节点是否能点击选中",
+                    "bindKey": "isOnlyLeaf",
+                    "desc": "设置只能叶子节点选中",
                     "default": true,
                     "dictionary": [
                         {
-                            "label": "选择",
+                            "label": "开启",
                             "value": true
                         },
                         {
-                            "label": "禁用",
+                            "label": "关闭",
                             "value": false
                         }
                     ]
