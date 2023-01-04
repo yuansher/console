@@ -56,7 +56,7 @@
                     "text": "叶子节点",
                     "bindKey": "isOnlyLeaf",
                     "desc": "设置只能叶子节点选中",
-                    "default": true,
+                    "default": false,
                     "dictionary": [
                         {
                             "label": "开启",
