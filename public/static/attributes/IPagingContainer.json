@@ -324,9 +324,20 @@
                         {
                             "label": "自定义函数",
                             "value": "customFunction"
+                        },
+                        {
+                            "label": "数据源",
+                            "value": "dataSource"
                         }
                     ],
                     "default": "customInterface"
+                },
+                {
+                    "type": "dataSourceSelect",
+                    "layoutType": "inline",
+                    "text": "数据源",
+                    "bindKey": "dataSource",
+                    "display":"@[dataSourceType=='dataSource']"
                 },
                 {
                     "type": "input",

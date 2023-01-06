@@ -544,6 +544,18 @@ export default {
             that.change();
           }
           break;
+        case "dataSource":
+          IDM.datasource.request(this.propData?.dataSource?.[0]?.id, {
+            moduleObject: this.moduleObject,
+            param: params
+          }, (resData) => {
+            that.listResultData = resData;
+            that.change();
+          }, () => {
+            that.listResultData = null;
+            that.change();
+          })
+          break;
       }
     },
     reload(reloadFirstPage){
