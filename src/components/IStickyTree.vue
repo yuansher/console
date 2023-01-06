@@ -160,7 +160,7 @@ export default {
     handleTreeSelect(selectedKeys) {
       if (this.propData?.customClickFunction?.length > 0) {
         const funcName = this.propData.customClickFunction[0].name
-        window?.[funcName].call(this, selectedKeys)
+        window?.[funcName]?.call(this, selectedKeys)
         return
       }
       if (!this.propData?.triggerComponents?.length > 0) {
