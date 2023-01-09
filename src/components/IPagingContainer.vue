@@ -577,6 +577,17 @@ export default {
           triggerType:'MT'
         })
       }
+      if(this.propData.linkageResultPageModule&&this.propData.linkageResultPageModule.length>0){
+        var moduleIdArray = [];
+        this.propData.linkageResultPageModule.forEach(item=>{moduleIdArray.push(item.moduleId)});
+        this.sendBroadcastMessage({
+          type:"linkageResult",
+          message:this.listResultData,
+          rangeModule:moduleIdArray,
+          triggerType:'MT'
+        })
+      }
+      
       var totalCount = this.listResultData?this.listResultData.data&&this.listResultData.data.total:-1;
       if(totalCount==-1){
         totalCount = this.listResultData&&this.listResultData.total;

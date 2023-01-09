@@ -497,6 +497,14 @@
                             "desc": "当前已选条件变化时需要联动其他组件需求值（比如列表的数据等）的组件范围",
                             "bindKey": "linkageDemandPageModule",
                             "multiple": true
+                        },
+                        {
+                            "type": "pageModuleSelect",
+                            "layoutType": "block",
+                            "text": "结果组件范围",
+                            "desc": "当前选项变更后获取列表值，需要联动其他组件变更结果值的组件范围",
+                            "bindKey": "linkageResultPageModule",
+                            "multiple": true
                         }
                     ]
                 }
