@@ -59,7 +59,7 @@ export default {
       conditionObject:{},
       conditionObjectRetain:{},
       searchText:"",
-      totalCount:0
+      totalCount:100
     }
   },
   props: {
@@ -78,13 +78,11 @@ export default {
   destroyed() {},
   methods:{
     showTotalFormat(total, range) {
-      return (
-        IDM.express &&
-        IDM.express.replace.call(this, this.propData.showTotalFormat, {
-          total,
-          range,
-        })
-      );
+      if ( this.propData.showTotalFormat && IDM.express ) {
+        return IDM.express.replace.call(this, this.propData.showTotalFormat, { total, range, })
+      } else {
+        return false
+      }
     },
     /**
      * 提供父级组件调用的刷新prop数据组件
