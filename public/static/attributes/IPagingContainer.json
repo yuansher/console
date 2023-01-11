@@ -39,12 +39,30 @@
                 {
                     "type": "input",
                     "layoutType": "inline",
+                    "text": "当前页数",
+                    "bindKey": "pageIndex",
+                    "desc":"当前页数key",
+                    "default": "pageIndex"
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "每页条数",
+                    "bindKey": "pageSize",
+                    "desc":"每页条数key",
+                    "default": "pageSize"
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
                     "text": "搜索KEY",
                     "bindKey": "searchKey",
                     "desc":"顶部文字的内容，自定义格式在高级设置中可以设置",
                     "default": "searchText",
                     "display":"@[headerDisplay&&searchDisplay]"
                 },
+
+
                 {
                     "type": "textarea",
                     "layoutType": "inline",
