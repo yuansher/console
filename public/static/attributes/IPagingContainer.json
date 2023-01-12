@@ -504,6 +504,14 @@
                     "multiple": false
                 },
                 {
+                    "type": "actionSelect",
+                    "layoutType": "block",
+                    "text": "参数自定义函数",
+                    "bindKey": "paramsMakeFunction",
+                    "desc": "用于请求数据源时，对请求参数进行处理，返回处理后的参数",
+                    "multiple": false
+                },
+                {
                     "type": "group",
                     "text": "联动组件",
                     "desc": "当查询结果的数据有变动会联动这里选择的组件，把当前查询的结果对象传递给这些组件",

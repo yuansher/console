@@ -498,6 +498,19 @@ export default {
       //请求数据源
       this.initData();
     },
+    makeParamsData(data) {
+      let result = {};
+      if ( this.propData.paramsMakeFunction && this.propData.paramsMakeFunction.length && window[this.propData.paramsMakeFunction[0].name] ) {
+          result = window[this.propData.paramsMakeFunction[0].name].call(this, {
+                                  ...data,
+                                  ...this.propData.paramsMakeFunction[0].param,
+                                  moduleObject: this.moduleObject,
+                              });
+          console.log('自定义参数函数',result)
+          return result
+      }
+      return data
+    },
     initData(){
       let that = this;
       //所有地址的url参数转换
@@ -515,6 +528,8 @@ export default {
       })
       params[ this.propData.pageIndex || "pageIndex"] = this.current;
       params[ this.propData.pageSize || "pageSize"] = this.pageSize;
+      params = this.makeParamsData(params)
+      
       switch (this.propData.dataSourceType) {
         case "customInterface":
           this.propData.customInterfaceUrl&&window.IDM.http.get(this.propData.customInterfaceUrl,params)
