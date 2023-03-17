@@ -224,6 +224,191 @@
         },
         {
           "type": "group",
+          "text": "图片显示设置",
+          "desc": "点击？查看背景设置用法指南",
+          "display":"@[showImageBox]",
+          "helpUrl": "",
+          "children": [
+            {
+              "type": "colorPicker",
+              "layoutType": "inline",
+              "text": "背景色",
+              "bindKey": "imgBgColor",
+              "placeholder": "请选择颜色",
+              "default": {}
+            },
+            {
+              "type": "select",
+              "layoutType": "inline",
+              "text": "位置",
+              "bindKey": "imgPosition",
+              "dictionary": [
+                {
+                  "label": "默认",
+                  "value": "initial"
+                },
+                {
+                  "label": "center",
+                  "value": "center"
+                },
+                {
+                  "label": "left",
+                  "value": "left"
+                },
+                {
+                  "label": "right",
+                  "value": "right"
+                },
+                {
+                  "label": "top",
+                  "value": "top"
+                },
+                {
+                  "label": "bottom",
+                  "value": "bottom"
+                },
+                {
+                  "label": "自定义",
+                  "value": "custom"
+                }
+              ]
+            },
+            {
+              "type": "inputNumberUnit",
+              "layoutType": "inline",
+              "text": "横向偏移",
+              "bindKey": "imgPositionX",
+              "dictionary": [
+                {
+                  "label": "px",
+                  "value": "px"
+                },
+                {
+                  "label": "%",
+                  "value": "%"
+                },
+                {
+                  "label": "em",
+                  "value": "em"
+                }
+              ],
+              "display":"@[imgPosition=='custom']"
+            },
+            {
+              "type": "inputNumberUnit",
+              "layoutType": "inline",
+              "text": "纵向偏移",
+              "bindKey": "imgPositionY",
+              "dictionary": [
+                {
+                  "label": "px",
+                  "value": "px"
+                },
+                {
+                  "label": "%",
+                  "value": "%"
+                },
+                {
+                  "label": "em",
+                  "value": "em"
+                }
+              ],
+              "display":"@[imgPosition=='custom']"
+            },
+            {
+              "type": "radio",
+              "layoutType": "block",
+              "text": "背景大小",
+              "bindKey": "imgBgSize",
+              "dictionary": [
+                {
+                  "label": "裁切显示",
+                  "value": "cover"
+                },
+                {
+                  "label": "完全显示",
+                  "value": "contain"
+                },
+                {
+                  "label": "自定义",
+                  "value": "custom"
+                }
+              ]
+            },
+            {
+              "type": "inputNumberUnit",
+              "layoutType": "inline",
+              "text": "宽度",
+              "bindKey": "imgBgSizeWidth",
+              "dictionary": [
+                {
+                  "label": "px",
+                  "value": "px"
+                },
+                {
+                  "label": "%",
+                  "value": "%"
+                },
+                {
+                  "label": "em",
+                  "value": "em"
+                }
+              ],
+              "display":"@[imgBgSize=='custom']"
+            },
+            {
+              "type": "inputNumberUnit",
+              "layoutType": "inline",
+              "text": "高度",
+              "bindKey": "imgBgSizeHeight",
+              "dictionary": [
+                {
+                  "label": "px",
+                  "value": "px"
+                },
+                {
+                  "label": "%",
+                  "value": "%"
+                },
+                {
+                  "label": "em",
+                  "value": "em"
+                }
+              ],
+              "display":"@[imgBgSize=='custom']"
+            },
+            {
+              "type": "radio",
+              "layoutType": "block",
+              "text": "平铺模式",
+              "bindKey": "imgBgRepeat",
+              "dictionary": [
+                {
+                  "label": "双向重复",
+                  "value": "repeat"
+                },
+                {
+                  "label": "水平重复",
+                  "value": "repeat-x"
+                },
+                {
+                  "label": "垂直重复",
+                  "value": "repeat-y"
+                },
+                {
+                  "label": "不重复",
+                  "value": "no-repeat"
+                },
+                {
+                  "label": "继承",
+                  "value": "inherit"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "group",
           "text": "背景设置",
           "desc": "点击？查看背景设置用法指南",
           "helpUrl": "",

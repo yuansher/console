@@ -14,8 +14,8 @@
     -->
     <div class="component-card-item-outbox">
       <div class="component-card-item-box" v-for="(item,index) in listData||[]" :key="index">
-        <div class="cc-item-img-container">
-          <img v-if="item.modulePreviewImgObject.length>0" :style="getStyle('itemimg',item.modulePreviewImgObject[0])" :src="IDM.url.getWebPath(item.modulePreviewImgObject[0].ourl)"/>
+        <div class="cc-item-img-container" :style="getImageBgStyle(item)">
+          <!-- <img v-if="item.modulePreviewImgObject.length>0" :style="getStyle('itemimg',item.modulePreviewImgObject[0])" :src="IDM.url.getWebPath(item.modulePreviewImgObject[0].ourl)"/> -->
           <div class="cc-item-img-shade"></div>
           <div class="cc-item-img-preview-button" v-if="propData.showPreviewButton" @click="previewComponent(item)">点击预览</div>
           <div class="cc-item-img-count-box" @click="showModal(item)">
@@ -430,6 +430,52 @@ export default {
       this.propData = propData.compositeAttr||{};
       this.convertAttrToStyleObject();
       console.log("组件内属性发生变化，变化后====》",this.propData);
+    },
+    /**
+     * 图片背景样式
+     * @param {*} item 
+     */
+    getImageBgStyle(item){
+      let styleObject = {};
+      if(item.modulePreviewImgObject && item.modulePreviewImgObject.length > 0){
+        styleObject["background-image"]=`url(${IDM.url.getWebPath(item.modulePreviewImgObject[0].ourl)})`;
+        
+        if (this.propData.imgBgSize && this.propData.imgBgSize == 'custom') {
+          styleObject['background-size'] =
+            (this.propData.imgBgSizeWidth
+              ? this.propData.imgBgSizeWidth.inputVal + this.propData.imgBgSizeWidth.selectVal
+              : 'auto') +
+            ' ' +
+            (this.propData.imgBgSizeHeight
+              ? this.propData.imgBgSizeHeight.inputVal + this.propData.imgBgSizeHeight.selectVal
+              : 'auto');
+        } else if (this.propData.imgBgSize) {
+          styleObject['background-size'] = this.propData.imgBgSize;
+        }
+        if(this.propData.imgPosition=="custom"){
+          if (this.propData.imgPositionX && this.propData.imgPositionX.inputVal) {
+            styleObject['background-position-x'] =
+              this.propData.imgPositionX.inputVal + this.propData.imgPositionX.selectVal;
+          }
+          if (this.propData.imgPositionY && this.propData.imgPositionY.inputVal) {
+            styleObject['background-position-y'] =
+              this.propData.imgPositionY.inputVal + this.propData.imgPositionY.selectVal;
+          }
+        }else{
+          styleObject['background-position']=this.propData.imgPosition;
+        }
+        
+        if (this.propData.imgBgColor && this.propData.imgBgColor.hex8) {
+            styleObject['background-color'] = this.propData.imgBgColor.hex8;
+        }
+        
+        //平铺模式
+        if (this.propData.imgBgRepeat) {
+            styleObject['background-repeat'] = this.propData.imgBgRepeat;
+        }
+              
+      }
+      return styleObject;
     },
     /**
      * 把属性转换成样式对象

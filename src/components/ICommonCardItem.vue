@@ -40,12 +40,12 @@
             />
           </div>
         </template>
-        <div v-if="propData.showImageBox" class="cc-item-img-container">
-          <img
+        <div v-if="propData.showImageBox" :style="getImageBgStyle(item)" class="cc-item-img-container">
+          <!-- <img
             v-if="item[propData.imageObjectDataFiled] && item[propData.imageObjectDataFiled].length > 0"
             :style="getStyle('itemimg', item[propData.imageObjectDataFiled][0])"
             :src="IDM.url.getWebPath(item[propData.imageObjectDataFiled][0].ourl)"
-          />
+          /> -->
           <div class="cc-item-img-shade"></div>
           <div
             class="cc-item-img-preview-button"
@@ -627,6 +627,53 @@ export default {
       // console.log('组件内属性发生变化，变化后====》', this.propData);
     },
     /**
+     * 图片背景样式
+     * @param {*} item 
+     */
+    getImageBgStyle(item){
+      let styleObject = {};
+      if(item[this.propData.imageObjectDataFiled] && item[this.propData.imageObjectDataFiled].length > 0){
+        styleObject["background-image"]=`url(${IDM.url.getWebPath(item[this.propData.imageObjectDataFiled][0].ourl)})`;
+        
+        if (this.propData.imgBgSize && this.propData.imgBgSize == 'custom') {
+          styleObject['background-size'] =
+            (this.propData.imgBgSizeWidth
+              ? this.propData.imgBgSizeWidth.inputVal + this.propData.imgBgSizeWidth.selectVal
+              : 'auto') +
+            ' ' +
+            (this.propData.imgBgSizeHeight
+              ? this.propData.imgBgSizeHeight.inputVal + this.propData.imgBgSizeHeight.selectVal
+              : 'auto');
+        } else if (this.propData.imgBgSize) {
+          styleObject['background-size'] = this.propData.imgBgSize;
+        }
+        if(this.propData.imgPosition=="custom"){
+          if (this.propData.imgPositionX && this.propData.imgPositionX.inputVal) {
+            styleObject['background-position-x'] =
+              this.propData.imgPositionX.inputVal + this.propData.imgPositionX.selectVal;
+          }
+          if (this.propData.imgPositionY && this.propData.imgPositionY.inputVal) {
+            styleObject['background-position-y'] =
+              this.propData.imgPositionY.inputVal + this.propData.imgPositionY.selectVal;
+          }
+        }else{
+          styleObject['background-position']=this.propData.imgPosition;
+        }
+        
+        if (this.propData.imgBgColor && this.propData.imgBgColor.hex8) {
+            styleObject['background-color'] = this.propData.imgBgColor.hex8;
+        }
+        
+        //平铺模式
+        if (this.propData.imgBgRepeat) {
+            styleObject['background-repeat'] = this.propData.imgBgRepeat;
+        }
+              
+      }
+      return styleObject;
+    },
+
+    /**
      * 把属性转换成样式对象
      */
     convertAttrToStyleObject() {
@@ -1187,6 +1234,7 @@ export default {
       switch (key) {
         case 'itemimg':
           if (object) {
+            //285*300   实际 200*200  
             let imgObject = object;
             if (
               this.propData.width &&
