@@ -41,10 +41,10 @@
     },
     "rules": {
       "no-unused-vars": 0,
-      "no-empty":0,
-      "no-undef":0,
-      "no-redeclare":0,
-      "no-case-declarations":0
+      "no-empty": 0,
+      "no-undef": 0,
+      "no-redeclare": 0,
+      "no-case-declarations": 0
     },
     "globals": {
       "IDM": true,

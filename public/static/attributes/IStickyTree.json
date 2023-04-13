@@ -270,6 +270,7 @@
                     "type": "dataSourceSelect",
                     "layoutType": "inline",
                     "text": "数据源",
+                    "desc": "设置树的数据源，返回格式：[{\"title\": \"0-0\",\"key\": \"0-0\",\"children\": [{\"title\": \"0-0-0\",\"key\": \"0-0-0\"}]",
                     "bindKey": "dataSource"
                 },
                 {
