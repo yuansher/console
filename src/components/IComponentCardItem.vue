@@ -5,7 +5,7 @@
     id：使用moduleObject.id，如果id不使用这个将会被idm-ctrl-id属性替换
     idm-ctrl-id：组件的id，这个必须不能为空
   -->
-  <div idm-ctrl="idm_module" :id="moduleObject.id" :idm-ctrl-id="moduleObject.id">
+  <div idm-ctrl="idm_module" :id="moduleObject.id" v-show="propData.defaultStatus!='hidden'" :idm-ctrl-id="moduleObject.id">
     <!--
       组件内部容器
       增加class="drag_container" 必选
@@ -815,6 +815,12 @@ export default {
           break;
       }
     },
+    showThisModuleHandle(){
+        this.propData.defaultStatus = "default";
+      },
+      hideThisModuleHandle(){
+        this.propData.defaultStatus = "hidden";
+      },
     /**
      * 组件通信：接收消息的方法
      * @param {
@@ -837,6 +843,11 @@ export default {
           //全选
           this.changeAllCheckStatusHandle();
         }
+      }
+      if(object&&object.type=="linkageShowModule"){
+        this.showThisModuleHandle();
+      }else if(object&&object.type=="linkageHideModule"){
+        this.hideThisModuleHandle();
       }
     },
     /**
