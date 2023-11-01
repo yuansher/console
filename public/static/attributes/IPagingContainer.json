@@ -70,15 +70,22 @@
                     "default": "searchText",
                     "display":"@[headerDisplay&&searchDisplay]"
                 },
-
-
+                {
+                    "type": "switch",
+                    "layoutType": "inline",
+                    "text": "隐藏分页",
+                    "bindKey": "hidePageSize",
+                    "desc":"是否显示每页条数下拉",
+                    "default": false
+                },
                 {
                     "type": "textarea",
                     "layoutType": "inline",
                     "text": "分页条数",
                     "bindKey": "pageSizeOptions",
                     "desc":"指定每页可以显示多少条，以逗号隔开，例如：10,20,30,40",
-                    "default": "10,20,30,40"
+                    "default": "10,20,30,40",
+                    "display":"@[!hidePageSize]"
                 },
                 {
                     "type": "inputNumber",
@@ -98,6 +105,14 @@
                     "desc":"设置用于显示数据总量和当前数据顺序，示例：@[range[0]]-@[range[1]] of @[total] items",
                     "placeholder":"示例：@[range[0]]-@[range[1]] of @[total] items",
                     "default": ""
+                },
+                {
+                    "type": "actionSelect",
+                    "layoutType": "block",
+                    "text": "页数自定义函数",
+                    "bindKey": "defaultPageSizeFN",
+                    "desc": "返回数字，控制一页显示多少条",
+                    "multiple": false
                 }
             ]
         },

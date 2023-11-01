@@ -42,7 +42,7 @@
         <a-pagination
           v-model="current"
           show-quick-jumper
-          show-size-changer
+          :show-size-changer="!propData.hidePageSize"
           :default-current="1"
           :show-total="showTotalFormat"
           :page-size.sync="pageSize"
@@ -520,11 +520,25 @@ export default {
       }
       window.IDM.setStyleToPageHead(this.moduleObject.id+" .console-paging-content-container",styleObject);
     },
+    getDefaultPageSizeFN(pageResize=false) {
+      if (this.propData.defaultPageSizeFN && this.propData.defaultPageSizeFN[0]?.name) {
+        const num = window[this.propData.defaultPageSizeFN[0].name].call(this, {
+            customParam: this.propData.defaultPageSizeFN[0].param,
+            pageResize,
+            _this: this,
+            moduleObject: this.moduleObject,
+        });
+        if (num) {
+          this.pageSize = num;
+        }
+      }
+    },
     /**
      * 把属性转换成样式对象
      */
     convertAttrToStyleObject(){
       this.pageSize = this.propData.defaultPageSize||10;
+      this.getDefaultPageSizeFN();
       this.convertAttrToStyleOutObject();
       if(this.propData.headerDisplay){
         this.convertAttrToStyleHeaderObject();
@@ -698,6 +712,10 @@ export default {
         }
       }else if(object.type&&object.type=="linkageReload"){
         this.reload(object.message&&object.message.reloadFirstPage);
+      }else if(object.type&&object.type=="pageResize"){
+        this.$nextTick(() => {
+          this.getDefaultPageSizeFN(true);
+        })
       }
     },
     /**
