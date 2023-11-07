@@ -6,6 +6,7 @@ function resolve(dir) {
     return path.join(__dirname, dir)
 }
 let assetsDir = "./static";
+const isDev = process.env.NODE_ENV === 'development'
 let getAssetsDir = function(filename) {
   return path.posix.join(assetsDir, filename);
 };
@@ -48,6 +49,7 @@ const externals = {
 }
 module.exports = {
     publicPath:"./",
+    productionSourceMap: false,
     assetsDir:assetsDir,
     pages:{
       index: {
@@ -114,13 +116,13 @@ module.exports = {
       //   .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
     },
     configureWebpack: {
-      plugins: [
-        new MiniCssExtractPlugin({
-          // 修改打包后css文件名
-          filename: `${assetsDir}/css/[name].css`,
-          chunkFilename: `${assetsDir}/css/[name].css`
-        })
-      ],
+      // plugins: [
+      //   new MiniCssExtractPlugin({
+      //     // 修改打包后css文件名
+      //     filename: `${assetsDir}/css/[name].css`,
+      //     chunkFilename: `${assetsDir}/css/[name].css`
+      //   })
+      // ],
       output: {
         // 输出重构  打包编译后的 文件名称
         filename: `${assetsDir}/js/[name].js`,
@@ -137,7 +139,10 @@ module.exports = {
     },
     css: {
         // 是否使用css分离插件 ExtractTextPlugin
-        extract: true,
+        extract: isDev ? false : {
+          filename: `${assetsDir}/css/[name].css`,
+          chunkFilename: `${assetsDir}/css/[name].css`
+        },
         // 开启 CSS source maps?
         sourceMap: true,
         // css预设器配置项
