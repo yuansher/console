@@ -148,6 +148,7 @@ export default {
     }
   },
   mounted() {
+    window[this.moduleObject.packageid] = this;
   },
   destroyed() { },
   methods: {

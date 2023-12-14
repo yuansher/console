@@ -1,9 +1,9 @@
 {
-  "version": "1.0.5",
+  "version": "2.2.0",
   "lasttime": "2023年3月17日14:43:50",
   "author": "申龙",
   "className": "console",
-  "desc": "",
+  "desc": "升级为异步组件版本",
   "module": [
     {
       "classId": "idm.componet.console.inavigationbar",
@@ -114,6 +114,13 @@
       "classId": "idm.component.console.istickytree",
       "comName": "悬浮树",
       "className": "IStickyTree",
+      "comType": "common",
+      "comLangue": "vue"
+    },
+    {
+      "classId": "idm.component.console.icleanspace",
+      "comName": "空间清理",
+      "className": "ICleanSpace",
       "comType": "common",
       "comLangue": "vue"
     }

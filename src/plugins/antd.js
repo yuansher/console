@@ -21,6 +21,8 @@ import 'ant-design-vue/lib/empty/style/css';
 import 'ant-design-vue/lib/spin/style/css';
 import 'ant-design-vue/lib/checkbox/style/css';
 import 'ant-design-vue/lib/tree/style/css';
+import 'ant-design-vue/lib/collapse/style/css';
+import 'ant-design-vue/lib/switch/style/css';
 import {
   Button,
   Dropdown,
@@ -42,7 +44,9 @@ import {
   Empty,
   Spin,
   Checkbox,
-  Tree
+  Tree,
+  Collapse,
+  Switch
 } from 'ant-design-vue';
 
 /* v1.1.3+ registration methods */
@@ -67,4 +71,6 @@ Vue.use(Empty);
 Vue.use(Spin);
 Vue.use(Checkbox);
 Vue.use(Tree);
+Vue.use(Collapse);
+Vue.use(Switch);
 Vue.prototype.$confirm = Modal.confirm;

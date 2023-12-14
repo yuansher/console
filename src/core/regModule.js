@@ -94,6 +94,8 @@ import Vue from 'vue'
             }
             console.log("渲染的ID>>>>", moduleObject.id);
         }
+        
+        console.log("🚀 ~ file: module.js:223 ~ moduleLoadedHandle ~ moduleObject 注册完成:", item)
     })
     //这里注册了CodeVar变量，就是利用这个变量给这里使用，核心框架调用这里的组件初始化方法，然后这里的方法就给这个变量设置要加载的组件
     //更改完变量后再实时加载渲染下面代码

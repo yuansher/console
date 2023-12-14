@@ -126,3 +126,6 @@ export {
 export {
     default as CaretDownFill
 } from '@ant-design/icons/lib/fill/CaretDownFill';
+export {
+    default as ProjectOutline
+} from '@ant-design/icons/lib/outline/ProjectOutline';
