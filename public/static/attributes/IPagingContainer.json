@@ -27,7 +27,16 @@
                     "bindKey": "headerDisplay",
                     "desc":"是否显示列表顶部文字提示和搜索条件",
                     "default": true
-                },{
+                },
+                {
+                    "type": "switch",
+                    "layoutType": "inline",
+                    "text": "切换按钮",
+                    "bindKey": "isShowChangeStyleButton",
+                    "desc":"是否显示列表顶部的切换列表分割的按钮",
+                    "default": true
+                },
+                {
                     "type": "switch",
                     "layoutType": "inline",
                     "text": "显示搜索",
@@ -61,15 +70,22 @@
                     "default": "searchText",
                     "display":"@[headerDisplay&&searchDisplay]"
                 },
-
-
+                {
+                    "type": "switch",
+                    "layoutType": "inline",
+                    "text": "隐藏分页",
+                    "bindKey": "hidePageSize",
+                    "desc":"是否显示每页条数下拉",
+                    "default": false
+                },
                 {
                     "type": "textarea",
                     "layoutType": "inline",
                     "text": "分页条数",
                     "bindKey": "pageSizeOptions",
                     "desc":"指定每页可以显示多少条，以逗号隔开，例如：10,20,30,40",
-                    "default": "10,20,30,40"
+                    "default": "10,20,30,40",
+                    "display":"@[!hidePageSize]"
                 },
                 {
                     "type": "inputNumber",
@@ -89,6 +105,14 @@
                     "desc":"设置用于显示数据总量和当前数据顺序，示例：@[range[0]]-@[range[1]] of @[total] items",
                     "placeholder":"示例：@[range[0]]-@[range[1]] of @[total] items",
                     "default": ""
+                },
+                {
+                    "type": "actionSelect",
+                    "layoutType": "block",
+                    "text": "页数自定义函数",
+                    "bindKey": "defaultPageSizeFN",
+                    "desc": "返回数字，控制一页显示多少条",
+                    "multiple": false
                 }
             ]
         },
@@ -531,6 +555,24 @@
                             "desc": "当前选项变更后获取列表值，需要联动其他组件变更结果值的组件范围",
                             "bindKey": "linkageResultPageModule",
                             "multiple": true
+                        },
+                        {
+                            "type": "pageModuleSelect",
+                            "layoutType": "block",
+                            "text": "切换组件-宫格",
+                            "desc": "当前列表风格按钮选项变更后，需要联动其他组件变更结果值的组件范围",
+                            "bindKey": "linkageListStyleGird",
+                            "display": "@[isShowChangeStyleButton]",
+                            "multiple": false
+                        },
+                        {
+                            "type": "pageModuleSelect",
+                            "layoutType": "block",
+                            "text": "切换组件-列表",
+                            "display": "@[isShowChangeStyleButton]",
+                            "desc": "当前列表风格按钮选项变更后，需要联动其他组件变更结果值的组件范围",
+                            "bindKey": "linkageListStyleList",
+                            "multiple": false
                         }
                     ]
                 }

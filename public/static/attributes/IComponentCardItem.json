@@ -20,6 +20,23 @@
             "text": "基本属性",
             "desc": "提供设置组件能达到展示效果的基本属性设置信息",
             "children": [
+                  {
+                    "type": "radio",
+                    "layoutType": "inline",
+                    "text": "默认状态",
+                    "bindKey": "defaultStatus",
+                    "dictionary": [
+                        {
+                            "label": "普通",
+                            "value": "default"
+                        },
+                        {
+                            "label": "隐藏",
+                            "value": "hidden"
+                        }
+                    ],
+                    "default": "default"
+                },
                 {
                     "type": "textarea",
                     "layoutType": "inline",

@@ -16,8 +16,20 @@
       <div class="drag_container" :idm-ctrl-id="moduleObject.id" idm-container-index="2">
         
       </div>
-      <div v-if="propData.searchDisplay">
-        <a-input-search placeholder="请输入关键词" style="width: 250px" @search="onSearch" />
+      <div class="console-paging-header-container-right">
+        <div v-if="propData.searchDisplay">
+          <a-input-search placeholder="请输入关键词" style="width: 250px" @search="onSearch" />
+        </div>
+        <div v-if="propData.isShowChangeStyleButton" style="margin-left: 10px;">
+          <a-radio-group v-model="listStyle" @change="onListStyleChange">
+            <a-radio-button value="grid">
+              宫格
+            </a-radio-button>
+            <a-radio-button value="list">
+              列表
+            </a-radio-button>
+          </a-radio-group>
+        </div>
       </div>
     </div>
     <div class="console-paging-content-container">
@@ -30,7 +42,7 @@
         <a-pagination
           v-model="current"
           show-quick-jumper
-          show-size-changer
+          :show-size-changer="!propData.hidePageSize"
           :default-current="1"
           :show-total="showTotalFormat"
           :page-size.sync="pageSize"
@@ -59,7 +71,8 @@ export default {
       conditionObject:{},
       conditionObjectRetain:{},
       searchText:"",
-      totalCount:0
+      totalCount:0,
+      listStyle: 'grid'
     }
   },
   props: {
@@ -77,6 +90,29 @@ export default {
   },
   destroyed() {},
   methods:{
+    onListStyleChange(event) {
+      if(this.propData.linkageListStyleGird&&this.propData.linkageListStyleGird.length>0){
+        var moduleIdArray = [];
+        this.propData.linkageListStyleGird.forEach(item=>{moduleIdArray.push(item.moduleId)});
+        this.sendBroadcastMessage({
+          type: this.listStyle == 'grid' ? "linkageShowModule" : 'linkageHideModule',
+          message:this.listResultData,
+          rangeModule:moduleIdArray,
+          triggerType:'MT'
+        })
+      }
+      if(this.propData.linkageListStyleList&&this.propData.linkageListStyleList.length>0){
+        var moduleIdArray = [];
+        this.propData.linkageListStyleList.forEach(item=>{moduleIdArray.push(item.moduleId)});
+        this.sendBroadcastMessage({
+          type: this.listStyle == 'list' ? "linkageShowModule" : 'linkageHideModule',
+          message:this.listResultData,
+          rangeModule:moduleIdArray,
+          triggerType:'MT'
+        })
+      }
+      this.change()
+    },
     showTotalFormat(total, range) {
       if ( this.propData.showTotalFormat && IDM.express ) {
         return IDM.express.replace.call(this, this.propData.showTotalFormat, { total, range, })
@@ -484,11 +520,25 @@ export default {
       }
       window.IDM.setStyleToPageHead(this.moduleObject.id+" .console-paging-content-container",styleObject);
     },
+    getDefaultPageSizeFN(pageResize=false) {
+      if (this.propData.defaultPageSizeFN && this.propData.defaultPageSizeFN[0]?.name) {
+        const num = window[this.propData.defaultPageSizeFN[0].name].call(this, {
+            customParam: this.propData.defaultPageSizeFN[0].param,
+            pageResize,
+            _this: this,
+            moduleObject: this.moduleObject,
+        });
+        if (num) {
+          this.pageSize = num;
+        }
+      }
+    },
     /**
      * 把属性转换成样式对象
      */
     convertAttrToStyleObject(){
       this.pageSize = this.propData.defaultPageSize||10;
+      this.getDefaultPageSizeFN();
       this.convertAttrToStyleOutObject();
       if(this.propData.headerDisplay){
         this.convertAttrToStyleHeaderObject();
@@ -662,6 +712,10 @@ export default {
         }
       }else if(object.type&&object.type=="linkageReload"){
         this.reload(object.message&&object.message.reloadFirstPage);
+      }else if(object.type&&object.type=="pageResize"){
+        this.$nextTick(() => {
+          this.getDefaultPageSizeFN(true);
+        })
       }
     },
     /**
@@ -713,6 +767,11 @@ export default {
   align-items:center;
   padding: 10px 0px;
   .console-header-text{
+  }
+  .console-paging-header-container-right {
+    display: flex;
+    justify-content: space-between;
+    align-items:center;
   }
 }
 .console-paging-footer-container{
