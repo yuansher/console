@@ -958,17 +958,32 @@ export default {
         _defaultVal.forEach(item => {
           item.modulePreviewImgObject = JSON.parse(item.modulePreviewImgJson || '[]');
           item.isEditName = false;
+          this.propData.rowCustomFunction?.length&&IDM.invokeCustomFunctions.apply(this, [
+            this.propData.rowCustomFunction,
+            {
+              moduleObject: this.moduleObject,
+              rowData:item
+            },
+          ]);
           if(!this.propData.cardInitSelected){
             item[this.propData.checkDataFiled||'idmItemChecked'] = _.findIndex(this.CurrentCheckedArray, item) > -1;
           }else if(item[this.propData.checkDataFiled||'idmItemChecked']){
             this.CurrentCheckedArray.push(_.cloneDeep(item))
           }
+          
         });
         this.listData = _defaultVal;
       } else {
         _defaultVal.forEach(item => {
           item.modulePreviewImgObject = JSON.parse(item.modulePreviewImgJson || '[]');
           item.isEditName = false;
+          this.propData.rowCustomFunction?.length&&IDM.invokeCustomFunctions.apply(this, [
+            this.propData.rowCustomFunction,
+            {
+              moduleObject: this.moduleObject,
+              rowData:item
+            },
+          ]);
           if(!this.propData.cardInitSelected){
             item[this.propData.checkDataFiled||'idmItemChecked'] = _.findIndex(this.CurrentCheckedArray, item) > -1;
           }else if(item[this.propData.checkDataFiled||'idmItemChecked']){
@@ -1087,6 +1102,14 @@ export default {
           this.CurrentCheckedArray.splice(itemIndex, 1);
         }
       }
+      this.propData.cardCheckedCustomFunction?.length&&IDM.invokeCustomFunctions.apply(this, [
+        this.propData.cardCheckedCustomFunction,
+        {
+          moduleObject: this.moduleObject,
+          item,
+          CurrentCheckedArray:this.CurrentCheckedArray
+        },
+      ]);
       this.$forceUpdate();
       this.sendItemCheckMsg();
     },
