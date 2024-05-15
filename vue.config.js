@@ -1,7 +1,7 @@
 
 const path = require('path')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const webpack = require('webpack');
 function resolve(dir) {
     return path.join(__dirname, dir)
 }
@@ -116,17 +116,20 @@ module.exports = {
       //   .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
     },
     configureWebpack: {
-      // plugins: [
-      //   new MiniCssExtractPlugin({
-      //     // 修改打包后css文件名
-      //     filename: `${assetsDir}/css/[name].css`,
-      //     chunkFilename: `${assetsDir}/css/[name].css`
-      //   })
-      // ],
+      plugins: [
+        new webpack.optimize.LimitChunkCountPlugin({
+          maxChunks: 1
+        }),
+        // new MiniCssExtractPlugin({
+        //   // 修改打包后css文件名
+        //   filename: `${assetsDir}/css/[name].css`,
+        //   chunkFilename: `${assetsDir}/css/[name].css`
+        // })
+      ],
       output: {
         // 输出重构  打包编译后的 文件名称
         filename: `${assetsDir}/js/[name].js`,
-        chunkFilename: `${assetsDir}/js/[name].js`,
+        // chunkFilename: `${assetsDir}/js/[name].js`,
         jsonpFunction:JSON.stringify("webpackJsonp_"+getGUID()+"_"+new Date().getTime())
       },
       resolve:{
@@ -144,7 +147,7 @@ module.exports = {
           chunkFilename: `${assetsDir}/css/[name].css`
         },
         // 开启 CSS source maps?
-        sourceMap: true,
+        sourceMap: isDev,
         // css预设器配置项
         // 启用 CSS modules for all css / pre-processor files.
         requireModuleExtension: true,
