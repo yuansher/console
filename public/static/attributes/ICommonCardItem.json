@@ -183,6 +183,13 @@
             "bindKey": "customFunction",
             "desc": "获取动态内容、自定义接口回调、页面统一接口回调的时候会调用此方法，返回数据格式为字符串，接收参数：{...自定义,interfaceData:自定义接口或页面统一接口的返回结果,moduleObject:组件对象,receiveData:接收到的消息数据}",
             "multiple": false
+        },
+        {
+            "type": "actionSelect",
+            "layoutType": "block",
+            "text": "item加工自定义函数",
+            "bindKey": "rowCustomFunction",
+            "desc": "可用于加工每行的数据，接收参数：{...自定义,rowData:每条数据}"
         }
       ]
     },
@@ -1217,6 +1224,13 @@
               "multiple": true
             }
           ]
+        },
+        {
+            "type": "actionSelect",
+            "layoutType": "block",
+            "text": "选择变动自定义函数",
+            "bindKey": "cardCheckedCustomFunction",
+            "desc": "当选择触发变动的时候会调用此处设置的函数，接收参数：{...自定义,item:当前点击的数据,CurrentCheckedArray:当前所有选择的项}"
         }
       ]
     }

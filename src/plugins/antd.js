@@ -23,6 +23,7 @@ import 'ant-design-vue/lib/checkbox/style/css';
 import 'ant-design-vue/lib/tree/style/css';
 import 'ant-design-vue/lib/collapse/style/css';
 import 'ant-design-vue/lib/switch/style/css';
+import 'ant-design-vue/lib/progress/style/css';
 import {
   Button,
   Dropdown,
@@ -46,7 +47,8 @@ import {
   Checkbox,
   Tree,
   Collapse,
-  Switch
+  Switch,
+  Progress
 } from 'ant-design-vue';
 
 /* v1.1.3+ registration methods */
@@ -73,4 +75,5 @@ Vue.use(Checkbox);
 Vue.use(Tree);
 Vue.use(Collapse);
 Vue.use(Switch);
+Vue.use(Progress);
 Vue.prototype.$confirm = Modal.confirm;

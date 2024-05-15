@@ -1068,7 +1068,7 @@ export default {
           }
         }
       }
-      if (Object.keys(this.propData.bgList.style).length) {
+      if (Object.keys(this.propData.bgList?.style||{}).length) {
         Object.assign(styleObject, this.propData.bgList.style);
       }
       window.IDM.setStyleToPageHead(this.moduleObject.id, styleObject);
