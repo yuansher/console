@@ -4,12 +4,27 @@
     <div class="search-input-container">
       <a-input v-if="propData.isShowSearch" placeholder="输入关键字搜索" @change="onChange">
       </a-input>
-      <a-icon type="redo" class="refresh-icon" @click.native="initData" :class="[isLoading ? 'refresh-animate' : '']" />
+      <a-icon type="redo" v-if="propData.isShowRefreshIcon" class="refresh-icon" @click.native="initData" :class="[isLoading ? 'refresh-animate' : '']" />
     </div>
     <a-tree :expanded-keys="expandedKeys" :selectedKeys.sync="selectedKeys" @select="handleSelect" class="tree-container scrollbar_style"
       :replace-fields="replaceFieldsObj" :show-line="propData.isShowLine" :auto-expand-parent="autoExpandParent"
       :tree-data="gData" @expand="onExpand">
       <template slot="title" slot-scope="scope">
+        <svg
+              v-if="propData.foldIcon && scope[replaceFieldsObj.children] && scope[replaceFieldsObj.children].length > 0 && propData.foldIcon.length"
+              class="idm-sticky-tree-left-icon idm-sticky-tree-fold-icon"
+
+              aria-hidden="true"
+          >
+              <use :xlink:href="`#${propData.foldIcon[0]}`"></use>
+        </svg>
+        <svg
+              v-if="propData.leafIcon && propData.leafIcon.length && (!scope[replaceFieldsObj.children] || scope[replaceFieldsObj.children].length === 0)"
+              class="idm-sticky-tree-left-icon idm-sticky-tree-leaf-icon"
+              aria-hidden="true"
+          >
+              <use :xlink:href="`#${propData.leafIcon[0]}`"></use>
+        </svg>
         <span class="title-text"
           v-if="scope[replaceFieldsObj.title] && scope[replaceFieldsObj.title].indexOf(searchValue) > -1">
           {{ scope[replaceFieldsObj.title].substr(0, scope[replaceFieldsObj.title].indexOf(searchValue)) }}
@@ -217,7 +232,7 @@ export default {
       }
     },
     convertAttrToStyleObject() {
-      const styleObject = {}, fontStyleObj = {}, matchFontStyleObj = {}, searchStyleObj = {}, treeObj = {};
+      const styleObject = {}, fontStyleObj = {}, matchFontStyleObj = {}, searchStyleObj = {}, treeObj = {}, iconObj = {}
       for (const key in this.propData) {
         if (this.propData.hasOwnProperty.call(this.propData, key)) {
           const element = this.propData[key];
@@ -257,8 +272,10 @@ export default {
               break
             case 'treeMaxHeight':
               treeObj['max-height'] = element
-
               break
+            case 'iconSize':
+              iconObj['width'] = element
+              iconObj['height'] = element
           }
         }
       }
@@ -269,6 +286,7 @@ export default {
       window.IDM.setStyleToPageHead(this.moduleObject.id + ' .title-text', fontStyleObj);
       window.IDM.setStyleToPageHead(this.moduleObject.id + ' .title-text .match-title-text', matchFontStyleObj);
       window.IDM.setStyleToPageHead(this.moduleObject.id + ' .tree-container', treeObj);
+      window.IDM.setStyleToPageHead(this.moduleObject.id + ' .idm-sticky-tree-left-icon', iconObj);
       this.initData(true);
     },
     reload() {
@@ -302,6 +320,7 @@ export default {
       return obj
     },
     initData(isFirst = false) {
+      if(this.propData.isShowRefreshIcon === undefined) this.propData.isShowRefreshIcon = true
       dataList = []
       this.isLoading = true
       if (this.moduleObject.env === 'develop') {

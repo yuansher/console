@@ -110,6 +110,25 @@
                     "type": "radio",
                     "styleType": "radio",
                     "layoutType": "inline",
+                    "text": "刷新图标",
+                    "bindKey": "isShowRefreshIcon",
+                    "desc": "是否显示刷新图标",
+                    "default": true,
+                    "dictionary": [
+                        {
+                            "label": "显示",
+                            "value": true
+                        },
+                        {
+                            "label": "隐藏",
+                            "value": false
+                        }
+                    ]
+                },
+                {
+                    "type": "radio",
+                    "styleType": "radio",
+                    "layoutType": "inline",
                     "text": "连接线",
                     "bindKey": "isShowLine",
                     "desc": "是否显示连接线",
@@ -132,6 +151,20 @@
                     "bindKey": "replaceFieldsStr",
                     "desc": "替换 treeNode 中 title,key,children 字段为 treeData 中对应的字段",
                     "default": "{ \"children\": \"children\", \"title\": \"title\", \"key\": \"key\" }"
+                },
+                {
+                    "type": "iconSelect",
+                    "layoutType": "inline",
+                    "text": "目录图标",
+                    "bindKey": "foldIcon",
+                    "desc": "设置目录显示的图标"
+                },
+                {
+                    "type": "iconSelect",
+                    "layoutType": "inline",
+                    "text": "叶子图标",
+                    "bindKey": "leafIcon",
+                    "desc": "设置叶子节点显示的图标"
                 }
             ]
         },
@@ -141,6 +174,14 @@
             "desc": "点击？查看样式设置用法指南",
             "helpUrl": "",
             "children": [
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "图标大小",
+                    "desc": "设置树结构文字左侧的图标大小",
+                    "bindKey": "iconSize",
+                    "default": "15px"
+                },
                 {
                     "type": "inputNumber",
                     "layoutType": "inline",
