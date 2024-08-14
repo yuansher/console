@@ -63,14 +63,6 @@
           "default": false
         },
         {
-          "type": "switch",
-          "layoutType": "inline",
-          "text": "修改时间",
-          "bindKey": "showUpdateTime",
-          "desc": "设置是否显示卡片更新时间而非显示类名",
-          "default": false
-        },
-        {
           "type": "inputNumber",
           "layoutType": "inline",
           "text": "子标题高",
