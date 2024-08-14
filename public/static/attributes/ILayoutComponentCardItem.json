@@ -25,7 +25,7 @@
                     "layoutType": "inline",
                     "text": "新建标题",
                     "bindKey": "newCardTitle",
-                    "desc":"新建卡片的标题",
+                    "desc": "新建卡片的标题",
                     "default": "新建空白页面"
                 },
                 {
@@ -42,7 +42,7 @@
                     "layoutType": "inline",
                     "text": "显示新建",
                     "bindKey": "showNewItemCard",
-                    "desc":"设置是否显示新建卡片",
+                    "desc": "设置是否显示新建卡片",
                     "default": true
                 },
                 {
@@ -50,7 +50,7 @@
                     "layoutType": "inline",
                     "text": "显示当页",
                     "bindKey": "showCurrentPage",
-                    "desc":"设置是否只显示当前一页的数据，设置为否则是保留之前加载的数据",
+                    "desc": "设置是否只显示当前一页的数据，设置为否则是保留之前加载的数据",
                     "default": true
                 },
                 {
@@ -310,7 +310,15 @@
                     "layoutType": "inline",
                     "text": "显示预览",
                     "bindKey": "showPreviewButton",
-                    "desc":"设置是否显示卡片上的预览按钮",
+                    "desc": "设置是否显示卡片上的预览按钮",
+                    "default": true
+                },
+                {
+                    "type": "switch",
+                    "layoutType": "inline",
+                    "text": "点击选择",
+                    "bindKey": "useClickSelect",
+                    "desc": "设置是否使用卡片点击后选择当前卡片",
                     "default": true
                 },
                 {

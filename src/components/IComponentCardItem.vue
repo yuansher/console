@@ -45,6 +45,14 @@
           <div v-if="propData.showSubTitle" class="cc-item-info-subtitle">
             {{item.moduleRemark}}
           </div>
+          <div class="cc-item-info-classid">
+            <template v-if="showUpdateTime">
+              <div class="cc-item-info-classid-font">修改时间：<span>{{item.updateTime}}</span></div>
+            </template>
+            <template v-else>
+              <div class="cc-item-info-classid-font">类名：<span>{{item.moduleClassName}}</span></div>
+            </template>
+          </div>
           <div class="cc-item-info-tags">
               <template v-for="tagItem in propData.tagsOptionList">
                 <a-tag
@@ -78,9 +86,7 @@
             <a-tag v-if="item.productName">
               {{item.productName}}
             </a-tag> -->
-          </div>
-          <div class="cc-item-info-classid">
-            <div class="cc-item-info-classid-font">类名：<span>{{item.moduleClassName}}</span></div>
+            
             <div class="cc-item-info-button" style="white-space: nowrap;" v-if="propData.buttonList&&propData.buttonList.length>0">
               <template v-for="(bitem,bindex) in propData.buttonList" >
                 <a-button v-if="bitem.buttonName" :key="bindex" :type="bitem.buttoType" shape="round" size="small" @click="clickButtonHandle(item,bitem)">{{bitem.buttonName}}</a-button>
