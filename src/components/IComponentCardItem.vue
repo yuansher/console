@@ -47,7 +47,7 @@
           </div>
           <div class="cc-item-info-classid">
             <template v-if="propData.showUpdateTime">
-              <div class="cc-item-info-classid-font">修改时间：<span>{{item.updateTime || item.createTime}}</span></div>
+              <div class="cc-item-info-classid-font">修改时间：<span>{{item.lastUpdateTime || item.createTime}}</span></div>
             </template>
             <template v-else>
               <div class="cc-item-info-classid-font">类名：<span>{{item.moduleClassName}}</span></div>
