@@ -657,6 +657,9 @@ export default {
       if(totalCount&&totalCount!=-1){
         this.totalCount = totalCount
       }
+      if (totalCount == 0) {
+        this.totalCount = 0
+      }
     },
     onShowSizeChange(current, pageSize) {
       // console.log(current, pageSize);
